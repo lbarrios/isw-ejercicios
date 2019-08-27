@@ -1,0 +1,18 @@
+Input por entrada estándar:
+2 enteros que representan la dureza del suelo y la porosidad del suelo respectivamente y en ese órden.
+
+Output por entrada estándar:
+Serie de instrucciones para realizar la extracción.
+Formato de instrucción: Sentido Velocidad Tiempo
+Sentido: C clockwise y CC counterclockwise
+Velocidad: Entero que indica los RPM
+Tiempo: Entero que indica cantidad de minutos
+
+Ejemplo:
+Entrada:
+0 0
+Salida:
+CC 100 5
+C 100 5
+
+Notar que el cierre de la pinza queda implícito entre las 2 instrucciones.
