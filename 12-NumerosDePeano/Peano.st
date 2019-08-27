@@ -21,9 +21,15 @@ I class
 
 	^unNumeroDePeano next ! !
 
-!I class methodsFor: 'as yet unclassified' stamp: 'FL 8/26/2019 20:58:22'!
-/ unNumeroDePeano
+!I class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:10:47'!
+- unNumeroDePeano
+	 
+	self error: 'descripcionDeErrorDeNumerosNegativosNoSoportados'! !
 
+!I class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:01:32'!
+/ unNumeroDePeano
+	
+	self = unNumeroDePeano ifFalse: [self error:'descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor'].
 	^unNumeroDePeano ! !
 
 !I class methodsFor: 'as yet unclassified' stamp: 'FL 8/26/2019 18:25:32'!
@@ -58,12 +64,17 @@ II class
 
 	^self previous + unNumeroDePeano next ! !
 
-!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/26/2019 20:44:51'!
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:16:02'!
 - unNumeroDePeano
-	 
+	 "TODO que tire el error  'descripcionDeErrorDeNumerosNegativosNoSoportados' en vez de no entender el mensaje previous cuando no se puede hacer la resta"
 	^unNumeroDePeano substractTo: self! !
 
-!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/26/2019 20:58:38'!
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:08:52'!
+/ aNumber 
+	"TODO por el momento solo anda si con I"
+	^self - aNumber / aNumber + 1! !
+
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:16:37'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
