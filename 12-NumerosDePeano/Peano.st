@@ -69,16 +69,16 @@ II class
 	 "TODO que tire el error  'descripcionDeErrorDeNumerosNegativosNoSoportados' en vez de no entender el mensaje previous cuando no se puede hacer la resta"
 	^unNumeroDePeano substractTo: self! !
 
-!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:08:52'!
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:57:59'!
 / aNumber 
 	"TODO por el momento solo anda si con I"
-	^self - aNumber / aNumber + 1! !
+	^self - aNumber / aNumber + I! !
 
-!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:16:37'!
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:55'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	next := nil.
+	next := III.
 	previous := I.! !
 
 !II class methodsFor: 'as yet unclassified' stamp: 'FL 8/26/2019 19:03:43'!
@@ -119,4 +119,162 @@ next := nil.
 substractTo: aNumber
 	^self previous substractTo: aNumber previous! !
 
+
+!classDefinition: #III category: #'Números de Peano'!
+DenotativeObject subclass: #III
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Números de Peano'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'III class' category: #'Números de Peano'!
+III class
+	instanceVariableNames: 'next previous'!
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+* aNumber 
+	^self previous * aNumber + aNumber! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
++ unNumeroDePeano
+
+	^self previous + unNumeroDePeano next ! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+- unNumeroDePeano
+	 "TODO que tire el error  'descripcionDeErrorDeNumerosNegativosNoSoportados' en vez de no entender el mensaje previous cuando no se puede hacer la resta"
+	^unNumeroDePeano substractTo: self! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+/ aNumber 
+	"TODO por el momento solo anda si con I"
+	^self - aNumber / aNumber + I! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:55'!
+initializeCollaboratorsFromFile
+	"Auto generated method for loading purposes - Do not modify it"
+
+	next := IIII.
+	previous := II.! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+next
+
+	next ifNil: [next := self cloneNamed: self name, 'I'. next previous: self.].
+	^next
+	
+	! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+previous
+
+	^previous ! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+previous: numero
+
+	previous := numero ! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+removeAllNext
+
+
+next ifNotNil:
+
+[
+
+next removeAllNext.
+
+next removeFromSystem.
+
+next := nil.
+
+]! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+substractTo: aNumber
+	^self previous substractTo: aNumber previous! !
+
+
+!classDefinition: #IIII category: #'Números de Peano'!
+DenotativeObject subclass: #IIII
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Números de Peano'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'IIII class' category: #'Números de Peano'!
+IIII class
+	instanceVariableNames: 'next previous'!
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+* aNumber 
+	^self previous * aNumber + aNumber! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
++ unNumeroDePeano
+
+	^self previous + unNumeroDePeano next ! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+- unNumeroDePeano
+	 "TODO que tire el error  'descripcionDeErrorDeNumerosNegativosNoSoportados' en vez de no entender el mensaje previous cuando no se puede hacer la resta"
+	^unNumeroDePeano substractTo: self! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+/ aNumber 
+	"TODO por el momento solo anda si con I"
+	^self - aNumber / aNumber + I! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:55'!
+initializeCollaboratorsFromFile
+	"Auto generated method for loading purposes - Do not modify it"
+
+	next := nil.
+	previous := III.! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+next
+
+	next ifNil: [next := self cloneNamed: self name, 'I'. next previous: self.].
+	^next
+	
+	! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+previous
+
+	^previous ! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+previous: numero
+
+	previous := numero ! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+removeAllNext
+
+
+next ifNotNil:
+
+[
+
+next removeAllNext.
+
+next removeFromSystem.
+
+next := nil.
+
+]! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 16:58:12'!
+substractTo: aNumber
+	^self previous substractTo: aNumber previous! !
+
 II initializeAfterFileIn!
+III initializeAfterFileIn!
+IIII initializeAfterFileIn!
