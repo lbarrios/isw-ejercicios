@@ -21,16 +21,24 @@ I class
 
 	^unNumeroDePeano next ! !
 
-!I class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:10:47'!
+!I class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:36:12'!
 - unNumeroDePeano
 	 
-	self error: 'descripcionDeErrorDeNumerosNegativosNoSoportados'! !
+	self error: self descripcionDeErrorDeNumerosNegativosNoSoportados! !
 
-!I class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:01:32'!
+!I class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:42:34'!
 / unNumeroDePeano
 	
-	self = unNumeroDePeano ifFalse: [self error:'descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor'].
+	self = unNumeroDePeano ifFalse: [self error: self descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor].
 	^unNumeroDePeano ! !
+
+!I class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:41:06'!
+descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor
+	^'No se puede dividir por un número mayor'! !
+
+!I class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:39:02'!
+descripcionDeErrorDeNumerosNegativosNoSoportados
+	^'Los números menores a 1 no están soportados.'! !
 
 !I class methodsFor: 'as yet unclassified' stamp: 'FL 8/26/2019 18:25:32'!
 next
@@ -64,18 +72,23 @@ II class
 
 	^self previous + unNumeroDePeano next ! !
 
-!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/27/2019 16:16:02'!
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:28:52'!
 - unNumeroDePeano
-	 "TODO que tire el error  'descripcionDeErrorDeNumerosNegativosNoSoportados' en vez de no entender el mensaje previous cuando no se puede hacer la resta"
-	^unNumeroDePeano substractTo: self! !
+	 
+	^[unNumeroDePeano substractTo: self] on: Error do: [self error: self name,' descripcionDeErrorDeNumerosNegativosNoSoportados'].! !
 
-!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:10'!
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:52:51'!
 / aNumber 
-	"TODO que tire el error 'descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor'"
 	
-	^self = aNumber ifTrue: [I] ifFalse:[self - aNumber / aNumber + I].! !
+	^[self = aNumber ifTrue: [I] ifFalse: [self - aNumber / aNumber + I]] 
+		on: Error 
+		do: [self error: self descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor]! !
 
-!II class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:14:14'!
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:41:12'!
+descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor
+	^'No se puede dividir por un número mayor'! !
+
+!II class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:54:23'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -134,34 +147,39 @@ DenotativeObject subclass: #III
 III class
 	instanceVariableNames: 'next previous'!
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 * aNumber 
 	^self previous * aNumber + aNumber! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 + unNumeroDePeano
 
 	^self previous + unNumeroDePeano next ! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 - unNumeroDePeano
-	 "TODO que tire el error  'descripcionDeErrorDeNumerosNegativosNoSoportados' en vez de no entender el mensaje previous cuando no se puede hacer la resta"
-	^unNumeroDePeano substractTo: self! !
+	 
+	^[unNumeroDePeano substractTo: self] on: Error do: [self error: self name,' descripcionDeErrorDeNumerosNegativosNoSoportados'].! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 / aNumber 
-	"TODO que tire el error 'descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor'"
 	
-	^self = aNumber ifTrue: [I] ifFalse:[self - aNumber / aNumber + I].! !
+	^[self = aNumber ifTrue: [I] ifFalse: [self - aNumber / aNumber + I]] 
+		on: Error 
+		do: [self error: self descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor]! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:14:14'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
+descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor
+	^'No se puede dividir por un número mayor'! !
+
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:54:23'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	next := IIII.
 	previous := II.! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 next
 
 	next ifNil: [next := self cloneNamed: self name, 'I'. next previous: self.].
@@ -169,17 +187,17 @@ next
 	
 	! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 previous
 
 	^previous ! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 previous: numero
 
 	previous := numero ! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 removeAllNext
 
 
@@ -195,7 +213,7 @@ next := nil.
 
 ]! !
 
-!III class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!III class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 substractTo: aNumber
 	^self previous substractTo: aNumber previous! !
 
@@ -213,34 +231,39 @@ DenotativeObject subclass: #IIII
 IIII class
 	instanceVariableNames: 'next previous'!
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 * aNumber 
 	^self previous * aNumber + aNumber! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 + unNumeroDePeano
 
 	^self previous + unNumeroDePeano next ! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 - unNumeroDePeano
-	 "TODO que tire el error  'descripcionDeErrorDeNumerosNegativosNoSoportados' en vez de no entender el mensaje previous cuando no se puede hacer la resta"
-	^unNumeroDePeano substractTo: self! !
+	 
+	^[unNumeroDePeano substractTo: self] on: Error do: [self error: self name,' descripcionDeErrorDeNumerosNegativosNoSoportados'].! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 / aNumber 
-	"TODO que tire el error 'descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor'"
 	
-	^self = aNumber ifTrue: [I] ifFalse:[self - aNumber / aNumber + I].! !
+	^[self = aNumber ifTrue: [I] ifFalse: [self - aNumber / aNumber + I]] 
+		on: Error 
+		do: [self error: self descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor]! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:14:14'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
+descripcionDeErrorDeNoSePuedeDividirPorUnNumeroMayor
+	^'No se puede dividir por un número mayor'! !
+
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:54:23'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	next := nil.
 	previous := III.! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 next
 
 	next ifNil: [next := self cloneNamed: self name, 'I'. next previous: self.].
@@ -248,17 +271,17 @@ next
 	
 	! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 previous
 
 	^previous ! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 previous: numero
 
 	previous := numero ! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 removeAllNext
 
 
@@ -274,7 +297,7 @@ next := nil.
 
 ]! !
 
-!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 8/28/2019 17:13:28'!
+!IIII class methodsFor: 'as yet unclassified' stamp: 'FL 9/1/2019 16:53:22'!
 substractTo: aNumber
 	^self previous substractTo: aNumber previous! !
 
