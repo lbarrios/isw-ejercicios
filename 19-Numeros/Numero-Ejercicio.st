@@ -363,27 +363,30 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:13'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:55:57'!
 * aMultiplier 
-	
-	^self class with: value * aMultiplier integerValue
+	aMultiplier class  = Entero
+	ifTrue: [^self class with: value * aMultiplier integerValue]
+	ifFalse: [^self*aMultiplier numerator / aMultiplier denominator]
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:13'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:50:04'!
 + anAdder 
-	
-	^self class with: value + anAdder integerValue
-! !
+	anAdder class = Entero 
+		ifTrue: [^self class with: value + anAdder integerValue] 
+		ifFalse: [^Fraccion with: self*anAdder denominator + anAdder numerator over: anAdder denominator]! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'NR 9/23/2018 23:40:37'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:01:24'!
 - aSubtrahend 
-	
-	^ self class with: value - aSubtrahend integerValue.! !
+	aSubtrahend class = Entero
+	ifTrue: [^ self class with: value - aSubtrahend integerValue.]
+	ifFalse: [^ (self * aSubtrahend denominator - aSubtrahend numerator) / aSubtrahend denominator]! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:58:24'!
 / aDivisor 
-	
-	^Fraccion with: self over: aDivisor! !
+	aDivisor class = Entero
+	ifTrue: [^Fraccion with: self over: aDivisor]
+	ifFalse: [^Fraccion with: self*aDivisor denominator over: aDivisor numerator]! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -482,37 +485,43 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:57:23'!
 * aMultiplier 
-	
-	^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)
-	! !
+	aMultiplier class = Fraccion
+	ifTrue: [^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)]
+	ifFalse: [^numerator * aMultiplier / denominator]! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:54:14'!
 + anAdder 
-	
 	| newNumerator newDenominator |
-	
-	newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
-	newDenominator := denominator * anAdder denominator.
-	
-	^newNumerator / newDenominator ! !
+	anAdder class = Fraccion 
+		ifTrue: [newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
+			newDenominator := denominator * anAdder denominator.
+		^newNumerator / newDenominator ]
+		ifFalse: [newNumerator := (numerator + (denominator * anAdder)).
+			newDenominator := denominator * anAdder.
+			^newNumerator / newDenominator
+		]! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'NR 9/23/2018 23:43:50'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:04:12'!
 - aSubtrahend 
 	
 	| newNumerator newDenominator |
 	
-	newNumerator := (numerator * aSubtrahend denominator) - (denominator * aSubtrahend numerator).
-	newDenominator := denominator * aSubtrahend denominator.
-	
-	^newNumerator / newDenominator 
+	aSubtrahend class = Fraccion
+	ifTrue: [ newNumerator := (numerator * aSubtrahend denominator) - (denominator * aSubtrahend numerator).
+		newDenominator := denominator * aSubtrahend denominator.
+		^newNumerator / newDenominator ]
+	ifFalse: [ newNumerator := numerator - (aSubtrahend * denominator).
+		newDenominator := denominator.
+		^newNumerator / newDenominator ]
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:59:24'!
 / aDivisor 
-	
-	^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)! !
+	aDivisor class = Fraccion
+	ifTrue:[^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)]
+	ifFalse:[^(numerator) / (denominator * aDivisor)]! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
