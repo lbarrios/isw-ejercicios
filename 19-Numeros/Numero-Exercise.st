@@ -378,11 +378,9 @@ Numero subclass: #Entero
 - aSubtrahend 
 	^aSubtrahend subtractToEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:58:24'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:39:56'!
 / aDivisor 
-	aDivisor class = Entero
-	ifTrue: [^Fraccion with: self over: aDivisor]
-	ifFalse: [^Fraccion with: self*aDivisor denominator over: aDivisor numerator]! !
+	^ aDivisor divideToEntero: self ! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -469,6 +467,15 @@ newNumerator := aFraction numerator + (aFraction denominator * self).
 newDenominator := aFraction denominator * self.
 ^newNumerator / newDenominator! !
 
+!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:45:06'!
+divideToEntero: anEntero
+^ Fraccion with: anEntero over: self! !
+
+!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:46:38'!
+divideToFraction: aFraction
+
+^(aFraction numerator) / (aFraction denominator * self)! !
+
 !Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:27:11'!
 subtractToEntero: anEntero
 
@@ -523,11 +530,9 @@ Numero subclass: #Fraccion
 	
 	^ aSubtrahend subtractToFraction: self.! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:59:24'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:48:40'!
 / aDivisor 
-	aDivisor class = Fraccion
-	ifTrue:[^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)]
-	ifFalse:[^(numerator) / (denominator * aDivisor)]! !
+	^aDivisor divideToFraction: self! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
@@ -599,6 +604,16 @@ addToFraction: aFraction
 newNumerator := (aFraction numerator * denominator) + (aFraction denominator * numerator).
 newDenominator := aFraction denominator * denominator.
 ^newNumerator / newDenominator ! !
+
+!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:39:31'!
+divideToEntero: anEntero
+
+^ (anEntero * denominator) / numerator! !
+
+!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:47:22'!
+divideToFraction: aFraction
+
+^(aFraction numerator * denominator) / (aFraction denominator * numerator)! !
 
 !Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:30:14'!
 subtractToEntero: anEntero
