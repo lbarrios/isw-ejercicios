@@ -363,11 +363,9 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:55:57'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 11:52:02'!
 * aMultiplier 
-	aMultiplier class  = Entero
-	ifTrue: [^self class with: value * aMultiplier integerValue]
-	ifFalse: [^self*aMultiplier numerator / aMultiplier denominator]
+	^aMultiplier multiplyToEntero: self
 	! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 11:07:30'!
@@ -378,11 +376,9 @@ Numero subclass: #Entero
 - aSubtrahend 
 	^aSubtrahend subtractToEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:58:24'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 12:02:19'!
 / aDivisor 
-	aDivisor class = Entero
-	ifTrue: [^Fraccion with: self over: aDivisor]
-	ifFalse: [^Fraccion with: self*aDivisor denominator over: aDivisor numerator]! !
+	^aDivisor divideToEntero: self! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -453,6 +449,25 @@ addToFraccion: aFraccion
 	^newNumerator / newDenominator
 	! !
 
+!Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 12:06:34'!
+divideToEntero: anEntero 
+	^Fraccion with: anEntero over: self! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 12:10:50'!
+divideToFraccion: aFraccion 
+	
+	^(aFraccion numerator) / (aFraccion denominator * self)! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:37:26'!
+multiplyToEntero:anEntero 
+	^self class with: anEntero integerValue * value
+	
+	! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:55:57'!
+multiplyToFraccion: aFraccion 
+	^self * aFraccion numerator / aFraccion denominator! !
+
 !Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:24:20'!
 subtractToEntero: anEntero 
 	^ self class with: anEntero integerValue - value.
@@ -507,11 +522,9 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:57:23'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 11:56:42'!
 * aMultiplier 
-	aMultiplier class = Fraccion
-	ifTrue: [^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)]
-	ifFalse: [^numerator * aMultiplier / denominator]! !
+	^aMultiplier multiplyToFraccion: self! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 11:19:25'!
 + anAdder 
@@ -522,11 +535,9 @@ Numero subclass: #Fraccion
 	
 	^aSubtrahend subtractToFraccion: self! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:59:24'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 12:10:17'!
 / aDivisor 
-	aDivisor class = Fraccion
-	ifTrue:[^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)]
-	ifFalse:[^(numerator) / (denominator * aDivisor)]! !
+	^aDivisor divideToFraccion: self! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
@@ -589,6 +600,28 @@ addToFraccion: aFraccion
 	newNumerator := (aFraccion denominator * numerator) + (aFraccion numerator * denominator).
 	newDenominator := aFraccion denominator * denominator.
 	^newNumerator / newDenominator! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 12:01:17'!
+divideToEntero: anEntero 
+	
+	^self class with: anEntero *self denominator over: self numerator! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 12:09:28'!
+divideToFraccion: aFraccion 
+	
+	^(aFraccion numerator * denominator) / (aFraccion denominator * numerator)! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:43:36'!
+multiplyToEntero: anEntero
+	| newNumerator newDenominator |
+	newNumerator := anEntero value * numerator value.
+	newDenominator := denominator value.
+	^self class with:newNumerator  over:newDenominator ! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:54:56'!
+multiplyToFraccion: aFraccion 
+	^(aFraccion numerator * numerator) / (aFraccion denominator * denominator)
+	! !
 
 !Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:23:19'!
 subtractToEntero: anEntero
