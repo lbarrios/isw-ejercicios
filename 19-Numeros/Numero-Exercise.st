@@ -353,7 +353,7 @@ canNotDivideByZeroErrorDescription
 
 !Numero class methodsFor: 'error descriptions' stamp: 'NR 4/8/2019 02:58:13'!
 invalidNumberTypeErrorDescription
-	^ 'Tipo de número inválido'! !
+	^ 'Tipo de nï¿½mero invï¿½lido'! !
 
 
 !classDefinition: #Entero category: #'Numero-Exercise'!
@@ -363,21 +363,26 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:54:02'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:55:57'!
 * aMultiplier 
-	aMultiplier multiplyToEntero: self! !
+	aMultiplier class  = Entero
+	ifTrue: [^self class with: value * aMultiplier integerValue]
+	ifFalse: [^self*aMultiplier numerator / aMultiplier denominator]
+	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:17:36'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 11:07:30'!
 + anAdder 
 	^anAdder addToEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:29:01'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 11:25:04'!
 - aSubtrahend 
 	^aSubtrahend subtractToEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:39:56'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:58:24'!
 / aDivisor 
-	^ aDivisor divideToEntero: self ! !
+	aDivisor class = Entero
+	ifTrue: [^Fraccion with: self over: aDivisor]
+	ifFalse: [^Fraccion with: self*aDivisor denominator over: aDivisor numerator]! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -435,6 +440,32 @@ printOn: aStream
 	aStream print: value ! !
 
 
+!Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:00:57'!
+addToEntero: anEntero
+	^self class with: anEntero integerValue + value
+	! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:18:35'!
+addToFraccion: aFraccion
+	| newDenominator newNumerator |
+	newNumerator := (aFraccion numerator + (aFraccion denominator * self)).
+	newDenominator := aFraccion denominator.
+	^newNumerator / newDenominator
+	! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:24:20'!
+subtractToEntero: anEntero 
+	^ self class with: anEntero integerValue - value.
+	! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:30:55'!
+subtractToFraccion: aFraccion 
+	| newDenominator newNumerator |
+	newNumerator := aFraccion numerator - (self * aFraccion denominator).
+	newDenominator := aFraccion denominator.
+	^newNumerator / newDenominator! !
+
+
 !Entero methodsFor: 'testing' stamp: 'NR 9/23/2018 22:17:55'!
 isNegative
 	
@@ -450,51 +481,6 @@ isZero
 	
 	^value = 0! !
 
-
-!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:13:05'!
-addToEntero: anEntero
-	^Entero with: (anEntero integerValue + value)! !
-
-!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:22:34'!
-addToFraction: aFraction
-
-| newNumerator newDenominator |
-
-newNumerator := aFraction numerator + (aFraction denominator * self).
-newDenominator := aFraction denominator * self.
-^newNumerator / newDenominator! !
-
-!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:45:06'!
-divideToEntero: anEntero
-^ Fraccion with: anEntero over: self! !
-
-!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:46:38'!
-divideToFraction: aFraction
-
-^(aFraction numerator) / (aFraction denominator * self)! !
-
-!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:54:30'!
-multiplyToEntero: anEntero
-
-^self class with: (anEntero integerValue * value)! !
-
-!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:52:22'!
-multiplyToFraction: aFraction
-
-^aFraction numerator * self / aFraction denominator! !
-
-!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:27:11'!
-subtractToEntero: anEntero
-
-^ self class with: anEntero integerValue - self integerValue.! !
-
-!Entero methodsFor: '????' stamp: 'LEB 9/12/2019 21:32:25'!
-subtractToFraction: aFraction
-
-| newNumerator |
-newNumerator := aFraction numerator - (self * aFraction denominator).
-^newNumerator / aFraction denominator! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Entero class' category: #'Numero-Exercise'!
@@ -503,7 +489,7 @@ Entero class
 
 !Entero class methodsFor: 'instance creation' stamp: 'NR 4/8/2019 02:57:57'!
 negativeFibonacciErrorDescription
-	^ ' Fibonacci no está definido aquí para Enteros Negativos'! !
+	^ ' Fibonacci no estï¿½ definido aquï¿½ para Enteros Negativos'! !
 
 !Entero class methodsFor: 'instance creation' stamp: 'HernanWilkinson 5/7/2016 22:53'!
 with: aValue 
@@ -521,23 +507,26 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:53:47'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:57:23'!
 * aMultiplier 
-	aMultiplier multiplyToFraction: self! !
+	aMultiplier class = Fraccion
+	ifTrue: [^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)]
+	ifFalse: [^numerator * aMultiplier / denominator]! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:23:27'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 11:19:25'!
 + anAdder 
+		^anAdder addToFraccion: self.! !
 
-^anAdder addToFraction: self! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:33:44'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'FL 9/15/2019 11:32:41'!
 - aSubtrahend 
 	
-	^ aSubtrahend subtractToFraction: self.! !
+	^aSubtrahend subtractToFraccion: self! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 21:48:40'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'LEB 9/12/2019 20:59:24'!
 / aDivisor 
-	^aDivisor divideToFraction: self! !
+	aDivisor class = Fraccion
+	ifTrue:[^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)]
+	ifFalse:[^(numerator) / (denominator * aDivisor)]! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
@@ -589,6 +578,32 @@ isZero
 	^false! !
 
 
+!Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:06:45'!
+addToEntero: anEntero
+
+	^self class with: anEntero*self denominator + self numerator over: self denominator! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:13:17'!
+addToFraccion: aFraccion 
+	| newNumerator newDenominator |
+	newNumerator := (aFraccion denominator * numerator) + (aFraccion numerator * denominator).
+	newDenominator := aFraccion denominator * denominator.
+	^newNumerator / newDenominator! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:23:19'!
+subtractToEntero: anEntero
+	^ anEntero * self denominator - self numerator / self denominator! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'FL 9/15/2019 11:29:08'!
+subtractToFraccion: aFraccion
+	
+	| newNumerator newDenominator |
+	newNumerator := (aFraccion numerator * denominator) - (aFraccion denominator * numerator ).
+	newDenominator := aFraccion denominator * denominator.
+	^newNumerator / newDenominator 
+! !
+
+
 !Fraccion methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:54:46'!
 printOn: aStream
 
@@ -596,52 +611,6 @@ printOn: aStream
 		print: numerator;
 		nextPut: $/;
 		print: denominator ! !
-
-
-!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:12:08'!
-addToEntero: anEntero
-^Fraccion with: anEntero*self denominator + self numerator over: self denominator! !
-
-!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:20:07'!
-addToFraction: aFraction
-| newNumerator newDenominator |
-
-newNumerator := (aFraction numerator * denominator) + (aFraction denominator * numerator).
-newDenominator := aFraction denominator * denominator.
-^newNumerator / newDenominator ! !
-
-!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:39:31'!
-divideToEntero: anEntero
-
-^ (anEntero * denominator) / numerator! !
-
-!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:47:22'!
-divideToFraction: aFraction
-
-^(aFraction numerator * denominator) / (aFraction denominator * numerator)! !
-
-!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:52:55'!
-multiplyToEntero: anEntero
-
-^(anEntero* numerator) / denominator! !
-
-!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:53:29'!
-multiplyToFraction: aFraction
-
-^(aFraction numerator * numerator) / (aFraction denominator * denominator)! !
-
-!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:30:14'!
-subtractToEntero: anEntero
-^ ((anEntero * denominator) - numerator) / denominator! !
-
-!Fraccion methodsFor: '????' stamp: 'LEB 9/12/2019 21:33:16'!
-subtractToFraction: aFraction
-
-| newNumerator newDenominator |
-
-newNumerator := (aFraction numerator * self denominator) - (aFraction denominator * self numerator).
-newDenominator := aFraction denominator * self denominator.
-^newNumerator / newDenominator! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
