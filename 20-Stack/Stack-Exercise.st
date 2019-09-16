@@ -168,23 +168,24 @@ size
 	^collection size! !
 
 
-!OOStack methodsFor: 'accessing' stamp: 'FL 9/16/2019 19:56:27'!
+!OOStack methodsFor: 'accessing' stamp: 'FL 9/16/2019 20:28:01'!
 top
 	self isEmpty ifTrue: [self error: self class stackEmptyErrorDescription].
-	^collection first ! !
+	^collection last ! !
 
 
-!OOStack methodsFor: 'adding' stamp: 'FL 9/16/2019 19:50:53'!
+!OOStack methodsFor: 'adding' stamp: 'FL 9/16/2019 20:28:15'!
 push: something
 
-	collection  addFirst: something! !
+	collection  addLast: something! !
 
 
-!OOStack methodsFor: 'removing' stamp: 'FL 9/16/2019 19:55:15'!
+!OOStack methodsFor: 'removing' stamp: 'FL 9/16/2019 20:30:56'!
 pop
-
-	self isEmpty ifTrue: [self error: self class stackEmptyErrorDescription].	
-	^collection removeFirst ! !
+	| top |
+	top _ self top.
+	collection removeLast.
+	^top! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
