@@ -147,10 +147,44 @@ TestCase subclass: #SentenceFinderByPrefixTest
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: ''
+	instanceVariableNames: 'collection'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!OOStack methodsFor: 'initialization' stamp: 'FL 9/16/2019 19:33:25'!
+initialize
+
+	collection  _ OrderedCollection new! !
+
+
+!OOStack methodsFor: 'evaluating' stamp: 'FL 9/16/2019 19:28:56'!
+isEmpty
+
+	^collection isEmpty ! !
+
+!OOStack methodsFor: 'evaluating' stamp: 'FL 9/16/2019 19:52:02'!
+size
+	^collection size! !
+
+
+!OOStack methodsFor: 'accessing' stamp: 'FL 9/16/2019 19:56:27'!
+top
+	self isEmpty ifTrue: [self error: self class stackEmptyErrorDescription].
+	^collection first ! !
+
+
+!OOStack methodsFor: 'adding' stamp: 'FL 9/16/2019 19:50:53'!
+push: something
+
+	collection  addFirst: something! !
+
+
+!OOStack methodsFor: 'removing' stamp: 'FL 9/16/2019 19:55:15'!
+pop
+
+	self isEmpty ifTrue: [self error: self class stackEmptyErrorDescription].	
+	^collection removeFirst ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
