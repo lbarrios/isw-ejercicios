@@ -163,14 +163,14 @@ isEmpty
 
 ^size=0.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'LEB 9/16/2019 20:20:05'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LEB 9/16/2019 20:29:32'!
 pop
 
-	[| value | 
-	value := top value.
-	size := size -1.
-	top := top nextNode.
-	^value.] on: Error do: [^self error: OOStack stackEmptyErrorDescription.]! !
+| value | 
+value := top value.
+size := size -1.
+top := top nextNode.
+^value.! !
 
 !OOStack methodsFor: 'as yet unclassified' stamp: 'LEB 9/16/2019 20:05:22'!
 push: aThing
@@ -186,10 +186,10 @@ size
 
 ^1! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'LEB 9/16/2019 20:25:57'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'LEB 9/16/2019 20:29:40'!
 top
 
-[^top value] on: Error do: [^self error: OOStack stackEmptyErrorDescription.]
+^top value
 	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -259,9 +259,9 @@ OOStackNode subclass: #OOStackNodeWithoutValue
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStackNodeWithoutValue methodsFor: 'as yet unclassified' stamp: 'LEB 9/16/2019 20:25:44'!
+!OOStackNodeWithoutValue methodsFor: 'as yet unclassified' stamp: 'LEB 9/16/2019 20:29:23'!
 value
-^self error.! !
+^self error: OOStack stackEmptyErrorDescription.! !
 
 
 !classDefinition: #SentenceFinderByPrefix category: #'Stack-Exercise'!
