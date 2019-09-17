@@ -139,10 +139,125 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 
 !classDefinition: #SentenceFinderByPrefixTest category: #'Stack-Exercise'!
 TestCase subclass: #SentenceFinderByPrefixTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'sentenceFinderByPrefix'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 10:48:35'!
+setUp
+
+	sentenceFinderByPrefix _ SentenceFinderByPrefix new.
+	
+	! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 10:59:16'!
+test01FindShouldReturnNoMatchesWhenCreated
+	|  prefix |
+	
+	prefix _ 'Hello'. 
+	
+	self assert: (sentenceFinderByPrefix find: prefix ) isEmpty.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 11:01:21'!
+test02CanNotUseEmptyPrefix
+	|  prefix |
+	
+	prefix _ ''. 
+	
+	self
+		should: [ sentenceFinderByPrefix find: prefix ]
+		raise: Error - MessageNotUnderstood 
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = SentenceFinderByPrefix emptyPrefixErrorDescription ]! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 11:07:51'!
+test03CanNotUsePrefixWithWhiteSpace
+	|  prefix |
+	
+	prefix _ 'Hola mundo'. 
+	
+	self
+		should: [ sentenceFinderByPrefix find: prefix ]
+		raise: Error - MessageNotUnderstood 
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = SentenceFinderByPrefix prefixWithWhiteSpaceErrorDescription ]! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 11:30:29'!
+test04OneSentenceOnStackThatMatch
+	|  prefix sentence matches |
+	
+	prefix _ 'Hell'. 
+	sentence _ 'Hello'.
+	
+	sentenceFinderByPrefix addSentence: sentence.
+	matches _ sentenceFinderByPrefix find: prefix .
+	
+	self assert: matches size = 1.
+	self assert: matches first = sentence .! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 11:31:14'!
+test05OneSentenceOnStackThatDoesNotMatch
+	|  prefix sentence matches |
+	
+	prefix _ 'HELL'. 
+	sentence _ 'Hello'.
+	
+	sentenceFinderByPrefix addSentence: sentence.
+	matches _ sentenceFinderByPrefix find: prefix .
+	
+	self assert: matches isEmpty.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 11:36:16'!
+test06ManySentencesOnStackWithOneMatch
+	|  prefix sentences matches |
+	
+	prefix _ 'Wint'. 
+	sentences _ #('winter is coming' 'winning is everything' 'The winds of Winter' 'Winter is here').
+	
+	sentenceFinderByPrefix addSentences: sentences.
+	matches _ sentenceFinderByPrefix find: prefix .
+	
+	self assert: matches size = 1.
+	self assert: matches first = (sentences at: 4) .! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 11:37:24'!
+test07ManySentencesOnStackWithNoMatches
+	|  prefix sentences matches |
+	
+	prefix _ 'Hello'. 
+	sentences _ #('winter is coming' 'winning is everything' 'The winds of Winter' 'Winter is here').
+	
+	sentenceFinderByPrefix addSentences: sentences.
+	matches _ sentenceFinderByPrefix find: prefix .
+	
+	self assert: matches isEmpty.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 12:05:08'!
+test08ManySentencesOnStackWithMatches
+	|  prefix sentences matches |
+	
+	prefix _ 'win'. 
+	sentences _ #('winter is coming' 'winning is everything' 'The winds of Winter' 'Winter is here').
+	
+	sentenceFinderByPrefix addSentences: sentences.
+	matches _ sentenceFinderByPrefix find: prefix .
+	
+	self assert: matches size = 2.
+	self assert: matches first = (sentences at: 2) .
+	self assert: (matches at: 2) = (sentences at: 1) .! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'FL 9/17/2019 12:11:34'!
+test09FindShouldReturnNoMatchesAfterFind
+	|  prefix sentences |
+	
+	prefix _ 'win'. 
+	sentences _ #('winter is coming' 'winning is everything' 'The winds of Winter' 'Winter is here').
+	
+	sentenceFinderByPrefix addSentences: sentences.
+	sentenceFinderByPrefix find: prefix .
+	
+	self assert: (sentenceFinderByPrefix find: prefix) isEmpty.! !
 
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
@@ -262,7 +377,59 @@ value: aValue over: anOOStackElement
 
 !classDefinition: #SentenceFinderByPrefix category: #'Stack-Exercise'!
 Object subclass: #SentenceFinderByPrefix
-	instanceVariableNames: ''
+	instanceVariableNames: 'sentencesStack'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!SentenceFinderByPrefix methodsFor: 'initialization' stamp: 'FL 9/17/2019 10:23:21'!
+initialize
+	sentencesStack _ OOStack new.! !
+
+
+!SentenceFinderByPrefix methodsFor: 'adding' stamp: 'FL 9/17/2019 10:26:53'!
+addSentence: aSentence
+	sentencesStack push:aSentence .! !
+
+!SentenceFinderByPrefix methodsFor: 'adding' stamp: 'FL 9/17/2019 11:16:23'!
+addSentences: sentencesCollection
+	sentencesCollection do: [:sentence | self addSentence: sentence ]! !
+
+
+!SentenceFinderByPrefix methodsFor: 'evaluating' stamp: 'FL 9/17/2019 12:08:33'!
+checkPrefix: aPrefix
+	aPrefix isEmpty ifTrue: [self error: self class emptyPrefixErrorDescription ].
+	(aPrefix allSatisfy: [:c | c ~= 32 asCharacter]) ifFalse: [self error: self class prefixWithWhiteSpaceErrorDescription ].! !
+
+!SentenceFinderByPrefix methodsFor: 'evaluating' stamp: 'FL 9/17/2019 11:46:02'!
+find: aPrefix
+	| sentences |
+	self checkPrefix: aPrefix.
+	sentences _ self obtainSentencesFromStack .
+	^sentences select: [:sentence | self string:aPrefix  isPrefixOf:sentence ].! !
+
+!SentenceFinderByPrefix methodsFor: 'evaluating' stamp: 'FL 9/17/2019 12:02:07'!
+string: aString isPrefixOf: anotherString
+	^aString = (anotherString copyFrom: 1 to: aString size).! !
+
+
+!SentenceFinderByPrefix methodsFor: 'accessing' stamp: 'FL 9/17/2019 11:24:30'!
+obtainSentencesFromStack
+	| sentences |
+	sentences _ OrderedCollection new.
+	[sentencesStack isEmpty ] whileFalse: [sentences addLast: sentencesStack pop ].
+	^sentences ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'SentenceFinderByPrefix class' category: #'Stack-Exercise'!
+SentenceFinderByPrefix class
+	instanceVariableNames: ''!
+
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'FL 9/17/2019 11:05:12'!
+emptyPrefixErrorDescription
+	^'Prefix is empty'! !
+
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'FL 9/17/2019 11:05:34'!
+prefixWithWhiteSpaceErrorDescription
+	^'Prefix has white space'! !
