@@ -147,45 +147,48 @@ TestCase subclass: #SentenceFinderByPrefixTest
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'collection'
+	instanceVariableNames: 'collection top size'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'initialization' stamp: 'FL 9/16/2019 19:33:25'!
+!OOStack methodsFor: 'initialization' stamp: 'FL 9/17/2019 09:40:25'!
 initialize
 
-	collection  _ OrderedCollection new! !
+	top _ OOStackBase new.
+	size _ 0.! !
 
 
-!OOStack methodsFor: 'evaluating' stamp: 'FL 9/16/2019 19:28:56'!
+!OOStack methodsFor: 'evaluating' stamp: 'FL 9/17/2019 09:51:15'!
 isEmpty
 
-	^collection isEmpty ! !
+	^size = 0.! !
 
-!OOStack methodsFor: 'evaluating' stamp: 'FL 9/16/2019 19:52:02'!
+!OOStack methodsFor: 'evaluating' stamp: 'FL 9/17/2019 09:51:24'!
 size
-	^collection size! !
+	^size! !
 
 
-!OOStack methodsFor: 'accessing' stamp: 'FL 9/16/2019 20:28:01'!
+!OOStack methodsFor: 'accessing' stamp: 'FL 9/17/2019 10:05:03'!
 top
-	self isEmpty ifTrue: [self error: self class stackEmptyErrorDescription].
-	^collection last ! !
+	^top valueFromStack: self! !
 
 
-!OOStack methodsFor: 'adding' stamp: 'FL 9/16/2019 20:28:15'!
+!OOStack methodsFor: 'adding' stamp: 'FL 9/17/2019 09:55:31'!
 push: something
+	| newTop|
+	newTop _ OOStackableElement value: something over: top.
+	size _ size + 1.
+	top _ newTop .! !
 
-	collection  addLast: something! !
 
-
-!OOStack methodsFor: 'removing' stamp: 'FL 9/16/2019 20:30:56'!
+!OOStack methodsFor: 'removing' stamp: 'FL 9/17/2019 10:06:22'!
 pop
-	| top |
-	top _ self top.
-	collection removeLast.
-	^top! !
+	| topValue |
+	topValue _ self top.
+	size _ size - 1.
+	top _ top belowElement .
+	^topValue! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -197,6 +200,64 @@ OOStack class
 stackEmptyErrorDescription
 	
 	^ 'Stack is empty'! !
+
+
+!classDefinition: #OOStackElement category: #'Stack-Exercise'!
+Object subclass: #OOStackElement
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!OOStackElement methodsFor: 'accessing' stamp: 'FL 9/17/2019 10:00:22'!
+valueFromStack: anOOStack
+	^self subclassResponsibility ! !
+
+
+!classDefinition: #OOStackBase category: #'Stack-Exercise'!
+OOStackElement subclass: #OOStackBase
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!OOStackBase methodsFor: 'accessing' stamp: 'FL 9/17/2019 10:03:26'!
+valueFromStack: anOOStack
+	^anOOStack error: anOOStack class stackEmptyErrorDescription. ! !
+
+
+!classDefinition: #OOStackableElement category: #'Stack-Exercise'!
+OOStackElement subclass: #OOStackableElement
+	instanceVariableNames: 'value belowElement'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!OOStackableElement methodsFor: 'initialization' stamp: 'FL 9/17/2019 09:47:08'!
+value: aValue over: anOOStackElement
+	value _ aValue.
+	belowElement _ anOOStackElement .! !
+
+
+!OOStackableElement methodsFor: 'accessing' stamp: 'FL 9/17/2019 09:57:55'!
+belowElement
+
+	^belowElement ! !
+
+!OOStackableElement methodsFor: 'accessing' stamp: 'FL 9/17/2019 10:01:32'!
+valueFromStack: anOOStack
+
+	^value! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'OOStackableElement class' category: #'Stack-Exercise'!
+OOStackableElement class
+	instanceVariableNames: ''!
+
+!OOStackableElement class methodsFor: 'instance creation' stamp: 'FL 9/17/2019 09:48:55'!
+value: aValue over: anOOStackElement
+	^self new value: aValue over: anOOStackElement.! !
 
 
 !classDefinition: #SentenceFinderByPrefix category: #'Stack-Exercise'!
