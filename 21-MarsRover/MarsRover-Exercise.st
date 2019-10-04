@@ -16,40 +16,40 @@ mr do: ''.
 self assert: 0@0 equals: mr position.
 self assert: #North equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'Alguien 1/1/0001 01:01'!
+!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:13:33'!
 test02MovingForwardToADirectionIncrementsOnePositionOnThatDirection
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: #North.
 
-mr doAction: 'f'.
+mr do: 'f'.
 self assert: 0@1 equals: mr position.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'Alguien 1/1/0001 01:01'!
+!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:13:37'!
 test03MovingBackwardToADirectionDecrementsOnePositionOnThatDirection
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: #North.
 
-mr doAction: 'b'.
+mr do: 'b'.
 self assert: 0@-1 equals: mr position.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'Alguien 1/1/0001 01:01'!
+!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:13:41'!
 test04RotatingTowardsRightFromADirectionChangesTheDirectionToTheRight
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: #North.
 
-mr doAction: 'r'.
+mr do: 'r'.
 self assert: #East equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:03:20'!
+!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:13:45'!
 test05RotatingTowardsLeftFromADirectionChangesTheDirectionToTheLeft
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: #North.
 
-mr doAction: 'l'.
+mr do: 'l'.
 self assert: #West equals: mr direction.! !
 
 
@@ -64,9 +64,13 @@ Object subclass: #MarsRover
 direction
 	^direction! !
 
-!MarsRover methodsFor: 'AAAA' stamp: 'LEB 10/3/2019 21:10:54'!
-do: aString 
-! !
+!MarsRover methodsFor: 'AAAA' stamp: 'LEB 10/3/2019 21:19:05'!
+do: aCommand
+
+'f' = aCommand ifTrue: [ position := 0@1 + position].
+'b' = aCommand ifTrue: [ position := 0@-1 + position].
+'r' = aCommand ifTrue: [ direction := #East ].
+'l' = aCommand ifTrue: [ direction := #West ].! !
 
 !MarsRover methodsFor: 'AAAA' stamp: 'LEB 10/3/2019 21:07:40'!
 initializeAt: aPosition directedTo: aDirection 
