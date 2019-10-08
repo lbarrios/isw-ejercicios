@@ -120,9 +120,10 @@ Object subclass: #CardinalPoints
 	poolDictionaries: ''
 	category: 'MarsRover-Exercise'!
 
-!CardinalPoints methodsFor: 'as yet unclassified' stamp: 'LEB 10/7/2019 21:50:15'!
-= aCardinalPoint
-^self class = aCardinalPoint class! !
+!CardinalPoints methodsFor: 'as yet unclassified' stamp: 'FL 10/8/2019 09:21:56'!
+moveBackward: aMarsRover
+	
+	self subclassResponsibility ! !
 
 !CardinalPoints methodsFor: 'as yet unclassified' stamp: 'LEB 10/7/2019 21:38:34'!
 moveForward: aaaaa
@@ -144,6 +145,23 @@ aMarsRover moveBackwardEast.! !
 moveForward: aMarsRover
 aMarsRover moveForwardEast.! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CardinalPointEast class' category: #'MarsRover-Exercise'!
+CardinalPointEast class
+	instanceVariableNames: 'uniqueInstance'!
+
+!CardinalPointEast class methodsFor: 'class initialization' stamp: 'FL 10/8/2019 09:20:28'!
+initialize
+
+	uniqueInstance := self basicNew! !
+
+
+!CardinalPointEast class methodsFor: 'instance creation' stamp: 'FL 10/8/2019 09:21:10'!
+new
+
+	^uniqueInstance! !
+
 
 !classDefinition: #CardinalPointNorth category: #'MarsRover-Exercise'!
 CardinalPoints subclass: #CardinalPointNorth
@@ -159,6 +177,23 @@ aMarsRover moveBackwardNorth.! !
 !CardinalPointNorth methodsFor: 'as yet unclassified' stamp: 'LEB 10/7/2019 21:39:26'!
 moveForward: aMarsRover
 aMarsRover moveForwardNorth.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CardinalPointNorth class' category: #'MarsRover-Exercise'!
+CardinalPointNorth class
+	instanceVariableNames: 'uniqueInstance'!
+
+!CardinalPointNorth class methodsFor: 'class initialization' stamp: 'FL 10/8/2019 09:22:33'!
+initialize
+
+	uniqueInstance := self basicNew! !
+
+
+!CardinalPointNorth class methodsFor: 'instance creation' stamp: 'FL 10/8/2019 09:23:27'!
+new
+
+	^uniqueInstance! !
 
 
 !classDefinition: #CardinalPointSouth category: #'MarsRover-Exercise'!
@@ -176,6 +211,23 @@ aMarsRover moveBackwardSouth.! !
 moveForward: aMarsRover
 aMarsRover moveForwardSouth.! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CardinalPointSouth class' category: #'MarsRover-Exercise'!
+CardinalPointSouth class
+	instanceVariableNames: 'uniqueInstance'!
+
+!CardinalPointSouth class methodsFor: 'class initialization' stamp: 'FL 10/8/2019 09:22:43'!
+initialize
+
+	uniqueInstance := self basicNew! !
+
+
+!CardinalPointSouth class methodsFor: 'instance creation' stamp: 'FL 10/8/2019 09:23:35'!
+new
+
+	^uniqueInstance! !
+
 
 !classDefinition: #CardinalPointWest category: #'MarsRover-Exercise'!
 CardinalPoints subclass: #CardinalPointWest
@@ -191,6 +243,23 @@ aMarsRover moveBackwardWest.! !
 !CardinalPointWest methodsFor: 'as yet unclassified' stamp: 'LEB 10/7/2019 21:39:47'!
 moveForward: aMarsRover
 aMarsRover moveForwardWest.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CardinalPointWest class' category: #'MarsRover-Exercise'!
+CardinalPointWest class
+	instanceVariableNames: 'uniqueInstance'!
+
+!CardinalPointWest class methodsFor: 'class initialization' stamp: 'FL 10/8/2019 09:22:56'!
+initialize
+
+	uniqueInstance := self basicNew! !
+
+
+!CardinalPointWest class methodsFor: 'instance creation' stamp: 'FL 10/8/2019 09:23:45'!
+new
+
+	^uniqueInstance! !
 
 
 !classDefinition: #MarsRover category: #'MarsRover-Exercise'!
@@ -268,3 +337,8 @@ MarsRover class
 !MarsRover class methodsFor: 'XXX' stamp: 'LEB 10/3/2019 21:09:11'!
 at: XXXX directedTo: YYYY
 	^ self new initializeAt: XXXX directedTo: YYYY! !
+
+CardinalPointEast initialize!
+CardinalPointNorth initialize!
+CardinalPointSouth initialize!
+CardinalPointWest initialize!
