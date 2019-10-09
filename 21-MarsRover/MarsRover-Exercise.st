@@ -149,6 +149,24 @@ self assert: mr_e isOver: 0@0 lookingAt: CardinalPointNorth new.
 self assert: mr_s isOver: 0@0 lookingAt: CardinalPointEast new.
 self assert: mr_n isOver: 0@0 lookingAt: CardinalPointWest new.! !
 
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:55:30'!
+test12MoreThanOneInstruccionAreProcessedSequentially
+| mr |
+
+mr := MarsRover at: 0@0 directedTo: CardinalPointNorth new.
+
+mr do: 'frblfl'.
+
+self assert: mr isOver: -1@2 lookingAt: CardinalPointWest new.! !
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 20:34:28'!
+test13CannotProcessUndefinedCommand
+| mr |
+
+mr := MarsRover at: 0@0 directedTo: CardinalPointNorth new.
+
+self should: [mr do: 'x'.]  raise: Error  withMessageText: MarsRover undefinedCommand.! !
+
 
 !classDefinition: #CardinalPoints category: #'MarsRover-Exercise'!
 Object subclass: #CardinalPoints
@@ -353,21 +371,19 @@ position := aPosition.
 direction := aDirection.! !
 
 
-!MarsRover methodsFor: 'operating' stamp: 'FL 10/9/2019 19:39:50'!
-do: aCommand
+!MarsRover methodsFor: 'operating' stamp: 'FL 10/9/2019 19:58:51'!
+do: aCommandSet
 
-'f' = aCommand ifTrue: [
-	direction moveForward: self.
-].
-'b' = aCommand ifTrue: [ 
-	direction moveBackward: self.
-].
-'r' = aCommand ifTrue: [ 
-	direction moveRight: self.
-].
-'l' = aCommand ifTrue: [ 
-	direction moveLeft: self.
-].! !
+aCommandSet do: [:c | self processCommand: c ].! !
+
+!MarsRover methodsFor: 'operating' stamp: 'FL 10/9/2019 20:36:39'!
+processCommand: aCommand
+
+| commandMethod |
+
+commandMethod _ self class commandsDictionary at: aCommand ifAbsent: [self error: MarsRover undefinedCommand.].
+
+direction perform: commandMethod with: self.! !
 
 
 !MarsRover methodsFor: 'moving' stamp: 'LEB 10/7/2019 21:45:06'!
@@ -455,13 +471,32 @@ position
 
 !classDefinition: 'MarsRover class' category: #'MarsRover-Exercise'!
 MarsRover class
-	instanceVariableNames: ''!
+	instanceVariableNames: 'commandsDictionary'!
 
-!MarsRover class methodsFor: 'XXX' stamp: 'LEB 10/3/2019 21:09:11'!
-at: XXXX directedTo: YYYY
-	^ self new initializeAt: XXXX directedTo: YYYY! !
+!MarsRover class methodsFor: 'instance creation' stamp: 'FL 10/9/2019 20:37:32'!
+at: aPosition directedTo: aDirection
+	^ self new initializeAt: aPosition directedTo: aDirection! !
+
+
+!MarsRover class methodsFor: 'error description' stamp: 'FL 10/9/2019 20:05:26'!
+undefinedCommand
+
+	^'Cannot process given command'! !
+
+
+!MarsRover class methodsFor: 'class variables' stamp: 'FL 10/9/2019 20:26:56'!
+commandsDictionary
+	^commandsDictionary! !
+
+
+!MarsRover class methodsFor: 'class initialization' stamp: 'FL 10/9/2019 20:22:04'!
+initialize
+
+	commandsDictionary _ Dictionary newFromPairs: {$f . #moveForward: .$b . #moveBackward: . $r . #moveRight: . $l . #moveLeft:}.
+	! !
 
 CardinalPointEast initialize!
 CardinalPointNorth initialize!
 CardinalPointSouth initialize!
 CardinalPointWest initialize!
+MarsRover initialize!
