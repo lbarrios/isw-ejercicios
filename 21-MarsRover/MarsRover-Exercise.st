@@ -5,89 +5,95 @@ TestCase subclass: #MarsRoverTests
 	poolDictionaries: ''
 	category: 'MarsRover-Exercise'!
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:09:43'!
-test01EmptyInstructionsSamePosition
+!MarsRoverTests methodsFor: 'assertions' stamp: 'FL 10/9/2019 19:01:08'!
+assert: aMarsRover isOver: aPosition lookingAt: aCardinalPoint
+
+self assert: aPosition equals: aMarsRover position.
+self assert: aCardinalPoint equals: aMarsRover direction.! !
+
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:11:15'!
+test01EmptyInstructionsSamePositionAndDirection
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: CardinalPointNorth new.
 
 mr do: ''.
 
-self assert: 0@0 equals: mr position.
-self assert: CardinalPointNorth new equals: mr direction.! !
+self assert: mr isOver: 0@0 lookingAt: CardinalPointNorth new.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:25:44'!
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:10:06'!
 test02MovingForwardToTheNorthIncrementsOnePositionToTheNorth
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: CardinalPointNorth new.
 
 mr do: 'f'.
-self assert: 0@1 equals: mr position.
-self assert: CardinalPointNorth new equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:25:51'!
+self assert: mr isOver: 0@1 lookingAt: CardinalPointNorth new.! !
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:09:42'!
 test03MovingBackwardToTheNorthDecrementsOnePositionToTheNorth
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: CardinalPointNorth new.
 
 mr do: 'b'.
-self assert: 0@-1 equals: mr position.
-self assert: CardinalPointNorth new equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:26:04'!
+self assert: mr isOver: 0@-1 lookingAt: CardinalPointNorth new.! !
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:09:23'!
 test04RotatingTowardsRightFromTheNorthChangesTheDirectionEast
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: CardinalPointNorth new.
 
 mr do: 'r'.
-self assert: 0@0 equals: mr position.
-self assert: CardinalPointEast new equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:26:08'!
+self assert: mr isOver: 0@0 lookingAt: CardinalPointEast new.! !
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:09:07'!
 test05RotatingTowardsLeftFromTheNorthChangesTheDirectionToWest
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: CardinalPointNorth new.
 
 mr do: 'l'.
-self assert: 0@0 equals: mr position.
-self assert: CardinalPointWest new equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:28:11'!
+self assert: mr isOver: 0@0 lookingAt: CardinalPointWest new.! !
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:08:42'!
 test06MovingForwardToWestIncrementsOnePositionToWest
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: CardinalPointWest new.
 
 mr do: 'f'.
-self assert: -1@0 equals: mr position.
-self assert: CardinalPointWest new equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:29:07'!
+self assert: mr isOver: -1@0 lookingAt: CardinalPointWest new.! !
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:08:00'!
 test07MovingForwardToSouthIncrementsOnePositionToSouth
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: CardinalPointSouth new.
 
 mr do: 'f'.
-self assert: 0@-1 equals: mr position.
-self assert: CardinalPointSouth new equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/3/2019 21:30:44'!
+self assert: mr isOver: 0@-1 lookingAt: CardinalPointSouth new.! !
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:07:34'!
 test08MovingForwardToEastIncrementsOnePositionToEast
 | mr |
 
 mr := MarsRover at: 0@0 directedTo: CardinalPointEast new.
 
 mr do: 'f'.
-self assert: 1@0 equals: mr position.
-self assert: CardinalPointEast new equals: mr direction.! !
 
-!MarsRoverTests methodsFor: 'test' stamp: 'LEB 10/7/2019 21:30:07'!
-test09MovingForwardToEastIncrementsOnePositionToEast
+self assert: mr isOver: 1@0 lookingAt: CardinalPointEast new.! !
+
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:06:07'!
+test09MovingBackwardDecrementsOnePositionToPointingDirection
 | mr_w mr_e mr_n mr_s |
 
 mr_w := MarsRover at: 0@0 directedTo: CardinalPointWest new.
@@ -100,17 +106,10 @@ mr_e do: 'b'.
 mr_s do: 'b'.
 mr_n do: 'b'.
 
-self assert: 1@0 equals: mr_w position.
-self assert: CardinalPointWest new equals: mr_w direction.
-
-self assert: -1@0 equals: mr_e position.
-self assert: CardinalPointEast new equals: mr_e direction.
-
-self assert: 0@1 equals: mr_s position.
-self assert: CardinalPointSouth new equals: mr_s direction.
-
-self assert: 0@-1 equals: mr_n position.
-self assert: CardinalPointNorth new equals: mr_n direction.! !
+self assert: mr_w isOver: 1@0 lookingAt: CardinalPointWest new.
+self assert: mr_e isOver: -1@0 lookingAt: CardinalPointEast new.
+self assert: mr_s isOver: 0@1 lookingAt: CardinalPointSouth new.
+self assert: mr_n isOver: 0@-1 lookingAt: CardinalPointNorth new.! !
 
 
 !classDefinition: #CardinalPoints category: #'MarsRover-Exercise'!
