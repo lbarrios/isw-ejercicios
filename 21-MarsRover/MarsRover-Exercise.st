@@ -111,6 +111,25 @@ self assert: mr_e isOver: -1@0 lookingAt: CardinalPointEast new.
 self assert: mr_s isOver: 0@1 lookingAt: CardinalPointSouth new.
 self assert: mr_n isOver: 0@-1 lookingAt: CardinalPointNorth new.! !
 
+!MarsRoverTests methodsFor: 'test' stamp: 'FL 10/9/2019 19:16:33'!
+test10RotatingTowardsRightChangesDirectionToTheRightOne
+| mr_w mr_e mr_n mr_s |
+
+mr_w := MarsRover at: 0@0 directedTo: CardinalPointWest new.
+mr_e := MarsRover at: 0@0 directedTo: CardinalPointEast new.
+mr_s := MarsRover at: 0@0 directedTo: CardinalPointSouth new.
+mr_n := MarsRover at: 0@0 directedTo: CardinalPointNorth new.
+
+mr_w do: 'r'.
+mr_e do: 'r'.
+mr_s do: 'r'.
+mr_n do: 'r'.
+
+self assert: mr_w isOver: 0@0 lookingAt: CardinalPointNorth new.
+self assert: mr_e isOver: 0@0 lookingAt: CardinalPointSouth new.
+self assert: mr_s isOver: 0@0 lookingAt: CardinalPointWest new.
+self assert: mr_n isOver: 0@0 lookingAt: CardinalPointEast new.! !
+
 
 !classDefinition: #CardinalPoints category: #'MarsRover-Exercise'!
 Object subclass: #CardinalPoints
@@ -124,8 +143,12 @@ moveBackward: aMarsRover
 	
 	self subclassResponsibility ! !
 
-!CardinalPoints methodsFor: 'as yet unclassified' stamp: 'LEB 10/7/2019 21:38:34'!
-moveForward: aaaaa
+!CardinalPoints methodsFor: 'as yet unclassified' stamp: 'FL 10/9/2019 19:20:25'!
+moveForward: aMarsRover
+self subclassResponsibility.! !
+
+!CardinalPoints methodsFor: 'as yet unclassified' stamp: 'FL 10/9/2019 19:22:20'!
+moveRight: aMarsRover
 self subclassResponsibility.! !
 
 
@@ -143,6 +166,10 @@ aMarsRover moveBackwardEast.! !
 !CardinalPointEast methodsFor: 'as yet unclassified' stamp: 'LEB 10/7/2019 21:39:04'!
 moveForward: aMarsRover
 aMarsRover moveForwardEast.! !
+
+!CardinalPointEast methodsFor: 'as yet unclassified' stamp: 'FL 10/9/2019 19:22:52'!
+moveRight: aMarsRover
+aMarsRover moveRightEast.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -177,6 +204,10 @@ aMarsRover moveBackwardNorth.! !
 moveForward: aMarsRover
 aMarsRover moveForwardNorth.! !
 
+!CardinalPointNorth methodsFor: 'as yet unclassified' stamp: 'FL 10/9/2019 19:23:19'!
+moveRight: aMarsRover
+aMarsRover moveRightNorth.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'CardinalPointNorth class' category: #'MarsRover-Exercise'!
@@ -209,6 +240,10 @@ aMarsRover moveBackwardSouth.! !
 !CardinalPointSouth methodsFor: 'as yet unclassified' stamp: 'LEB 10/7/2019 21:39:37'!
 moveForward: aMarsRover
 aMarsRover moveForwardSouth.! !
+
+!CardinalPointSouth methodsFor: 'as yet unclassified' stamp: 'FL 10/9/2019 19:24:00'!
+moveRight: aMarsRover
+aMarsRover moveRightSouth.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -243,6 +278,10 @@ aMarsRover moveBackwardWest.! !
 moveForward: aMarsRover
 aMarsRover moveForwardWest.! !
 
+!CardinalPointWest methodsFor: 'as yet unclassified' stamp: 'FL 10/9/2019 19:24:24'!
+moveRight: aMarsRover
+aMarsRover moveRightWest.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'CardinalPointWest class' category: #'MarsRover-Exercise'!
@@ -268,11 +307,14 @@ Object subclass: #MarsRover
 	poolDictionaries: ''
 	category: 'MarsRover-Exercise'!
 
-!MarsRover methodsFor: 'AAAA' stamp: 'LEB 10/3/2019 21:11:43'!
-direction
-	^direction! !
+!MarsRover methodsFor: 'initialization' stamp: 'LEB 10/3/2019 21:07:40'!
+initializeAt: aPosition directedTo: aDirection 
 
-!MarsRover methodsFor: 'AAAA' stamp: 'LEB 10/7/2019 21:54:52'!
+position := aPosition.
+direction := aDirection.! !
+
+
+!MarsRover methodsFor: 'operating' stamp: 'FL 10/9/2019 19:26:43'!
 do: aCommand
 
 'f' = aCommand ifTrue: [
@@ -281,18 +323,10 @@ do: aCommand
 'b' = aCommand ifTrue: [ 
 	direction moveBackward: self.
 ].
-'r' = aCommand ifTrue: [ direction := CardinalPointEast new ].
+'r' = aCommand ifTrue: [ 
+	direction moveRight: self.
+].
 'l' = aCommand ifTrue: [ direction := CardinalPointWest new ].! !
-
-!MarsRover methodsFor: 'AAAA' stamp: 'LEB 10/3/2019 21:07:40'!
-initializeAt: aPosition directedTo: aDirection 
-
-position := aPosition.
-direction := aDirection.! !
-
-!MarsRover methodsFor: 'AAAA' stamp: 'LEB 10/3/2019 21:11:13'!
-position
-	^position! !
 
 
 !MarsRover methodsFor: 'moving' stamp: 'LEB 10/7/2019 21:45:06'!
@@ -326,6 +360,35 @@ position := 0@-1 + position.! !
 !MarsRover methodsFor: 'moving' stamp: 'LEB 10/7/2019 21:45:44'!
 moveForwardWest
 position := -1@0 + position.! !
+
+!MarsRover methodsFor: 'moving' stamp: 'FL 10/9/2019 19:25:48'!
+moveRightEast
+
+	direction := CardinalPointSouth new.! !
+
+!MarsRover methodsFor: 'moving' stamp: 'FL 10/9/2019 19:25:25'!
+moveRightNorth
+
+	direction := CardinalPointEast new.! !
+
+!MarsRover methodsFor: 'moving' stamp: 'FL 10/9/2019 19:26:12'!
+moveRightSouth
+
+	direction := CardinalPointWest new.! !
+
+!MarsRover methodsFor: 'moving' stamp: 'FL 10/9/2019 19:26:02'!
+moveRightWest
+
+	direction := CardinalPointNorth new.! !
+
+
+!MarsRover methodsFor: 'accessing' stamp: 'LEB 10/3/2019 21:11:43'!
+direction
+	^direction! !
+
+!MarsRover methodsFor: 'accessing' stamp: 'LEB 10/3/2019 21:11:13'!
+position
+	^position! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
