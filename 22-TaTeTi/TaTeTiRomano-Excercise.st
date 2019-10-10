@@ -130,8 +130,18 @@ ttt moveStoneUp: 1@1.
 
 self should: [ttt putStoneAt: 0@2.] raise: Error withMessageText: TTT cannotAddStoneWhenPlayerHasMaximumStones.! !
 
-!TTTEsts methodsFor: 'testing' stamp: 'LEB 10/10/2019 20:29:05'!
-test20XMovingDownAStoneMovesItDown
+!TTTEsts methodsFor: 'testing' stamp: 'LEB 10/10/2019 20:39:56'!
+test20XMovingUpAStoneMovesItUp
+
+| ttt |
+
+ttt := self filledTTT.
+ttt moveStoneUp: 1@1.
+
+self assert: (ttt includesStoneFromXAt: 1@2).! !
+
+!TTTEsts methodsFor: 'testing' stamp: 'LEB 10/10/2019 20:39:52'!
+test21XMovingDownAStoneMovesItDown
 
 | ttt |
 
@@ -142,15 +152,29 @@ ttt moveStoneDown: 1@2.
 
 self assert: (ttt includesStoneFromXAt: 1@1).! !
 
-!TTTEsts methodsFor: 'testing' stamp: 'LEB 10/10/2019 20:31:10'!
-test21XMovingUpAStoneMovesItUp
+!TTTEsts methodsFor: 'testing' stamp: 'LEB 10/10/2019 20:40:54'!
+test22XMovingLeftAStoneMovesItLeft
 
 | ttt |
 
 ttt := self filledTTT.
 ttt moveStoneUp: 1@1.
+ttt moveStoneUp: 2@1.
+ttt moveStoneLeft: 1@2.
 
-self assert: (ttt includesStoneFromXAt: 1@2).! !
+self assert: (ttt includesStoneFromXAt: 0@2).! !
+
+!TTTEsts methodsFor: 'testing' stamp: 'LEB 10/10/2019 20:42:06'!
+test23XMovingRightAStoneMovesItRight
+
+| ttt |
+
+ttt := self filledTTT.
+ttt moveStoneUp: 1@1.
+ttt moveStoneUp: 0@1.
+ttt moveStoneRight: 1@2.
+
+self assert: (ttt includesStoneFromXAt: 2@2).! !
 
 
 !TTTEsts methodsFor: 'setUp/tearDown' stamp: 'LEB 10/10/2019 18:53:34'!
@@ -240,6 +264,20 @@ moveStoneDown: aStonePosition
 self putStoneAt: aStonePosition + (0@-1).
 ! !
 
+!TTT methodsFor: 'movingStones' stamp: 'LEB 10/10/2019 20:41:35'!
+moveStoneLeft: aStonePosition
+
+	(turnX ifTrue: [xStones] ifFalse: [yStones]) remove: aStonePosition.
+	self putStoneAt: aStonePosition + (-1@0).
+! !
+
+!TTT methodsFor: 'movingStones' stamp: 'LEB 10/10/2019 20:42:30'!
+moveStoneRight: aStonePosition
+
+	(turnX ifTrue: [xStones] ifFalse: [yStones]) remove: aStonePosition.
+	self putStoneAt: aStonePosition + (1@0).
+! !
+
 !TTT methodsFor: 'movingStones' stamp: 'LEB 10/10/2019 20:29:58'!
 moveStoneUp: aStonePosition
 
@@ -247,10 +285,6 @@ moveStoneUp: aStonePosition
 self putStoneAt: aStonePosition + (0@1).
 ! !
 
-
-!TTT methodsFor: 'error handling' stamp: 'LEB 10/10/2019 20:29:14'!
-error: aString 
-	self shouldBeImplemented.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
