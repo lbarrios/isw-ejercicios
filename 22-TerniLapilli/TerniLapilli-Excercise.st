@@ -415,17 +415,12 @@ Object subclass: #TerniLapilli
 	poolDictionaries: ''
 	category: 'TerniLapilli-Excercise'!
 
-!TerniLapilli methodsFor: 'adding' stamp: 'FL 10/16/2019 19:20:55'!
+!TerniLapilli methodsFor: 'adding' stamp: 'FL 10/16/2019 20:55:24'!
 putStoneAt: stonePosition
 
 (self positionIsInsideBoard: stonePosition) ifFalse: [self error: self class cannotAddStoneOutOfBoundsErrorMessage ].
 (self positionIsEmpty: stonePosition) ifFalse: [self error: self class cannotAddStoneOnAnOccupiedPositionErrorMessage ].
-(turnX ifTrue: [xStones] ifFalse: [yStones]) size = 3 ifTrue: [self error: self class cannotAddStoneWhenPlayerHasMaximumStonesErrorMessage ].
-(self isOver) ifTrue: [self error: self class cannotDoActionWhenGameIsOverErrorMessage ].
-
-(turnX ifTrue: [xStones] ifFalse: [yStones]) add: stonePosition.
-
-turnX _ turnX not.! !
+^self state putStoneAt: stonePosition! !
 
 
 !TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 18:57:09'!
@@ -453,23 +448,64 @@ hasThreeStonesAligned: aStoneSet
 
 	^(self hasAWinningRow: aStoneSet) or: [self hasAWinningColumn: aStoneSet] or: [self hasAWinningDiagonal: aStoneSet].! !
 
-!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 19:20:08'!
-moveStoneAt: aStonePosition to: distanceToMove
+!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 21:08:53'!
+moveStoneAt: aStonePosition distance: aDistance
 
 | destinationPosition |
-destinationPosition _ aStonePosition + distanceToMove.
+destinationPosition _ aStonePosition + aDistance.
 
-self allStonesArePlaced ifFalse: [self error: self class cannotMoveStoneBeforePlacingAllStonesErrorMessage ].
 (self positionIsInsideBoard: destinationPosition) ifFalse: [self error: self class cannotMoveStoneOutOfBoundErrorMessage ].
 (self positionIsEmpty: destinationPosition ) ifFalse: [self error: self class cannotMoveStoneOverAnotherStoneErrorMessage ].
-(self isOver) ifTrue: [self error: self class cannotDoActionWhenGameIsOverErrorMessage ].
+
+self state moveStoneAt: aStonePosition to: destinationPosition 
+! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 21:03:38'!
+moveStoneWhenFilledAt: aStonePosition to: aDestination
+
+
 (turnX ifTrue: [xStones] ifFalse: [yStones]) remove: aStonePosition ifAbsent: [self error: self class cannotMoveStoneIfThereIsNoStoneErrorMessage ].
-self putStoneAt: aStonePosition + distanceToMove.
+self putStoneAt: aDestination .
+! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 21:07:16'!
+moveStoneWhenFinished
+
+
+self error: self class cannotDoActionWhenGameIsOverErrorMessage
+! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 21:06:26'!
+moveStoneWhenNotFilled
+
+self error: self class cannotMoveStoneBeforePlacingAllStonesErrorMessage 
 ! !
 
 !TerniLapilli methodsFor: 'private' stamp: 'LEB 10/10/2019 18:26:32'!
 positionIsInsideBoard: stonePosition
 	^ (stonePosition x between: 0 and: 2) and: [stonePosition y between: 0 and: 2].! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 20:56:02'!
+putStoneWhenFilled
+
+	self error: self class cannotAddStoneWhenPlayerHasMaximumStonesErrorMessage.! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 20:55:53'!
+putStoneWhenFinished
+
+	self error: self class cannotDoActionWhenGameIsOverErrorMessage! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 20:52:28'!
+putStoneWhenNotFilledAt: stonePosition
+
+	(turnX ifTrue: [xStones] ifFalse: [yStones]) add: stonePosition.
+
+	turnX _ turnX not.! !
+
+!TerniLapilli methodsFor: 'private' stamp: 'FL 10/16/2019 20:58:19'!
+state 
+
+	^TerniLapilliState stateFor: self! !
 
 
 !TerniLapilli methodsFor: 'initialization' stamp: 'LEB 10/10/2019 18:44:22'!
@@ -525,49 +561,49 @@ positionIsEmpty: stonePosition
 	^ ((xStones includes: stonePosition) or: [yStones includes: stonePosition]) not.! !
 
 
-!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 17:47:38'!
+!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 21:04:41'!
 moveStoneDown: aStonePosition
 
-self moveStoneAt: aStonePosition to:  (0@-1).
+self moveStoneAt: aStonePosition distance:  (0@-1).
 ! !
 
-!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 19:30:26'!
+!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 21:04:41'!
 moveStoneDownleft: aStonePosition 
 	aStonePosition  = (2@2) | (aStonePosition = (1@1)) ifFalse: [self error: self class cannotMoveWhereThereIsNoLineErrorMessage ].
-	self moveStoneAt: aStonePosition to:  -1@-1.! !
+	self moveStoneAt: aStonePosition distance:  -1@-1.! !
 
-!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 19:30:55'!
+!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 21:04:41'!
 moveStoneDownright: aStonePosition 
 	aStonePosition  = (0@2) | (aStonePosition = (1@1)) ifFalse: [self error: self class cannotMoveWhereThereIsNoLineErrorMessage ].
-	self moveStoneAt: aStonePosition to: 1@-1.! !
+	self moveStoneAt: aStonePosition distance: 1@-1.! !
 
-!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 17:48:26'!
+!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 21:04:42'!
 moveStoneLeft: aStonePosition
 
-	self moveStoneAt: aStonePosition to: -1@0.
+	self moveStoneAt: aStonePosition distance: -1@0.
 ! !
 
-!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 17:48:42'!
+!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 21:04:42'!
 moveStoneRight: aStonePosition
 
-	self moveStoneAt: aStonePosition to: 1@0.
+	self moveStoneAt: aStonePosition distance: 1@0.
 ! !
 
-!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 17:47:13'!
+!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 21:04:42'!
 moveStoneUp: aStonePosition
 
-self moveStoneAt: aStonePosition to: 0@1.
+self moveStoneAt: aStonePosition distance: 0@1.
 ! !
 
-!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 19:32:02'!
+!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 21:04:42'!
 moveStoneUpleft: aStonePosition 
 	aStonePosition  = (2@0) | (aStonePosition = (1@1)) ifFalse: [self error: self class cannotMoveWhereThereIsNoLineErrorMessage ].
-	self moveStoneAt: aStonePosition to: -1@1.! !
+	self moveStoneAt: aStonePosition distance: -1@1.! !
 
-!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 19:31:38'!
+!TerniLapilli methodsFor: 'movingStones' stamp: 'FL 10/16/2019 21:04:42'!
 moveStoneUpright: aStonePosition 
 	aStonePosition  = (0@0) | (aStonePosition = (1@1)) ifFalse: [self error: self class cannotMoveWhereThereIsNoLineErrorMessage ].
-	self moveStoneAt: aStonePosition to: 1@1.! !
+	self moveStoneAt: aStonePosition distance: 1@1.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -611,3 +647,140 @@ cannotMoveStoneOverAnotherStoneErrorMessage
 !TerniLapilli class methodsFor: 'exceptions' stamp: 'FL 10/16/2019 19:26:31'!
 cannotMoveWhereThereIsNoLineErrorMessage
 	^'There is no line on the board that allows that move'! !
+
+
+!classDefinition: #TerniLapilliState category: #'TerniLapilli-Excercise'!
+Object subclass: #TerniLapilliState
+	instanceVariableNames: 'terniLapilli'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli-Excercise'!
+
+!TerniLapilliState methodsFor: 'initialization' stamp: 'FL 10/16/2019 20:34:43'!
+initializeFor: aTerniLapilli
+
+	terniLapilli _ aTerniLapilli ! !
+
+
+!TerniLapilliState methodsFor: 'adding' stamp: 'FL 10/16/2019 20:37:02'!
+putStoneAt: stonePosition
+	
+	self subclassResponsibility ! !
+
+
+!TerniLapilliState methodsFor: 'moving' stamp: 'FL 10/16/2019 21:09:52'!
+moveStoneAt: aStonePosition to: aDestination
+
+	self subclassResponsibility ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TerniLapilliState class' category: #'TerniLapilli-Excercise'!
+TerniLapilliState class
+	instanceVariableNames: ''!
+
+!TerniLapilliState class methodsFor: 'state selection' stamp: 'FL 10/16/2019 20:40:12'!
+canHandle: aTerniLapilli
+
+	self subclassResponsibility ! !
+
+!TerniLapilliState class methodsFor: 'state selection' stamp: 'FL 10/16/2019 20:41:36'!
+stateFor: aTerniLapilli
+
+	^(self subclasses detect: [:aTerniLapilliStateClass | aTerniLapilliStateClass canHandle: aTerniLapilli ]) for: aTerniLapilli ! !
+
+
+!TerniLapilliState class methodsFor: 'instance creation' stamp: 'FL 10/16/2019 20:41:55'!
+for: aStack
+
+	^self new initializeFor: aStack! !
+
+
+!classDefinition: #FilledTerniLapilliState category: #'TerniLapilli-Excercise'!
+TerniLapilliState subclass: #FilledTerniLapilliState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli-Excercise'!
+
+!FilledTerniLapilliState methodsFor: 'adding' stamp: 'FL 10/16/2019 20:56:38'!
+putStoneAt: stonePosition
+	
+	terniLapilli putStoneWhenFilled ! !
+
+
+!FilledTerniLapilliState methodsFor: 'moving' stamp: 'FL 10/16/2019 21:10:31'!
+moveStoneAt: aStonePosition to: aDestination
+
+	terniLapilli moveStoneWhenFilledAt: aStonePosition to: aDestination ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FilledTerniLapilliState class' category: #'TerniLapilli-Excercise'!
+FilledTerniLapilliState class
+	instanceVariableNames: ''!
+
+!FilledTerniLapilliState class methodsFor: 'state selection' stamp: 'FL 10/16/2019 20:45:38'!
+canHandle: aTerniLapilli
+
+	^aTerniLapilli allStonesArePlaced  & (aTerniLapilli isOver not).! !
+
+
+!classDefinition: #FinishedTerniLapilliState category: #'TerniLapilli-Excercise'!
+TerniLapilliState subclass: #FinishedTerniLapilliState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli-Excercise'!
+
+!FinishedTerniLapilliState methodsFor: 'adding' stamp: 'FL 10/16/2019 20:57:19'!
+putStoneAt: stonePosition
+	
+	terniLapilli putStoneWhenFinished ! !
+
+
+!FinishedTerniLapilliState methodsFor: 'moving' stamp: 'FL 10/16/2019 21:10:56'!
+moveStoneAt: aStonePosition to: aDestination
+
+	terniLapilli moveStoneWhenFinished ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'FinishedTerniLapilliState class' category: #'TerniLapilli-Excercise'!
+FinishedTerniLapilliState class
+	instanceVariableNames: ''!
+
+!FinishedTerniLapilliState class methodsFor: 'state selection' stamp: 'FL 10/16/2019 20:46:25'!
+canHandle: aTerniLapilli
+
+	^aTerniLapilli isOver.! !
+
+
+!classDefinition: #NotFilledTerniLapilliState category: #'TerniLapilli-Excercise'!
+TerniLapilliState subclass: #NotFilledTerniLapilliState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli-Excercise'!
+
+!NotFilledTerniLapilliState methodsFor: 'adding' stamp: 'FL 10/16/2019 20:57:41'!
+putStoneAt: stonePosition
+	
+	terniLapilli putStoneWhenNotFilledAt: stonePosition ! !
+
+
+!NotFilledTerniLapilliState methodsFor: 'moving' stamp: 'FL 10/16/2019 21:11:15'!
+moveStoneAt: aStonePosition to: aDestination
+
+	terniLapilli moveStoneWhenNotFilled ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'NotFilledTerniLapilliState class' category: #'TerniLapilli-Excercise'!
+NotFilledTerniLapilliState class
+	instanceVariableNames: ''!
+
+!NotFilledTerniLapilliState class methodsFor: 'state selection' stamp: 'FL 10/16/2019 20:46:08'!
+canHandle: aTerniLapilli
+
+	^aTerniLapilli allStonesAreNotPlaced  & (aTerniLapilli isOver not).! !
