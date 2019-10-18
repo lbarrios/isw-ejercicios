@@ -303,8 +303,33 @@ for: aValue
 	^ self new initializeFor: aValue ! !
 
 
+!classDefinition: #FinancialEntity category: #'Portfolio-Ejercicio'!
+Object subclass: #FinancialEntity
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Ejercicio'!
+
+!FinancialEntity methodsFor: 'balance' stamp: 'FL 10/17/2019 20:41:35'!
+balance
+
+	self subclassResponsibility ! !
+
+
+!FinancialEntity methodsFor: 'testing' stamp: 'FL 10/17/2019 20:42:30'!
+hasRegistered: aTransaction
+
+	^ self subclassResponsibility ! !
+
+
+!FinancialEntity methodsFor: 'transactions' stamp: 'FL 10/17/2019 20:43:28'!
+transactions 
+
+	^ self subclassResponsibility ! !
+
+
 !classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
-Object subclass: #Portfolio
+FinancialEntity subclass: #Portfolio
 	instanceVariableNames: 'financialEntities'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -371,7 +396,7 @@ repeatFinancialEntityErrorMessage
 
 
 !classDefinition: #ReceptiveAccount category: #'Portfolio-Ejercicio'!
-Object subclass: #ReceptiveAccount
+FinancialEntity subclass: #ReceptiveAccount
 	instanceVariableNames: 'transactions'
 	classVariableNames: ''
 	poolDictionaries: ''
