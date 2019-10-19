@@ -87,12 +87,89 @@ test07PortfolioKnowsItsTransactions
 	self assert: 1 equals: portfolio transactions size .
 	self assert: (portfolio transactions includes: deposit).! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'FL 10/17/2019 20:15:26'!
-test99PortfolioWithPortfolioCannotShareAccount 
+!PortfolioTest methodsFor: 'tests' stamp: 'FL 10/19/2019 09:48:20'!
+test08PortfolioCannotHaveAnAccountRepeatedInItself
+	
+	| portfolio account  |
+	
+	portfolio _ Portfolio new.
+	account _ ReceptiveAccount  new.
+	Deposit register: 50 on: account.
+	portfolio add: account .
+	
+	self should: [portfolio add: account .] raise:  Error - MessageNotUnderstood 
+	withExceptionDo:  [:error | error description = Portfolio repeatFinancialEntityErrorMessage.
+		self assert: 50 equals: portfolio balance .]! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'FL 10/19/2019 10:14:36'!
+test09PortfolioCannotHaveAnAccountIfASonPortfolioHasIt
+	
+	| portfolio account  internPortfolio |
+	
+	portfolio _ Portfolio new.
+	internPortfolio _ Portfolio new.
+	account _ ReceptiveAccount  new.
+	Deposit register: 50 on: account.
+	internPortfolio add: account .
+	portfolio add: internPortfolio.
+	
+	self should: [portfolio add: account .] raise:  Error - MessageNotUnderstood 
+	withExceptionDo:  [:error | error description = Portfolio repeatFinancialEntityErrorMessage.
+		self assert: 50 equals: portfolio balance .]! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'FL 10/19/2019 10:10:09'!
+test10PortfolioCannotHaveItself
+	
+	| portfolio account  |
+	
+	portfolio _ Portfolio new.
+	account _ ReceptiveAccount  new.
+	Deposit register: 50 on: account.
+	portfolio add: account .
+	
+	
+	self should: [portfolio add: portfolio .] raise:  Error - MessageNotUnderstood 
+	withExceptionDo:  [:error | error description = Portfolio repeatFinancialEntityErrorMessage.
+		self assert: 50 equals: portfolio balance .]! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'FL 10/19/2019 10:24:52'!
+test11PortfolioWithOneParentCannotHaveAnAccountIfAParentPortfolioHasIt
+	
+	| portfolio account  internPortfolio |
+	
+	portfolio _ Portfolio new.
+	internPortfolio _ Portfolio new.
+	account _ ReceptiveAccount  new.
+	Deposit register: 50 on: account.
+	portfolio add: account .
+	portfolio add: internPortfolio.
+	
+	self should: [internPortfolio add: account .] raise:  Error - MessageNotUnderstood 
+	withExceptionDo:  [:error | error description = Portfolio repeatFinancialEntityErrorMessage.
+		self assert: 0 equals: internPortfolio balance .]! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'FL 10/19/2019 10:24:38'!
+test12PortfolioWithMoreThanOneParentCannotHaveAnAccountIfAParentPortfolioHasIt
+	
+	| parentPortfolio1 parentPortfolio2 account  internPortfolio |
+	
+	parentPortfolio1 _ Portfolio new.
+	parentPortfolio2 _ Portfolio new.
+	internPortfolio _ Portfolio new.
+	account _ ReceptiveAccount  new.
+	Deposit register: 50 on: account.
+	parentPortfolio1 add: account .
+	parentPortfolio1 add: internPortfolio.
+	parentPortfolio2 add: internPortfolio.
+	
+	self should: [internPortfolio add: account .] raise:  Error - MessageNotUnderstood 
+	withExceptionDo:  [:error | error description = Portfolio repeatFinancialEntityErrorMessage.
+		self assert: 0 equals: internPortfolio balance .]! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'FL 10/19/2019 10:32:49'!
+test13PortfolioCannotAddAPortfolioThatSharesAnAccount 
 	
 	| portfolio internPortfolio account  |
-	
-	"TODO test muy a futuro"
 	
 	portfolio _ Portfolio new.
 	internPortfolio _ Portfolio new.
@@ -100,9 +177,27 @@ test99PortfolioWithPortfolioCannotShareAccount
 	Deposit register: 50 on: account.
 	internPortfolio add: account .
 	portfolio add: account .
-	"self should: [portfolio add: internPortfolio .] raise:  Error - MessageNotUnderstood 
+	self should: [portfolio add: internPortfolio .] raise:  Error - MessageNotUnderstood 
 	withExceptionDo:  [:error | error description = Portfolio repeatFinancialEntityErrorMessage.
-		self assert: 50 equals: portfolio balance .]."! !
+		self assert: 50 equals: portfolio balance .].! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'FL 10/19/2019 10:52:35'!
+test14CannotJoinPortfoliosThatShareInformationInTheHierarchy
+	
+	| parentPortfolio1 parentPortfolio2 account  internPortfolio |
+	
+	parentPortfolio1 _ Portfolio new.
+	parentPortfolio2 _ Portfolio new.
+	internPortfolio _ Portfolio new.
+	account _ ReceptiveAccount  new.
+	Deposit register: 50 on: account.
+	parentPortfolio1 add: account .
+	parentPortfolio2 add: internPortfolio.
+	parentPortfolio2 add: account.
+	
+	self should: [internPortfolio add: parentPortfolio1 .] raise:  Error - MessageNotUnderstood 
+	withExceptionDo:  [:error | error description = Portfolio repeatFinancialEntityErrorMessage.
+		self assert: 0 equals: internPortfolio balance .]! !
 
 
 !classDefinition: #ReceptiveAccountTest category: #'Portfolio-Ejercicio'!
@@ -330,41 +425,54 @@ transactions
 
 !classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
 FinancialEntity subclass: #Portfolio
-	instanceVariableNames: 'financialEntities'
+	instanceVariableNames: 'sons parents'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!Portfolio methodsFor: 'balance' stamp: 'FL 10/17/2019 19:24:14'!
+!Portfolio methodsFor: 'balance' stamp: 'FL 10/19/2019 10:15:20'!
 balance
 
-	^financialEntities sum: [ :aFinancialEntity | aFinancialEntity balance] ifEmpty: [ 0 ].! !
+	^sons sum: [ :aFinancialEntity | aFinancialEntity balance] ifEmpty: [ 0 ].! !
 
 
-!Portfolio methodsFor: 'add' stamp: 'FL 10/17/2019 20:08:15'!
+!Portfolio methodsFor: 'add' stamp: 'FL 10/19/2019 10:44:58'!
 add: aFinancialEntity
 
-	financialEntities add: aFinancialEntity .
+	(sons includes: aFinancialEntity) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].
+	(self accounts includes: aFinancialEntity ) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].
+	(self = aFinancialEntity ) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].
+	(parents anySatisfy: [:aPortfolio | aPortfolio accounts includes: aFinancialEntity] ) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].
+	((aFinancialEntity isKindOf: self class) and: [(aFinancialEntity accounts intersection: self accounts) notEmpty]) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].	
+
+	sons add: aFinancialEntity .
+	(aFinancialEntity isKindOf: self class) ifTrue: [aFinancialEntity addParent: self].
 	! !
 
+!Portfolio methodsFor: 'add' stamp: 'FL 10/19/2019 10:25:56'!
+addParent: aPortfolio
 
-!Portfolio methodsFor: 'initialization' stamp: 'FL 10/17/2019 19:20:06'!
+	parents add: aPortfolio ! !
+
+
+!Portfolio methodsFor: 'initialization' stamp: 'FL 10/19/2019 10:26:38'!
 initialize
 
-	financialEntities _ Set new.! !
+	sons _ Set new.
+	parents _ Set new.! !
 
 
-!Portfolio methodsFor: 'transactions ' stamp: 'FL 10/17/2019 20:35:23'!
+!Portfolio methodsFor: 'transactions ' stamp: 'FL 10/19/2019 10:15:20'!
 transactions 
 
 	| transactions |
 	transactions _ OrderedCollection new.
-	financialEntities do: [:financialEntity | transactions addAll: financialEntity transactions ].
+	sons do: [:financialEntity | transactions addAll: financialEntity transactions ].
 
 	^transactions! !
 
 
-!Portfolio methodsFor: 'accounts' stamp: 'FL 10/17/2019 20:21:31'!
+!Portfolio methodsFor: 'accounts' stamp: 'FL 10/19/2019 10:15:20'!
 accounts
 
 	| accounts |
@@ -372,16 +480,16 @@ accounts
 	"METODO HORRIBLE!! Probablemente hay que sacarlo"
 	
 	accounts _ Set new.
-	financialEntities do: [:financialEntity | (financialEntity isKindOf: Portfolio) ifTrue: [accounts addAll:  financialEntity accounts] 
+	sons do: [:financialEntity | (financialEntity isKindOf: Portfolio) ifTrue: [accounts addAll:  financialEntity accounts] 
 		ifFalse: [accounts add: financialEntity ] ].
 	
 	^accounts! !
 
 
-!Portfolio methodsFor: 'testing' stamp: 'FL 10/17/2019 20:20:35'!
+!Portfolio methodsFor: 'testing' stamp: 'FL 10/19/2019 10:15:20'!
 hasRegistered: aTransaction
 
-	^financialEntities anySatisfy: [:financialEntity | financialEntity hasRegistered: aTransaction ]! !
+	^sons anySatisfy: [:financialEntity | financialEntity hasRegistered: aTransaction ]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
