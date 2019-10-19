@@ -422,6 +422,20 @@ transactions
 
 	^ self subclassResponsibility ! !
 
+
+!FinancialEntity methodsFor: 'tree manage' stamp: 'FL 10/19/2019 16:05:49'!
+addParent: anObject! !
+
+!FinancialEntity methodsFor: 'tree manage' stamp: 'FL 10/19/2019 15:41:32'!
+completeHierarchy
+
+	self subclassResponsibility ! !
+
+!FinancialEntity methodsFor: 'tree manage' stamp: 'FL 10/19/2019 15:38:09'!
+downHierarchy
+
+	self subclassResponsibility ! !
+
 
 !classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
 FinancialEntity subclass: #Portfolio
@@ -436,26 +450,21 @@ balance
 	^sons sum: [ :aFinancialEntity | aFinancialEntity balance] ifEmpty: [ 0 ].! !
 
 
-!Portfolio methodsFor: 'add' stamp: 'FL 10/19/2019 10:44:58'!
+!Portfolio methodsFor: 'add' stamp: 'FL 10/19/2019 16:05:19'!
 add: aFinancialEntity
 
-	(sons includes: aFinancialEntity) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].
-	(self accounts includes: aFinancialEntity ) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].
-	(self = aFinancialEntity ) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].
-	(parents anySatisfy: [:aPortfolio | aPortfolio accounts includes: aFinancialEntity] ) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].
-	((aFinancialEntity isKindOf: self class) and: [(aFinancialEntity accounts intersection: self accounts) notEmpty]) ifTrue: [self error: self class repeatFinancialEntityErrorMessage].	
+	| hierarchy1 hierarchy2 |
+
+	hierarchy1 _ self completeHierarchy .
+	hierarchy2 _ aFinancialEntity completeHierarchy .
+	(hierarchy1 intersection: hierarchy2 ) notEmpty ifTrue: [self error: self class repeatFinancialEntityErrorMessage].	
 
 	sons add: aFinancialEntity .
-	(aFinancialEntity isKindOf: self class) ifTrue: [aFinancialEntity addParent: self].
+	aFinancialEntity addParent: self.
 	! !
 
-!Portfolio methodsFor: 'add' stamp: 'FL 10/19/2019 10:25:56'!
-addParent: aPortfolio
 
-	parents add: aPortfolio ! !
-
-
-!Portfolio methodsFor: 'initialization' stamp: 'FL 10/19/2019 10:26:38'!
+!Portfolio methodsFor: 'initialization' stamp: 'FL 10/19/2019 16:22:33'!
 initialize
 
 	sons _ Set new.
@@ -472,18 +481,29 @@ transactions
 	^transactions! !
 
 
-!Portfolio methodsFor: 'accounts' stamp: 'FL 10/19/2019 10:15:20'!
-accounts
+!Portfolio methodsFor: 'tree manage' stamp: 'FL 10/19/2019 10:25:56'!
+addParent: aPortfolio
 
-	| accounts |
-	
-	"METODO HORRIBLE!! Probablemente hay que sacarlo"
-	
-	accounts _ Set new.
-	sons do: [:financialEntity | (financialEntity isKindOf: Portfolio) ifTrue: [accounts addAll:  financialEntity accounts] 
-		ifFalse: [accounts add: financialEntity ] ].
-	
-	^accounts! !
+	parents add: aPortfolio ! !
+
+!Portfolio methodsFor: 'tree manage' stamp: 'FL 10/19/2019 15:31:34'!
+completeHierarchy
+
+	^self roots collect: [ :aPortfolio | aPortfolio downHierarchy] andFold: [:a :b | a addAll: b].! !
+
+!Portfolio methodsFor: 'tree manage' stamp: 'FL 10/19/2019 16:19:26'!
+downHierarchy
+
+	| answer |
+
+	answer _ sons  collect: [ :aFinancialEntity | aFinancialEntity downHierarchy] andFold: [:a :b | a addAll: b] ifEmpty: sons class new.
+	answer add: self.
+	^answer ! !
+
+!Portfolio methodsFor: 'tree manage' stamp: 'FL 10/19/2019 16:19:48'!
+roots
+
+	^parents  collect: [ :aPortfolio | aPortfolio  roots] andFold: [:a :b | a addAll: b] ifEmpty: (parents class with: self).! !
 
 
 !Portfolio methodsFor: 'testing' stamp: 'FL 10/19/2019 10:15:20'!
@@ -549,3 +569,14 @@ hasRegistered: aTransaction
 
 	^ transactions includes: aTransaction 
 ! !
+
+
+!ReceptiveAccount methodsFor: 'tree manage' stamp: 'FL 10/19/2019 16:21:47'!
+completeHierarchy
+
+	^Set with: self.! !
+
+!ReceptiveAccount methodsFor: 'tree manage' stamp: 'FL 10/19/2019 16:21:55'!
+downHierarchy
+
+	^Set with: self.! !
