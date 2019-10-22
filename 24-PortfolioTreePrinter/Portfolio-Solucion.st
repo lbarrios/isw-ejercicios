@@ -358,33 +358,33 @@ test11TransferorAccountKnowsRegisteredTransferWithdraw
 		
 	self assert: (transferorAccount hasRegistered: (transfer withdraw)).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 20:52:11'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:14:52'!
 test12AccountSummaryOfAnAccountWithoutOperationsReturnsAnEmptyString
 
 	| account |
 	
 	account := ReceptiveAccount  new.	
-	self assert: '' equals: account accountSummary.! !
+	self assert: 'Balance = 0.' equals: account accountSummary.! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:06:41'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:16:51'!
 test13AccountSummaryOfAnAccountWithADepositReturnsAStringWithThatDeposit
 
 	| account |
 	
 	account := ReceptiveAccount  new.
 	Deposit register: 100 on: account.
-	self assert: 'Depósito por 100.' equals: account accountSummary.! !
+	self assert: 'Depósito por 100. Balance = 100.' equals: account accountSummary.! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:08:43'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:18:52'!
 test13AccountSummaryOfAnAccountWithAWithdrawReturnsAStringWithThatWithdraw
 
 	| account |
 	
 	account := ReceptiveAccount  new.
 	Withdraw register: 100 on: account.
-	self assert: 'Extracción por 100.' equals: account accountSummary.! !
+	self assert: 'Extracción por 100. Balance = -100.' equals: account accountSummary.! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:09:05'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:19:04'!
 test14AccountSummaryOfAnAccountWithADepositAndAWithdrawReturnsAStringWithTheConcatenationOfTheOperations
 
 	| account |
@@ -392,9 +392,9 @@ test14AccountSummaryOfAnAccountWithADepositAndAWithdrawReturnsAStringWithTheConc
 	account := ReceptiveAccount  new.
 	Deposit register: 100 on: account.
 	Withdraw register: 50 on: account.
-	self assert: 'Depósito por 100. Extracción por 50.' equals: account accountSummary.! !
+	self assert: 'Depósito por 100. Extracción por 50. Balance = 50.' equals: account accountSummary.! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:11:50'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:19:12'!
 test15AccountSummaryOfAnAccountWithATransferDepositReturnsAStringWithADepositFromThatTransfer
 
 	| receiverAccount transferorAccount |
@@ -404,9 +404,9 @@ test15AccountSummaryOfAnAccountWithATransferDepositReturnsAStringWithADepositFro
 	receiverAccount := ReceptiveAccount  new.
 	
 	Transfer register: 100 from: transferorAccount to: receiverAccount.
-	self assert: 'Entrada por transferencia de 100.' equals: receiverAccount accountSummary.! !
+	self assert: 'Entrada por transferencia de 100. Balance = 100.' equals: receiverAccount accountSummary.! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:11:13'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:19:18'!
 test16AccountSummaryOfAnAccountWithATransferWithdrawReturnsAStringWithAWithdrawFromThatTransfer
 
 	| receiverAccount transferorAccount |
@@ -416,7 +416,43 @@ test16AccountSummaryOfAnAccountWithATransferWithdrawReturnsAStringWithAWithdrawF
 	receiverAccount := ReceptiveAccount  new.
 	
 	Transfer register: 100 from: transferorAccount to: receiverAccount.
-	self assert: 'Depósito por 100. Salida por transferencia de 100.' equals: transferorAccount accountSummary.! !
+	self assert: 'Depósito por 100. Salida por transferencia de 100. Balance = 0.' equals: transferorAccount accountSummary.! !
+
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:24:23'!
+test17TransferNetOfAnAccountWithNoTransfersIsZero
+
+	| acccount |
+	
+	acccount := ReceptiveAccount  new.
+	Deposit register: 100 on: acccount.
+	
+	self assert: 0 equals: acccount transferNet.! !
+
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:30:17'!
+test18TransferNetOfAnAccountWithADepositTransferIsTheAmountOfTheDeposit
+
+	| receiverAccount transferorAccount |
+	
+	transferorAccount := ReceptiveAccount  new.
+	Deposit register: 100 on: transferorAccount.
+	receiverAccount := ReceptiveAccount  new.
+	
+	Transfer register: 100 from: transferorAccount to: receiverAccount.
+
+	self assert: 100 equals: receiverAccount transferNet.! !
+
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:30:53'!
+test19TransferNetOfAnAccountWithATransferWithdrawIsTheAmountOfTheWithdraw
+
+	| receiverAccount transferorAccount |
+	
+	transferorAccount := ReceptiveAccount  new.
+	Deposit register: 100 on: transferorAccount.
+	receiverAccount := ReceptiveAccount  new.
+	
+	Transfer register: 100 from: transferorAccount to: receiverAccount.
+
+	self assert: -100 equals: transferorAccount transferNet.! !
 
 
 !classDefinition: #Account category: #'Portfolio-Solucion'!
@@ -629,10 +665,19 @@ transactions
 	^ transactions copy! !
 
 
-!ReceptiveAccount methodsFor: 'reporting' stamp: 'FL 10/21/2019 20:59:58'!
+!ReceptiveAccount methodsFor: 'reporting' stamp: 'FL 10/21/2019 21:20:31'!
 accountSummary
 
-	^transactions collect: [:transaction | transaction asString] andFold: [:report :transactionAsString | report, ' ', transactionAsString ] ifEmpty: [''].! !
+	^ (transactions collect: [:transaction | transaction asString, ' '] andFold: [:report :transactionAsString | report, transactionAsString ] ifEmpty: ['']),
+	'Balance = ', self balance asString, '.'.! !
+
+!ReceptiveAccount methodsFor: 'reporting' stamp: 'FL 10/21/2019 21:28:36'!
+transferNet
+
+	^(transactions select: [:transaction | transaction isKindOf: TransferTransaction])
+		inject: 0
+		into: [ :currentBalance :transaction | transaction affectBalance: currentBalance ].
+		! !
 
 
 !ReceptiveAccount methodsFor: 'balance' stamp: 'HAW 5/25/2019 11:24:46'!
