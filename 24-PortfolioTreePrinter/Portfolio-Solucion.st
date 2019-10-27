@@ -358,33 +358,33 @@ test11TransferorAccountKnowsRegisteredTransferWithdraw
 		
 	self assert: (transferorAccount hasRegistered: (transfer withdraw)).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:14:52'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 18:34:35'!
 test12AccountSummaryOfAnAccountWithoutOperationsReturnsAnEmptyString
 
 	| account |
 	
 	account := ReceptiveAccount  new.	
-	self assert: 'Balance = 0.' equals: account accountSummary.! !
+	self assert: 'Balance = 0.' equals: (AccountSummary for: account).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:16:51'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 18:34:58'!
 test13AccountSummaryOfAnAccountWithADepositReturnsAStringWithThatDeposit
 
 	| account |
 	
 	account := ReceptiveAccount  new.
 	Deposit register: 100 on: account.
-	self assert: 'Depósito por 100. Balance = 100.' equals: account accountSummary.! !
+	self assert: 'Depósito por 100. Balance = 100.' equals: (AccountSummary for: account).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:18:52'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 18:35:09'!
 test13AccountSummaryOfAnAccountWithAWithdrawReturnsAStringWithThatWithdraw
 
 	| account |
 	
 	account := ReceptiveAccount  new.
 	Withdraw register: 100 on: account.
-	self assert: 'Extracción por 100. Balance = -100.' equals: account accountSummary.! !
+	self assert: 'Extracción por 100. Balance = -100.' equals: (AccountSummary for: account).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:19:04'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 18:35:27'!
 test14AccountSummaryOfAnAccountWithADepositAndAWithdrawReturnsAStringWithTheConcatenationOfTheOperations
 
 	| account |
@@ -392,9 +392,9 @@ test14AccountSummaryOfAnAccountWithADepositAndAWithdrawReturnsAStringWithTheConc
 	account := ReceptiveAccount  new.
 	Deposit register: 100 on: account.
 	Withdraw register: 50 on: account.
-	self assert: 'Depósito por 100. Extracción por 50. Balance = 50.' equals: account accountSummary.! !
+	self assert: 'Depósito por 100. Extracción por 50. Balance = 50.' equals: (AccountSummary for: account).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:19:12'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 18:35:50'!
 test15AccountSummaryOfAnAccountWithATransferDepositReturnsAStringWithADepositFromThatTransfer
 
 	| receiverAccount transferorAccount |
@@ -404,9 +404,9 @@ test15AccountSummaryOfAnAccountWithATransferDepositReturnsAStringWithADepositFro
 	receiverAccount := ReceptiveAccount  new.
 	
 	Transfer register: 100 from: transferorAccount to: receiverAccount.
-	self assert: 'Entrada por transferencia de 100. Balance = 100.' equals: receiverAccount accountSummary.! !
+	self assert: 'Entrada por transferencia de 100. Balance = 100.' equals: (AccountSummary for: receiverAccount).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:19:18'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 18:36:13'!
 test16AccountSummaryOfAnAccountWithATransferWithdrawReturnsAStringWithAWithdrawFromThatTransfer
 
 	| receiverAccount transferorAccount |
@@ -416,7 +416,7 @@ test16AccountSummaryOfAnAccountWithATransferWithdrawReturnsAStringWithAWithdrawF
 	receiverAccount := ReceptiveAccount  new.
 	
 	Transfer register: 100 from: transferorAccount to: receiverAccount.
-	self assert: 'Depósito por 100. Salida por transferencia de 100. Balance = 0.' equals: transferorAccount accountSummary.! !
+	self assert: 'Depósito por 100. Salida por transferencia de 100. Balance = 0.' equals: (AccountSummary for: transferorAccount).! !
 
 !ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 17:59:33'!
 test17TransferNetOfAnAccountWithNoTransfersIsZero
@@ -665,12 +665,6 @@ transactions
 	^ transactions copy! !
 
 
-!ReceptiveAccount methodsFor: 'reporting' stamp: 'FL 10/21/2019 21:20:31'!
-accountSummary
-
-	^ (transactions collect: [:transaction | transaction asString, ' '] andFold: [:report :transactionAsString | report, transactionAsString ] ifEmpty: ['']),
-	'Balance = ', self balance asString, '.'.! !
-
 !ReceptiveAccount methodsFor: 'reporting' stamp: 'FL 10/27/2019 17:33:31'!
 process: anAccountReport
 	
@@ -747,10 +741,10 @@ startingValue
 
 	^startingValue ! !
 
-!AccountReport methodsFor: 'value' stamp: 'FL 10/27/2019 17:58:12'!
+!AccountReport methodsFor: 'value' stamp: 'FL 10/27/2019 18:30:12'!
 value
 
-	^account process: self! !
+	^self subclassResponsibility ! !
 
 
 !AccountReport methodsFor: 'initialization' stamp: 'FL 10/27/2019 17:46:33'!
@@ -784,6 +778,35 @@ initializeFor: anAccount
 	currentValue _ ''.
 	account _ anAccount .! !
 
+
+!AccountSummary methodsFor: 'process' stamp: 'FL 10/27/2019 18:27:45'!
+processDeposit: aDeposit
+
+	currentValue _ currentValue ,'Depósito por ', aDeposit value asString, '. '! !
+
+!AccountSummary methodsFor: 'process' stamp: 'FL 10/27/2019 18:27:50'!
+processTransferDeposit: aTransferDeposit
+
+	currentValue _ currentValue,'Entrada por transferencia de ', aTransferDeposit value asString, '. '.! !
+
+!AccountSummary methodsFor: 'process' stamp: 'FL 10/27/2019 18:27:57'!
+processTransferWithdraw: aTransferWithdraw
+
+	currentValue _ currentValue,'Salida por transferencia de ', aTransferWithdraw value asString, '. '.! !
+
+!AccountSummary methodsFor: 'process' stamp: 'FL 10/27/2019 18:28:01'!
+processWithdraw: aWithdraw
+
+	currentValue _ currentValue ,'Extracción por ', aWithdraw value asString, '. '! !
+
+
+!AccountSummary methodsFor: 'value' stamp: 'FL 10/27/2019 18:32:34'!
+value
+
+	currentValue _ account process: self.
+	
+	^currentValue ,'Balance = ', account balance asString, '.'.! !
+
 
 !classDefinition: #TransferNet category: #'Portfolio-Solucion'!
 AccountReport subclass: #TransferNet
@@ -816,6 +839,12 @@ processTransferWithdraw: aTransferWithdraw
 !TransferNet methodsFor: 'process' stamp: 'FL 10/27/2019 17:53:45'!
 processWithdraw: aWithdraw! !
 
+
+!TransferNet methodsFor: 'value' stamp: 'FL 10/27/2019 18:30:36'!
+value
+
+	^account process: self! !
+
 
 !classDefinition: #AccountTransaction category: #'Portfolio-Solucion'!
 Object subclass: #AccountTransaction
@@ -823,11 +852,6 @@ Object subclass: #AccountTransaction
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
-
-!AccountTransaction methodsFor: 'value' stamp: 'FL 10/21/2019 21:07:47'!
-asString
-
-	^self subclassResponsibility ! !
 
 !AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
 value 
@@ -875,11 +899,6 @@ initializeFor: aValue
 
 	value := aValue ! !
 
-
-!Deposit methodsFor: 'value' stamp: 'FL 10/21/2019 21:07:05'!
-asString
-
-	^'Depósito por ', self value asString, '.'! !
 
 !Deposit methodsFor: 'value' stamp: 'FL 10/21/2019 20:38:36'!
 value
@@ -934,11 +953,6 @@ affectBalance: aBalance
 
 	^aBalance - self value! !
 
-!Withdraw methodsFor: 'balance' stamp: 'FL 10/21/2019 21:07:29'!
-asString
-
-	^'Extracción por ', self value asString, '.'! !
-
 
 !Withdraw methodsFor: 'process' stamp: 'FL 10/27/2019 17:37:48'!
 processFor: anAccountReport
@@ -964,33 +978,30 @@ Object subclass: #Transfer
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!Transfer methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:24:39'!
-affectBalance: aBalance
-
-	self shouldBeImplemented.! !
-
-!Transfer methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:24:13'!
+!Transfer methodsFor: 'part' stamp: 'FL 10/21/2019 20:24:13'!
 deposit
 
 	^deposit! !
 
-!Transfer methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:37:36'!
+!Transfer methodsFor: 'part' stamp: 'FL 10/21/2019 20:24:21'!
+withdraw
+
+	^withdraw! !
+
+
+!Transfer methodsFor: 'value' stamp: 'FL 10/21/2019 20:24:26'!
+value
+
+	^value! !
+
+
+!Transfer methodsFor: 'initialization' stamp: 'FL 10/21/2019 20:37:36'!
 initializeFor: aValue from: transferorAccount to: receiverAccount
 
 	value := aValue.
 	withdraw := TransferWithdraw of: self.
 	deposit := TransferDeposit of: self.
 ! !
-
-!Transfer methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:24:26'!
-value
-
-	^value! !
-
-!Transfer methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:24:21'!
-withdraw
-
-	^withdraw! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1022,10 +1033,10 @@ Object subclass: #TransferTransaction
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferTransaction methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:36:34'!
-affectBalance: aBalance
+!TransferTransaction methodsFor: 'value' stamp: 'FL 10/27/2019 18:21:24'!
+value
 
-	self subclassResponsibility ! !
+	^transfer value! !
 
 
 !TransferTransaction methodsFor: 'initialization' stamp: 'FL 10/27/2019 17:38:53'!
@@ -1038,6 +1049,12 @@ initializeOf: aTransfer
 processFor: anAccountReport
 
 	^self subclassResponsibility! !
+
+
+!TransferTransaction methodsFor: 'balance' stamp: 'FL 10/21/2019 20:36:34'!
+affectBalance: aBalance
+
+	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1058,21 +1075,16 @@ TransferTransaction subclass: #TransferDeposit
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:37:09'!
-affectBalance: aBalance
-
-	^aBalance + transfer value ! !
-
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 21:11:59'!
-asString
-
-	^'Entrada por transferencia de ', transfer value asString, '.'.! !
-
-
 !TransferDeposit methodsFor: 'process' stamp: 'FL 10/27/2019 17:40:47'!
 processFor: anAccountReport
 
 	^anAccountReport processTransferDeposit: self.! !
+
+
+!TransferDeposit methodsFor: 'balance' stamp: 'FL 10/21/2019 20:37:09'!
+affectBalance: aBalance
+
+	^aBalance + transfer value ! !
 
 
 !classDefinition: #TransferWithdraw category: #'Portfolio-Solucion'!
@@ -1082,18 +1094,13 @@ TransferTransaction subclass: #TransferWithdraw
 	poolDictionaries: ''
 	category: 'Portfolio-Solucion'!
 
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:37:17'!
-affectBalance: aBalance
-
-	^aBalance - transfer value ! !
-
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 21:12:06'!
-asString
-
-	^'Salida por transferencia de ', transfer value asString, '.'.! !
-
-
 !TransferWithdraw methodsFor: 'process' stamp: 'FL 10/27/2019 17:41:12'!
 processFor: anAccountReport
 
 	^anAccountReport processTransferWithdraw: self.! !
+
+
+!TransferWithdraw methodsFor: 'balance' stamp: 'FL 10/21/2019 20:37:17'!
+affectBalance: aBalance
+
+	^aBalance - transfer value ! !
