@@ -418,7 +418,7 @@ test16AccountSummaryOfAnAccountWithATransferWithdrawReturnsAStringWithAWithdrawF
 	Transfer register: 100 from: transferorAccount to: receiverAccount.
 	self assert: 'Depósito por 100. Salida por transferencia de 100. Balance = 0.' equals: transferorAccount accountSummary.! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:24:23'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 17:59:33'!
 test17TransferNetOfAnAccountWithNoTransfersIsZero
 
 	| acccount |
@@ -426,9 +426,9 @@ test17TransferNetOfAnAccountWithNoTransfersIsZero
 	acccount := ReceptiveAccount  new.
 	Deposit register: 100 on: acccount.
 	
-	self assert: 0 equals: acccount transferNet.! !
+	self assert: 0 equals: (TransferNet for: acccount).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:30:17'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 18:01:07'!
 test18TransferNetOfAnAccountWithADepositTransferIsTheAmountOfTheDeposit
 
 	| receiverAccount transferorAccount |
@@ -439,9 +439,9 @@ test18TransferNetOfAnAccountWithADepositTransferIsTheAmountOfTheDeposit
 	
 	Transfer register: 100 from: transferorAccount to: receiverAccount.
 
-	self assert: 100 equals: receiverAccount transferNet.! !
+	self assert: 100 equals: (TransferNet for: receiverAccount).! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/21/2019 21:30:53'!
+!ReceptiveAccountTest methodsFor: 'tests' stamp: 'FL 10/27/2019 18:01:31'!
 test19TransferNetOfAnAccountWithATransferWithdrawIsTheAmountOfTheWithdraw
 
 	| receiverAccount transferorAccount |
@@ -452,7 +452,7 @@ test19TransferNetOfAnAccountWithATransferWithdrawIsTheAmountOfTheWithdraw
 	
 	Transfer register: 100 from: transferorAccount to: receiverAccount.
 
-	self assert: -100 equals: transferorAccount transferNet.! !
+	self assert: -100 equals: (TransferNet for: transferorAccount).! !
 
 
 !classDefinition: #Account category: #'Portfolio-Solucion'!
@@ -671,13 +671,12 @@ accountSummary
 	^ (transactions collect: [:transaction | transaction asString, ' '] andFold: [:report :transactionAsString | report, transactionAsString ] ifEmpty: ['']),
 	'Balance = ', self balance asString, '.'.! !
 
-!ReceptiveAccount methodsFor: 'reporting' stamp: 'FL 10/21/2019 21:28:36'!
-transferNet
-
-	^(transactions select: [:transaction | transaction isKindOf: TransferTransaction])
-		inject: 0
-		into: [ :currentBalance :transaction | transaction affectBalance: currentBalance ].
-		! !
+!ReceptiveAccount methodsFor: 'reporting' stamp: 'FL 10/27/2019 17:33:31'!
+process: anAccountReport
+	
+	^transactions
+		inject: anAccountReport startingValue
+		into: [ :currentValue :transaction | anAccountReport affect: currentValue with: transaction].! !
 
 
 !ReceptiveAccount methodsFor: 'balance' stamp: 'HAW 5/25/2019 11:24:46'!
@@ -705,10 +704,117 @@ addedTo: aPortfolio
 	
 	! !
 
+
+!classDefinition: #AccountReport category: #'Portfolio-Solucion'!
+Object subclass: #AccountReport
+	instanceVariableNames: 'startingValue currentValue account'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
 
-!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 19:39:32'!
-registerAsTransferor: aTransfer 
-	self shouldBeImplemented.! !
+!AccountReport methodsFor: 'process' stamp: 'FL 10/27/2019 17:54:05'!
+affect: aValue with: aTransaction
+
+	currentValue _ aValue.
+	
+	aTransaction processFor: self.
+	
+	^currentValue ! !
+
+!AccountReport methodsFor: 'process' stamp: 'FL 10/27/2019 17:53:07'!
+processDeposit: aDeposit
+
+	^self subclassResponsibility! !
+
+!AccountReport methodsFor: 'process' stamp: 'FL 10/27/2019 17:31:49'!
+processTransferDeposit: aTransferDeposit
+
+	^self subclassResponsibility! !
+
+!AccountReport methodsFor: 'process' stamp: 'FL 10/27/2019 17:31:35'!
+processTransferWithdraw: aTransferWithdraw
+
+	^self subclassResponsibility! !
+
+!AccountReport methodsFor: 'process' stamp: 'FL 10/27/2019 17:31:23'!
+processWithdraw: aWithdraw
+
+	^self subclassResponsibility! !
+
+
+!AccountReport methodsFor: 'value' stamp: 'FL 10/27/2019 17:30:49'!
+startingValue
+
+	^startingValue ! !
+
+!AccountReport methodsFor: 'value' stamp: 'FL 10/27/2019 17:58:12'!
+value
+
+	^account process: self! !
+
+
+!AccountReport methodsFor: 'initialization' stamp: 'FL 10/27/2019 17:46:33'!
+initializeFor: anAccount
+
+	^self subclassResponsibility ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'AccountReport class' category: #'Portfolio-Solucion'!
+AccountReport class
+	instanceVariableNames: ''!
+
+!AccountReport class methodsFor: 'instance creation' stamp: 'FL 10/27/2019 18:00:07'!
+for: anAccount
+
+	^(self new initializeFor: anAccount) value.! !
+
+
+!classDefinition: #AccountSummary category: #'Portfolio-Solucion'!
+AccountReport subclass: #AccountSummary
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!AccountSummary methodsFor: 'initialization' stamp: 'FL 10/27/2019 17:49:08'!
+initializeFor: anAccount
+
+	startingValue _ ''.
+	currentValue _ ''.
+	account _ anAccount .! !
+
+
+!classDefinition: #TransferNet category: #'Portfolio-Solucion'!
+AccountReport subclass: #TransferNet
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Portfolio-Solucion'!
+
+!TransferNet methodsFor: 'initialization' stamp: 'FL 10/27/2019 17:49:56'!
+initializeFor: anAccount
+
+	startingValue _ 0.
+	currentValue _ 0.
+	account _ anAccount .! !
+
+
+!TransferNet methodsFor: 'process' stamp: 'FL 10/27/2019 17:53:50'!
+processDeposit: aDeposit! !
+
+!TransferNet methodsFor: 'process' stamp: 'FL 10/27/2019 17:56:23'!
+processTransferDeposit: aTransferDeposit
+
+	currentValue _ aTransferDeposit affectBalance: currentValue ! !
+
+!TransferNet methodsFor: 'process' stamp: 'FL 10/27/2019 17:56:42'!
+processTransferWithdraw: aTransferWithdraw
+
+	currentValue _ aTransferWithdraw affectBalance: currentValue ! !
+
+!TransferNet methodsFor: 'process' stamp: 'FL 10/27/2019 17:53:45'!
+processWithdraw: aWithdraw! !
 
 
 !classDefinition: #AccountTransaction category: #'Portfolio-Solucion'!
@@ -733,6 +839,12 @@ value
 affectBalance: aBalance
 
 	self subclassResponsibility ! !
+
+
+!AccountTransaction methodsFor: 'process' stamp: 'FL 10/27/2019 17:36:17'!
+processFor: anAccountReport
+
+	^self subclassResponsibility! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -780,6 +892,12 @@ affectBalance: aBalance
 
 	^aBalance + self value ! !
 
+
+!Deposit methodsFor: 'process' stamp: 'FL 10/27/2019 17:37:09'!
+processFor: anAccountReport
+
+	^anAccountReport processDeposit: self.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Deposit class' category: #'Portfolio-Solucion'!
@@ -820,6 +938,12 @@ affectBalance: aBalance
 asString
 
 	^'Extracción por ', self value asString, '.'! !
+
+
+!Withdraw methodsFor: 'process' stamp: 'FL 10/27/2019 17:37:48'!
+processFor: anAccountReport
+
+	^anAccountReport processWithdraw: self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -903,6 +1027,29 @@ affectBalance: aBalance
 
 	self subclassResponsibility ! !
 
+
+!TransferTransaction methodsFor: 'initialization' stamp: 'FL 10/27/2019 17:38:53'!
+initializeOf: aTransfer
+
+	transfer := aTransfer! !
+
+
+!TransferTransaction methodsFor: 'process' stamp: 'FL 10/27/2019 17:38:27'!
+processFor: anAccountReport
+
+	^self subclassResponsibility! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferTransaction class' category: #'Portfolio-Solucion'!
+TransferTransaction class
+	instanceVariableNames: ''!
+
+!TransferTransaction class methodsFor: 'instance creation' stamp: 'FL 10/27/2019 17:39:17'!
+of: aTransfer
+
+	^ self new initializeOf: aTransfer! !
+
 
 !classDefinition: #TransferDeposit category: #'Portfolio-Solucion'!
 TransferTransaction subclass: #TransferDeposit
@@ -921,21 +1068,11 @@ asString
 
 	^'Entrada por transferencia de ', transfer value asString, '.'.! !
 
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:38:07'!
-initializeOf: aTransfer
 
-	transfer := aTransfer ! !
+!TransferDeposit methodsFor: 'process' stamp: 'FL 10/27/2019 17:40:47'!
+processFor: anAccountReport
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TransferDeposit class' category: #'Portfolio-Solucion'!
-TransferDeposit class
-	instanceVariableNames: ''!
-
-!TransferDeposit class methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:37:48'!
-of: aTransfer
-
-	^ self new initializeOf: aTransfer! !
+	^anAccountReport processTransferDeposit: self.! !
 
 
 !classDefinition: #TransferWithdraw category: #'Portfolio-Solucion'!
@@ -955,18 +1092,8 @@ asString
 
 	^'Salida por transferencia de ', transfer value asString, '.'.! !
 
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:38:13'!
-initializeOf: aTransfer
 
-	transfer := aTransfer ! !
+!TransferWithdraw methodsFor: 'process' stamp: 'FL 10/27/2019 17:41:12'!
+processFor: anAccountReport
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TransferWithdraw class' category: #'Portfolio-Solucion'!
-TransferWithdraw class
-	instanceVariableNames: ''!
-
-!TransferWithdraw class methodsFor: 'as yet unclassified' stamp: 'FL 10/21/2019 20:37:52'!
-of: aTransfer
-
-	^ self new initializeOf: aTransfer! !
+	^anAccountReport processTransferWithdraw: self.! !
