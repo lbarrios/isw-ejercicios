@@ -1,0 +1,972 @@
+
+
+----STARTUP---- (30 October 2019 20:25:46) as /home/garuflax/Desktop/FCEN/Ingeniería de Software I/CuisUniversity/CuisUniversity-3938.image!
+
+
+----End fileIn of /home/garuflax/Desktop/FCEN/Ingeniería de Software I/CuisUniversity/Packages/TerseGuide.pck.st----!
+
+Object subclass: #ShoppingCart
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!classDefinition: #ShoppingCart category: #TusLibros stamp: 'FL 10/30/2019 20:28:13'!
+Object subclass: #ShoppingCart
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+TestCase subclass: #ShoppingCartTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!classDefinition: #ShoppingCartTest category: #TusLibros stamp: 'FL 10/30/2019 20:29:01'!
+TestCase subclass: #ShoppingCartTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 20:32:14'!
+test01ShoppingCartIsEmptyWhenCreated
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	
+	self assert: aShoppingCart isEmpty.! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:32:17'!
+ERROR!
+!ShoppingCart methodsFor: 'testing' stamp: 'FL 10/30/2019 20:33:04'!
+isEmpty
+	self shouldBeImplemented.! !
+!ShoppingCart methodsFor: 'testing' stamp: 'FL 10/30/2019 20:33:14' prior: 50780406!
+isEmpty
+	^true! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:33:17'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:33:17'!
+PASSED!
+
+!classDefinition: #ShoppingCartTest category: #TusLibros stamp: 'FL 10/30/2019 20:41:35'!
+TestCase subclass: #ShoppingCartTest
+	instanceVariableNames: 'designPatternsBook'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!classDefinition: #ShoppingCartTest category: #TusLibros stamp: 'FL 10/30/2019 20:41:37'!
+TestCase subclass: #ShoppingCartTest
+	instanceVariableNames: 'designPatternsBook operatingSystemConceptsBook'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!ShoppingCartTest methodsFor: 'setUp/tearDown' stamp: 'FL 10/30/2019 20:41:21'!
+setUp
+
+	designPatternsBook _ 'Design Patterns'.
+	operatingSystemConceptsBook _ 'Operating System Concepts'.! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 20:43:41'!
+test02ShoppingCartIsNotEmptyAfterAddingABook
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: 2 .
+	
+	self assert: aShoppingCart isEmpty.! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 20:44:20' prior: 50780442!
+test02ShoppingCartIsNotEmptyAfterAddingABook
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self deny: aShoppingCart isEmpty.! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 20:44:40' prior: 50780450!
+test02ShoppingCartIsNotEmptyAfterAddingABook
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self deny: aShoppingCart isEmpty.! !
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:44:44'!
+ERROR!
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 20:45:27'!
+add: aString 
+	self shouldBeImplemented.! !
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:45:37'!
+ERROR!
+
+!classDefinition: #ShoppingCart category: #TusLibros stamp: 'FL 10/30/2019 20:46:00'!
+Object subclass: #ShoppingCart
+	instanceVariableNames: 'isEmpty'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!ShoppingCart methodsFor: 'testing' stamp: 'FL 10/30/2019 20:45:56' prior: 50780410!
+isEmpty
+	^isEmpty! !
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 20:46:14' prior: 50780471!
+add: aString 
+	isEmpty _ false.! !
+!ShoppingCart methodsFor: 'initialization' stamp: 'FL 10/30/2019 20:46:31'!
+initialize
+
+	isEmpty _ true.! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:46:34'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:46:34'!
+PASSED!
+
+----QUIT----(30 October 2019 20:48:58) CuisUniversity-3938.image priorSource: 14319118!
+
+----STARTUP---- (30 October 2019 20:52:09) as /home/garuflax/Desktop/FCEN/Ingeniería de Software I/CuisUniversity/CuisUniversity-3938.image!
+
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:52:48'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:52:48'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:52:48'!
+PASSED!
+
+'' isEmpty !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 20:54:52'!
+test03ShoppingCartListIsEmptyWhenCreated
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	
+	self assert: aShoppingCart list isEmpty.! !
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:54:57'!
+ERROR!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:55:16'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:55:16'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:55:16'!
+ERROR!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:55:16'!
+ERROR!
+!ShoppingCart methodsFor: 'accessing' stamp: 'FL 10/30/2019 20:55:27'!
+list
+	self shouldBeImplemented.! !
+!ShoppingCart methodsFor: 'accessing' stamp: 'FL 10/30/2019 20:55:39' prior: 50780548!
+list
+	^''.! !
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:55:41'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:55:44'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:55:44'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:55:44'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:55:44'!
+PASSED!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 20:57:45'!
+test04ShoppingCartListIsNotEmptyAfterAddingABook
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self deny: aShoppingCart isEmpty.! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 20:57:54' prior: 50780573!
+test04ShoppingCartListIsNotEmptyAfterAddingABook
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self deny: aShoppingCart list isEmpty.! !
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:57:55'!
+FAILURE!
+
+!classDefinition: #ShoppingCart category: #TusLibros stamp: 'FL 10/30/2019 20:58:58'!
+Object subclass: #ShoppingCart
+	instanceVariableNames: 'isEmpty element'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!ShoppingCart methodsFor: 'accessing' stamp: 'FL 10/30/2019 20:58:56' prior: 50780552!
+list
+	^element.! !
+!ShoppingCart methodsFor: 'initialization' stamp: 'FL 10/30/2019 20:59:15' prior: 50780494!
+initialize
+
+	isEmpty _ true.
+	element _ ''.! !
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 20:59:35' prior: 50780490!
+add: aString 
+	isEmpty _ false.
+	element _ aString.! !
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 20:59:49' prior: 50780611!
+add: aBook 
+	isEmpty _ false.
+	element _ aBook.! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:59:52'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:59:52'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 20:59:52'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 20:59:52'!
+PASSED!
+
+!classDefinition: #ShoppingCart category: #TusLibros stamp: 'FL 10/30/2019 21:01:00'!
+Object subclass: #ShoppingCart
+	instanceVariableNames: 'isEmpty content'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!ShoppingCart methodsFor: 'as yet unclassified' stamp: 'FL 10/30/2019 21:01:00' prior: 50780616!
+add: aBook 
+	isEmpty _ false.
+	content _ aBook.! !
+!ShoppingCart methodsFor: 'as yet unclassified' stamp: 'FL 10/30/2019 21:01:00' prior: 50780606!
+initialize
+
+	isEmpty _ true.
+	content _ ''.! !
+!ShoppingCart methodsFor: 'as yet unclassified' stamp: 'FL 10/30/2019 21:01:00' prior: 50780602!
+list
+	^content.! !
+
+Object subclass: #ShoppingCart
+	instanceVariableNames: 'content'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!classDefinition: #ShoppingCart category: #TusLibros stamp: 'FL 10/30/2019 21:01:13'!
+Object subclass: #ShoppingCart
+	instanceVariableNames: 'content'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!ShoppingCart methodsFor: 'initialization' stamp: 'FL 10/30/2019 21:01:19' prior: 50780648!
+initialize
+
+	content _ ''.! !
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 21:01:33' prior: 50780643!
+add: aBook 
+	content _ aBook.! !
+!ShoppingCart methodsFor: 'testing' stamp: 'FL 10/30/2019 21:02:03' prior: 50780486!
+isEmpty
+	^content isEmpty ! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 21:02:04'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 21:02:04'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 21:02:04'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 21:02:04'!
+PASSED!
+
+| d| 
+d _ Dictionary new.!
+
+| d| 
+d _ Dictionary new.
+d add:3->'juan'.
+d!
+
+| d| 
+d _ Dictionary new.
+d add:3->'juan'.
+d asArray 
+!
+
+| d| 
+d _ Dictionary new.
+d add:'juan'->3.
+d add:'miguel'->5.
+d asArray !
+
+| d| 
+d _ Dictionary new.
+d add:'juan'->3.
+d add:'miguel'->5.
+d !
+
+| d| 
+d _ Dictionary new.
+d add:'juan'->3.
+d add:'miguel'->5.
+d  asOrderedCollection !
+
+| d| 
+d _ Dictionary new.
+d add:'juan'->3.
+d add:'miguel'->5.
+d keys!
+
+#('juan' 'miguel') isArray!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 22:49:11'!
+test05ShoppingCartListHasQuantityOfEachBookItHas
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self assert: aShoppingCart list asArray equals: #(designPatternsBook).! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 22:50:14' prior: 50780708!
+test05ShoppingCartListHasQuantityOfEachBookItHas
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self assert: aShoppingCart list keys equals: #(designPatternsBook).
+	self assert: aShoppingCart list asArray equals: #(1).! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 22:51:03'!
+test05ShoppingCartWithOneBookListItCorrectly
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self assert: aShoppingCart list keys equals: #(designPatternsBook).
+	self assert: aShoppingCart list asArray equals: #(1).! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 22:52:38'!
+test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self assert: aShoppingCart list keys equals: #(designPatternsBook).
+	self assert: aShoppingCart list asArray equals: #(1).! !
+
+!methodRemoval: ShoppingCartTest #test05ShoppingCartListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 22:52:40'!
+test05ShoppingCartListHasQuantityOfEachBookItHas
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self assert: aShoppingCart list keys equals: #(designPatternsBook).
+	self assert: aShoppingCart list asArray equals: #(1).!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 22:52:42'!
+ERROR!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 22:52:42'!
+ERROR!
+!ShoppingCart methodsFor: 'initialization' stamp: 'FL 10/30/2019 22:53:07' prior: 50780668!
+initialize
+
+	content _ Dictionary new.! !
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 22:53:23' prior: 50780672!
+add: aBook 
+	content _ aBook->1.! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 22:53:29'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 22:53:29'!
+ERROR!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 22:53:29'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 22:53:29'!
+ERROR!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 22:53:29'!
+ERROR!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 22:53:29'!
+ERROR!
+
+| d| 
+d _ Dictionary new.
+d add:'juan'->3.
+d add:'miguel'->5.
+d isEmpty !
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 22:54:27' prior: 50780776!
+add: aBook 
+	content add: aBook->1.! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 22:54:28'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 22:54:28'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 22:54:28'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 22:54:28'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 22:54:28'!
+FAILURE!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 22:54:28'!
+FAILURE!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 22:54:48'!
+FAILURE!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 22:55:02'!
+FAILURE!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 22:59:07' prior: 50780729!
+test05ShoppingCartWithOneBookListItCorrectly
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self assert: (Dictionary new; add: designPatternsBook ->1; yourself) equals: aShoppingCart list.
+! !
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 22:59:08'!
+ERROR!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 22:59:14' prior: 50780839!
+test05ShoppingCartWithOneBookListItCorrectly
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	self assert: (Dictionary new; add: designPatternsBook->1; yourself) equals: aShoppingCart list.
+! !
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 22:59:15'!
+ERROR!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:00:42' prior: 50780853!
+test05ShoppingCartWithOneBookListItCorrectly
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->1.
+	
+	self assert: expected equals: aShoppingCart list.
+! !
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 23:00:55'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:00:55'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:00:55'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:00:55'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:00:55'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 23:00:55'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 23:00:55'!
+FAILURE!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 23:00:55'!
+FAILURE!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:02:14' prior: 50780740!
+test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas
+
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->1.
+	expected add: 1->1.
+	
+	self assert: expected equals: aShoppingCart list.! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:02:35' prior: 50780909!
+test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas
+
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->1.
+	expected add: operatingSystemConceptsBook->1.
+	
+	self assert: expected equals: aShoppingCart list.! !
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 23:02:36'!
+FAILURE!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:03:37'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:03:37'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:03:37'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:03:37'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 23:03:37'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 23:03:37'!
+FAILURE!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 23:03:37'!
+FAILURE!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:04:11' prior: 50780922!
+test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas
+
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	aShoppingCart add: operatingSystemConceptsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->1.
+	expected add: operatingSystemConceptsBook->1.
+	
+	self assert: expected equals: aShoppingCart list.! !
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 23:04:12'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:04:12'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:04:12'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:04:12'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:04:12'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 23:04:12'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 23:04:12'!
+PASSED!
+
+!methodRemoval: ShoppingCartTest #test05ShoppingCartWithOneBookListItCorrectly stamp: 'FL 10/30/2019 23:04:40'!
+test05ShoppingCartWithOneBookListItCorrectly
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->1.
+	
+	self assert: expected equals: aShoppingCart list.
+!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:05:53'!
+test05ShoppingCartWithDifferentBooksListHasOneOfEachBook
+
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	aShoppingCart add: operatingSystemConceptsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->1.
+	expected add: operatingSystemConceptsBook->1.
+	
+	self assert: expected equals: aShoppingCart list.! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:06:59'!
+test06ShoppingCartWithRepeatedBookListHasCorrectAmount
+
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	aShoppingCart add: designPatternsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->2.
+	
+	self assert: expected equals: aShoppingCart list.! !
+
+!methodRemoval: ShoppingCartTest #test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas stamp: 'FL 10/30/2019 23:07:02'!
+test06ShoppingCartWithDifferentBooksListHasQuantityOfEachBookItHas
+
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add: designPatternsBook .
+	aShoppingCart add: operatingSystemConceptsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->1.
+	expected add: operatingSystemConceptsBook->1.
+	
+	self assert: expected equals: aShoppingCart list.!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:07:14'!
+FAILURE!
+
+| d s| 
+d _ Dictionary new.
+d add:'juan'->3.
+d add:'miguel'->5.
+s _ ShoppingCart new.
+s list add: 1->2.
+s!
+!ShoppingCart methodsFor: 'accessing' stamp: 'FL 10/30/2019 23:08:55' prior: 50780653!
+list
+	^content clone.! !
+
+| d s| 
+d _ Dictionary new.
+d add:'juan'->3.
+d add:'miguel'->5.
+s _ ShoppingCart new.
+s list add: 1->2.
+s!
+!ShoppingCart methodsFor: 'accessing' stamp: 'FL 10/30/2019 23:09:13' prior: 50781073!
+list
+	^content copy.! !
+
+| d s| 
+d _ Dictionary new.
+d add:'juan'->3.
+d add:'miguel'->5.
+s _ ShoppingCart new.
+s list add: 1->2.
+s!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:09:49'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:09:49'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:09:49'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:09:49'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:09:49'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:09:49'!
+FAILURE!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:09:49'!
+FAILURE!
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 23:14:20' prior: 50780805!
+add: aBook 
+	content at: aBook put: 1 + (content at: aBook ifAbsent: [0]).! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:14:21'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:14:21'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:14:21'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:14:21'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:14:21'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:14:21'!
+PASSED!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:16:00'!
+test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce
+
+	| aShoppingCart expected |
+	
+	aShoppingCart _ ShoppingCart new.
+	aShoppingCart add:2 of: designPatternsBook .
+	
+	expected _ Dictionary new.
+	expected add: designPatternsBook->2.
+	
+	self assert: expected equals: aShoppingCart list.! !
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:16:01'!
+ERROR!
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 23:16:19'!
+add: aSmallInteger of: aString 
+	self shouldBeImplemented.! !
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:18:12'!
+ERROR!
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 23:19:12' prior: 50781156!
+add: anAmount of: aBook
+	anAmount timesRepeat: [self add: aBook]! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:19:14'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:19:14'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:19:14'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:19:14'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:19:14'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:19:14'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:19:14'!
+PASSED!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:24:29'!
+test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	
+	self should: [aShoppingCart add:0 of: designPatternsBook .]  
+	raise: Error - MessageNotUnderstood withExceptionDo: [ :e |
+		self assert: aShoppingCart isEmpty ]! !
+!ShoppingCartTest methodsFor: 'tests' stamp: 'FL 10/30/2019 23:30:01' prior: 50781196!
+test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible
+
+	| aShoppingCart |
+	
+	aShoppingCart _ ShoppingCart new.
+	
+	self should: [aShoppingCart add:0 of: designPatternsBook .]  
+	raise: Error - MessageNotUnderstood withExceptionDo: [ :anError |
+		anError description = ShoppingCart AddLessThanOneBookErrorMessage.
+		self assert: aShoppingCart isEmpty. ]! !
+
+!testRun: #ShoppingCartTest #test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible stamp: 'FL 10/30/2019 23:30:05'!
+FAILURE!
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 23:31:42' prior: 50781165!
+add: anAmount of: aBook
+	anAmount >= 1 ifFalse: [self class ].
+	anAmount timesRepeat: [self add: aBook]! !
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 23:31:52' prior: 50781227!
+add: anAmount of: aBook
+	anAmount >= 1 ifFalse: [self error: self class ].
+	anAmount timesRepeat: [self add: aBook]! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:31:53'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:31:53'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:31:53'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:31:53'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:31:53'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:31:53'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:31:53'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible stamp: 'FL 10/30/2019 23:31:53'!
+ERROR!
+
+!testRun: #ShoppingCartTest #test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible stamp: 'FL 10/30/2019 23:31:53'!
+ERROR!
+!ShoppingCart class methodsFor: 'error message' stamp: 'FL 10/30/2019 23:33:16'!
+AddLessThanOneBookErrorMessage
+
+	^'You must add 1 or more books.'! !
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 23:33:35' prior: 50781233!
+add: anAmount of: aBook
+	anAmount >= 1 ifFalse: [self error: self class AddLessThanOneBookErrorMessage ].
+	anAmount timesRepeat: [self add: aBook]! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:33:36'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:33:36'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:33:36'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:33:36'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:33:36'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:33:36'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:33:36'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible stamp: 'FL 10/30/2019 23:33:36'!
+PASSED!
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 23:34:57' prior: 50781279!
+add: anAmount of: aBook
+	anAmount >= 1 ifFalse: [self error: self class AddLessThanOneBookErrorMessage ].
+	content at: aBook put: anAmount + (content at: aBook ifAbsent: [0]).! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:35:01'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:35:01'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:35:01'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:35:01'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:35:01'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:35:01'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:35:01'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible stamp: 'FL 10/30/2019 23:35:01'!
+PASSED!
+!ShoppingCart methodsFor: 'adding' stamp: 'FL 10/30/2019 23:35:20' prior: 50781113!
+add: aBook 
+	self add: 1 of:aBook.! !
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:35:20'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:35:20'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:35:20'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:35:20'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:35:20'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:35:20'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:35:20'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible stamp: 'FL 10/30/2019 23:35:20'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:35:25'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:35:25'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:35:25'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:35:25'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:35:25'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:35:25'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:35:25'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible stamp: 'FL 10/30/2019 23:35:25'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test01ShoppingCartIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:35:59'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test02ShoppingCartIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:35:59'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test03ShoppingCartListIsEmptyWhenCreated stamp: 'FL 10/30/2019 23:35:59'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test04ShoppingCartListIsNotEmptyAfterAddingABook stamp: 'FL 10/30/2019 23:35:59'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test05ShoppingCartWithDifferentBooksListHasOneOfEachBook stamp: 'FL 10/30/2019 23:35:59'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test06ShoppingCartWithRepeatedBookListHasCorrectAmount stamp: 'FL 10/30/2019 23:35:59'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test07ShoppingCartCanBeAddedWithMoreThanOneBookAtOnce stamp: 'FL 10/30/2019 23:35:59'!
+PASSED!
+
+!testRun: #ShoppingCartTest #test08AddingAnAmountLessThanOneBookToAShoppingCartIsNotPosible stamp: 'FL 10/30/2019 23:35:59'!
+PASSED!
+
+----QUIT----(30 October 2019 23:36:21) CuisUniversity-3938.image priorSource: 14363327!
