@@ -1,4 +1,4 @@
-!classDefinition: #TestTusLibros category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #TestTusLibros category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 TestCase subclass: #TestTusLibros
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -51,7 +51,7 @@ validCreditCard
 	^CreditCard new.! !
 
 
-!classDefinition: #CartTest category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #CartTest category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 TestTusLibros subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -145,7 +145,7 @@ test08CartRemembersTheNumberOfAddedItems
 	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #CashierTest category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 TestTusLibros subclass: #CashierTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -529,7 +529,7 @@ test05cannotCheckoutWithAnExpiredCreditCard
 	"! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #Cart category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -607,7 +607,7 @@ items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> ((ca
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: 'Cart class' category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 Cart class
 	instanceVariableNames: ''!
 
@@ -617,7 +617,7 @@ acceptingItemsOf: aCatalog
 	^self new initializeAcceptingItemsOf: aCatalog ! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #Cashier category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook creditCard'
 	classVariableNames: ''
@@ -653,7 +653,7 @@ invalidCartErrorMessage
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: 'Cashier class' category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -663,7 +663,7 @@ for: aCart on: aSalesBook with: aCreditCard
 	^self new initializeFor: aCart on: aSalesBook with: aCreditCard.! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #CreditCard category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 Object subclass: #CreditCard
 	instanceVariableNames: 'expired'
 	classVariableNames: ''
@@ -683,7 +683,7 @@ isExpired
 ^expired! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -691,7 +691,7 @@ Object subclass: #MerchantProcessor
 	category: 'TusLibros'!
 
 
-!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 MerchantProcessor subclass: #MerchantProcessorMOCK
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -699,7 +699,7 @@ MerchantProcessor subclass: #MerchantProcessorMOCK
 	category: 'TusLibros'!
 
 
-!classDefinition: #Ticket category: #TusLibros stamp: 'EEEE 11/4/2019 21:28:06'!
+!classDefinition: #Ticket category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
 Object subclass: #Ticket
 	instanceVariableNames: ''
 	classVariableNames: ''
