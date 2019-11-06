@@ -6830,3 +6830,622 @@ PASSED!
 PASSED!
 
 ----SNAPSHOT----(6 November 2019 17:44:07) CuisUniversity-3938.image priorSource: 14331428!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:44:48' prior: 50781878!
+test06checkingOutHandlesMerchantProcessorErrorCorrectly
+
+	| aCashier aMerchantProcessor |
+	
+		
+	aMerchantProcessor := MerchantProcessorMOCK with: [^ self error ].
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+
+	self 
+		should: [aCashier checkOut ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = aCashier merchantProcessorErrorMessage.
+		]! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:45:31'!
+test07checkingOutCommunicatesWithMerchantProcessor
+
+	| aCashier aMerchantProcessor |
+	
+		
+	aMerchantProcessor := MerchantProcessorMOCK with: [^ self error ].
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+
+	self 
+		should: [aCashier checkOut ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = aCashier merchantProcessorErrorMessage.
+		]! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:45:53' prior: 50785060!
+test07checkingOutCommunicatesWithMerchantProcessor
+
+	| aCashier aMerchantProcessor communicationFlag |
+	
+	communicationFlag := false.
+	
+	aMerchantProcessor := MerchantProcessorMOCK with: [^ self error ].
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+
+	self 
+		should: [aCashier checkOut ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = aCashier merchantProcessorErrorMessage.
+		]! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:46:13' prior: 50785079!
+test07checkingOutCommunicatesWithMerchantProcessor
+
+	| aCashier aMerchantProcessor communicationFlag |
+	
+	communicationFlag := false.
+	
+	aMerchantProcessor := MerchantProcessorMOCK with: [ communicationFlag := true ].
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+
+	self 
+		should: [aCashier checkOut ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = aCashier merchantProcessorErrorMessage.
+		]! !
+
+!testRun: #CashierTest #test07checkingOutCommunicatesWithMerchantProcessor stamp: 'LEB 11/6/2019 17:46:21'!
+FAILURE!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:46:52' prior: 50785099!
+test07checkingOutCommunicatesWithMerchantProcessor
+
+	| aCashier aMerchantProcessor communicationFlag |
+	
+	communicationFlag := false.
+	
+	aMerchantProcessor := MerchantProcessorMOCK with: [ communicationFlag := true ].
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+
+	aCashier checkOut.
+	self assert: communicationFlag.! !
+
+!testRun: #CashierTest #test07checkingOutCommunicatesWithMerchantProcessor stamp: 'LEB 11/6/2019 17:46:54'!
+PASSED!
+
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 17:46:54'!
+PASSED!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 17:46:54'!
+PASSED!
+
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 17:46:54'!
+PASSED!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 17:46:54'!
+PASSED!
+
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 17:46:54'!
+PASSED!
+
+!testRun: #CashierTest #test06checkingOutHandlesMerchantProcessorErrorCorrectly stamp: 'LEB 11/6/2019 17:46:54'!
+PASSED!
+
+!testRun: #CashierTest #test07checkingOutCommunicatesWithMerchantProcessor stamp: 'LEB 11/6/2019 17:46:54'!
+PASSED!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:50:03' prior: 50781244!
+test01cannotCheckOutEmptyCart
+
+	| aCashier |
+	
+	aCashier _ Cashier for: anEmptyCart on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
+	
+	self 
+		should: [aCashier checkOut ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = aCashier invalidCartErrorMessage.
+			self assert: anEmptyCart isEmpty.
+			self assert: aSalesbook isEmpty ]
+	
+	! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:50:25' prior: 50781429!
+test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook
+
+	| aCashier aTicket |
+	
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
+
+	aTicket := aCashier checkOut.
+	
+	self deny: aSalesbook isEmpty.
+	self assert: (aSalesbook includes: aTicket).! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:50:49' prior: 50781264!
+test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
+
+	| aCashier aTicket |
+	
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
+	aTicket := aCashier checkOut.
+	
+	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	"
+	NO CORREGIR LO SIGUIENTE:
+	self assert: 1 equals: aTicket size.
+	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
+	self assert: (aTicket at: 1) key value equals: 1.
+	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
+	"! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:51:02' prior: 50781296!
+test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
+
+	| aCart aCashier aTicket |
+	aCart _ aCartWithAnItem.
+	aCart add: self itemSellByTheStore2.
+	
+	aCashier _ Cashier for: aCart on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
+	aTicket := aCashier checkOut.
+	
+	self assert: (self defaultCatalog at: self itemSellByTheStore) + (self defaultCatalog at: self itemSellByTheStore2) equals: aTicket.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	"
+	NO CORREGIR LO SIGUIENTE:
+	self assert: 1 equals: aTicket size.
+	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
+	self assert: (aTicket at: 1) key value equals: 1.
+	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
+	"! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:51:13' prior: 50781557!
+test05cannotCheckoutWithAnExpiredCreditCard
+
+	| aCashier |
+	
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self expiredCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
+	
+	self 
+		should: [aCashier checkOut ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = aCashier expiredCreditCardMessage.
+			self deny: aCartWithAnItem isEmpty.
+			self assert: aSalesbook isEmpty	
+				]
+			
+			
+			
+			
+			
+			
+			
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	"
+	NO CORREGIR LO SIGUIENTE:
+	self assert: 1 equals: aTicket size.
+	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
+	self assert: (aTicket at: 1) key value equals: 1.
+	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
+	"! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:51:18' prior: 50785266!
+test05cannotCheckoutWithAnExpiredCreditCard
+
+	| aCashier |
+	
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self expiredCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
+	
+	self 
+		should: [aCashier checkOut ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = aCashier expiredCreditCardMessage.
+			self deny: aCartWithAnItem isEmpty.
+			self assert: aSalesbook isEmpty	
+		]
+			
+			
+			
+			
+			
+			
+			
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	"
+	NO CORREGIR LO SIGUIENTE:
+	self assert: 1 equals: aTicket size.
+	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
+	self assert: (aTicket at: 1) key value equals: 1.
+	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
+	"! !
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:51:54' prior: 50785123!
+test07checkingOutCommunicatesWithMerchantProcessor
+
+	| aCashier aMerchantProcessor communicationFlag |
+	
+	communicationFlag := false.
+	aMerchantProcessor := MerchantProcessorMOCK with: [ communicationFlag := true ].
+	
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+	aCashier checkOut.
+	
+	self assert: communicationFlag.! !
+
+----SNAPSHOT----(6 November 2019 17:52:55) CuisUniversity-3938.image priorSource: 14508419!
+
+!classRemoval: #Ticket stamp: 'LEB 11/6/2019 17:53:08'!
+Object subclass: #Ticket
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+----SNAPSHOT----(6 November 2019 17:53:15) CuisUniversity-3938.image priorSource: 14518377!

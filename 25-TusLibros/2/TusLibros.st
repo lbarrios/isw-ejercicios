@@ -1,4 +1,4 @@
-!classDefinition: #TestTusLibros category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #TestTusLibros category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 TestCase subclass: #TestTusLibros
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -58,7 +58,7 @@ validCreditCard
 	^aCreditCard.! !
 
 
-!classDefinition: #CartTest category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #CartTest category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 TestTusLibros subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -152,20 +152,19 @@ test08CartRemembersTheNumberOfAddedItems
 	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #CashierTest category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 TestTusLibros subclass: #CashierTest
 	instanceVariableNames: 'anEmptyCart aCartWithAnItem aSalesbook anArbitraryDate'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:25:32'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:50:03'!
 test01cannotCheckOutEmptyCart
 
-	| aCashier aMerchantProcessor |
+	| aCashier |
 	
-	aMerchantProcessor := self alwaysOKMerchantProcessor.
-	aCashier _ Cashier for: anEmptyCart on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+	aCashier _ Cashier for: anEmptyCart on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
 	
 	self 
 		should: [aCashier checkOut ]
@@ -177,26 +176,24 @@ test01cannotCheckOutEmptyCart
 	
 	! !
 
-!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:26:02'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:50:25'!
 test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook
 
-	| aCashier aTicket aMerchantProcessor |
+	| aCashier aTicket |
 	
-	aMerchantProcessor := self alwaysOKMerchantProcessor.
-	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
 
 	aTicket := aCashier checkOut.
 	
 	self deny: aSalesbook isEmpty.
 	self assert: (aSalesbook includes: aTicket).! !
 
-!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:25:32'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:50:49'!
 test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 
-	| aCashier aTicket aMerchantProcessor |
+	| aCashier aTicket |
 	
-	aMerchantProcessor := self alwaysOKMerchantProcessor.
-	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
 	aTicket := aCashier checkOut.
 	
 	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
@@ -304,15 +301,14 @@ test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
 
-!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:25:32'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:51:02'!
 test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
 
-	| aCart aCashier aTicket aMerchantProcessor |
+	| aCart aCashier aTicket |
 	aCart _ aCartWithAnItem.
 	aCart add: self itemSellByTheStore2.
 	
-	aMerchantProcessor := self alwaysOKMerchantProcessor.
-	aCashier _ Cashier for: aCart on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+	aCashier _ Cashier for: aCart on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
 	aTicket := aCashier checkOut.
 	
 	self assert: (self defaultCatalog at: self itemSellByTheStore) + (self defaultCatalog at: self itemSellByTheStore2) equals: aTicket.
@@ -418,13 +414,13 @@ test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
 
-!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:27:49'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:51:18'!
 test05cannotCheckoutWithAnExpiredCreditCard
 
-	| aCashier aMerchantProcessor |
+	| aCashier |
 	
-	aMerchantProcessor := self alwaysOKMerchantProcessor.
-	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self expiredCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self expiredCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
+	
 	self 
 		should: [aCashier checkOut ]
 		raise: Error - MessageNotUnderstood
@@ -432,7 +428,7 @@ test05cannotCheckoutWithAnExpiredCreditCard
 			self assert: anError messageText = aCashier expiredCreditCardMessage.
 			self deny: aCartWithAnItem isEmpty.
 			self assert: aSalesbook isEmpty	
-				]
+		]
 			
 			
 			
@@ -541,7 +537,7 @@ test05cannotCheckoutWithAnExpiredCreditCard
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
 
-!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:39:49'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:44:48'!
 test06checkingOutHandlesMerchantProcessorErrorCorrectly
 
 	| aCashier aMerchantProcessor |
@@ -555,101 +551,20 @@ test06checkingOutHandlesMerchantProcessorErrorCorrectly
 		raise: Error - MessageNotUnderstood
 		withExceptionDo: [ :anError |
 			self assert: anError messageText = aCashier merchantProcessorErrorMessage.
-		]
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
+		]! !
+
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:51:54'!
+test07checkingOutCommunicatesWithMerchantProcessor
+
+	| aCashier aMerchantProcessor communicationFlag |
+	
+	communicationFlag := false.
+	aMerchantProcessor := MerchantProcessorMOCK with: [ communicationFlag := true ].
+	
+	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: aMerchantProcessor.
+	aCashier checkOut.
+	
+	self assert: communicationFlag.! !
 
 
 !CashierTest methodsFor: 'setUp/tearDown' stamp: 'LEB 11/6/2019 17:25:32'!
@@ -661,7 +576,7 @@ aSalesbook := self defaultSalesBook.
 anArbitraryDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.! !
 
 
-!classDefinition: #CreditCardTest category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #CreditCardTest category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 TestTusLibros subclass: #CreditCardTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -843,7 +758,7 @@ aDate year.
 "! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #Cart category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -921,7 +836,7 @@ items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> ((ca
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: 'Cart class' category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 Cart class
 	instanceVariableNames: ''!
 
@@ -931,7 +846,7 @@ acceptingItemsOf: aCatalog
 	^self new initializeAcceptingItemsOf: aCatalog ! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #Cashier category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook creditCard date merchantProcessor'
 	classVariableNames: ''
@@ -976,7 +891,7 @@ merchantProcessorErrorMessage
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: 'Cashier class' category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -986,7 +901,7 @@ for: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate withMerchantP
 	^self new initializeFor: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate withMerchantProcessor: aMerchantProcessor.! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 Object subclass: #CreditCard
 	instanceVariableNames: 'number expiration owner'
 	classVariableNames: ''
@@ -1007,7 +922,7 @@ initializeWithNumber: aNumber expiringOn: anExpirationMonthOfYear ownedBy: anOwn
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -1016,7 +931,7 @@ withNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName
 	^self new initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -1030,7 +945,7 @@ self shouldBeImplemented.
 ! !
 
 
-!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 MerchantProcessor subclass: #MerchantProcessorMOCK
 	instanceVariableNames: 'blockClosure'
 	classVariableNames: ''
@@ -1048,18 +963,10 @@ initializeWith: aBlockClosure
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'MerchantProcessorMOCK class' category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
+!classDefinition: 'MerchantProcessorMOCK class' category: #TusLibros stamp: 'LEB 11/6/2019 17:53:14'!
 MerchantProcessorMOCK class
 	instanceVariableNames: ''!
 
 !MerchantProcessorMOCK class methodsFor: 'instance creation' stamp: 'LEB 11/6/2019 17:32:08'!
 with: aBlockClosure 
 	^self new initializeWith: aBlockClosure ! !
-
-
-!classDefinition: #Ticket category: #TusLibros stamp: 'LEB 11/6/2019 17:44:06'!
-Object subclass: #Ticket
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
