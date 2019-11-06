@@ -1,1525 +1,1316 @@
 
 
-----STARTUP---- (31 October 2019 16:17:37) as /home/flinari/Downloads/linux64/CuisUniversity-3938.image!
+----STARTUP---- (6 November 2019 15:40:53) as /home/lbarrios/cuis_university/5.0-3938/CuisUniversity-3938.image!
 
 
-----End fileIn of /home/flinari/Downloads/linux64/Packages/TerseGuide.pck.st----!
+----End fileIn of /home/lbarrios/facultad/isw-ejercicios/25-TusLibros/2/TusLibros.st----!
 
-----QUIT----(31 October 2019 16:18:58) CuisUniversity-3938.image priorSource: 14319118!
+----SNAPSHOT----(6 November 2019 15:42:02) CuisUniversity-3938.image priorSource: 14319118!
 
-----STARTUP---- (4 November 2019 18:47:14) as /home/flinari/Downloads/linux64/CuisUniversity-3938.image!
-
-
-----End fileIn of /home/flinari/Desktop/repo/isw-ejercicios/25-TusLibros/2/TusLibros.st----!
-
-Object subclass: #Cashier
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classDefinition: #Cashier category: #TusLibros stamp: 'FL 11/4/2019 18:48:48'!
-Object subclass: #Cashier
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-TestCase subclass: #CashierTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classDefinition: #CashierTest category: #TusLibros stamp: 'FL 11/4/2019 18:49:02'!
-TestCase subclass: #CashierTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 18:53:37'!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ Cart new.
-	aCashier _ Cashier for: aCart.
-	
-	! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 18:56:32' prior: 50780582!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ CartTest createCart .
-	aCashier _ Cashier for: aCart.
-	
-	
-	
-	! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 18:58:46' prior: 50780588!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ CartTest createCart .
-	aCashier _ Cashier for: aCart.
-	
-	self 
-		should: [aCashier checkOut  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = aCashier invalidCartErrorMessage.
-			self assert: aCart isEmpty ]
-	
-	
-	
-	! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:00:50'!
-ERROR!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:01:24'!
-ERROR!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:02:00' prior: 50780595!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ CartTest new createCart .
-	aCashier _ Cashier for: aCart.
-	
-	self 
-		should: [aCashier checkOut  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = aCashier invalidCartErrorMessage.
-			self assert: aCart isEmpty ]
-	
-	
-	
-	! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:02:01'!
-ERROR!
-
-Object subclass: #TestObjectGenerator
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classDefinition: #TestObjectGenerator category: #TusLibros stamp: 'FL 11/4/2019 19:04:23'!
-Object subclass: #TestObjectGenerator
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-!TestObjectGenerator methodsFor: 'create' stamp: 'FL 11/4/2019 19:05:13'!
-createCart! !
-!TestObjectGenerator methodsFor: 'create' stamp: 'FL 11/4/2019 19:05:30' prior: 50780643!
-createCart
-	
-	^Cart acceptingItemsOf: self defaultCatalog! !
-!TestObjectGenerator methodsFor: 'catalog' stamp: 'FL 11/4/2019 19:06:44'!
-defaultCatalog
-	
-	^ Array with: self itemSellByTheStore! !
-!TestObjectGenerator methodsFor: 'item' stamp: 'FL 11/4/2019 19:07:35'!
-itemNotSellByTheStore
-	
-	^'invalidBook'! !
-!TestObjectGenerator methodsFor: 'item' stamp: 'FL 11/4/2019 19:07:58'!
-itemSellByTheStore
-	
-	^ 'validBook'! !
-
-!methodRemoval: CartTest #createCart stamp: 'FL 11/4/2019 19:08:13'!
-createCart
-	
-	^Cart acceptingItemsOf: self defaultCatalog!
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:08:36' prior: 50780499!
-test01NewCartsAreCreatedEmpty
-
-	self assert: TestObjectGenerator createCart isEmpty! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:08:47' prior: 50780477!
-test02CanNotAddItemsThatDoNotBelongToStore
-
-	| cart |
-	
-	cart := TestObjectGenerator createCart.
-	
-	self 
-		should: [ cart add: self itemNotSellByTheStore ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:08:57' prior: 50780504!
-test03AfterAddingAnItemTheCartIsNotEmptyAnymore
-
-	| cart |
-	
-	cart := TestObjectGenerator createCart.
-	
-	cart add: self itemSellByTheStore.
-	self deny: cart isEmpty ! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:09:04' prior: 50780464!
-test04CanNotAddNonPositiveNumberOfItems
-
-	| cart |
-	
-	cart := TestObjectGenerator createCart.
-	
-	self 
-		should: [cart add: 0 of: self itemSellByTheStore ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidQuantityErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:09:11' prior: 50780519!
-test05CanNotAddMoreThanOneItemNotSellByTheStore
-
-	| cart |
-	
-	cart := TestObjectGenerator createCart.
-	
-	self 
-		should: [cart add: 2 of: self itemNotSellByTheStore  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:09:19' prior: 50780532!
-test06CartRemembersAddedItems
-
-	| cart |
-	
-	cart := TestObjectGenerator createCart.
-	
-	cart add: self itemSellByTheStore.
-	self assert: (cart includes: self itemSellByTheStore)! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:09:24' prior: 50780512!
-test07CartDoesNotHoldNotAddedItems
-
-	| cart |
-	
-	cart := TestObjectGenerator createCart.
-	
-	self deny: (cart includes: self itemSellByTheStore)! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:09:28' prior: 50780490!
-test08CartRemembersTheNumberOfAddedItems
-
-	| cart |
-	
-	cart := TestObjectGenerator createCart.
-	
-	cart add: 2 of: self itemSellByTheStore.
-	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:09:40' prior: 50780615!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ TestObjectGenerator createCart .
-	aCashier _ Cashier for: aCart.
-	
-	self 
-		should: [aCashier checkOut  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = aCashier invalidCartErrorMessage.
-			self assert: aCart isEmpty ]
-	
-	
-	
-	! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780740!
-test08CartRemembersTheNumberOfAddedItems
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator createCart.
-	
-	cart add: 2 of: self itemSellByTheStore.
-	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780669!
-test01NewCartsAreCreatedEmpty
-
-	self assert: TusLibrosObjectGenerator createCart isEmpty! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780675!
-test02CanNotAddItemsThatDoNotBelongToStore
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator createCart.
-	
-	self 
-		should: [ cart add: self itemNotSellByTheStore ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780723!
-test06CartRemembersAddedItems
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator createCart.
-	
-	cart add: self itemSellByTheStore.
-	self assert: (cart includes: self itemSellByTheStore)! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780688!
-test03AfterAddingAnItemTheCartIsNotEmptyAnymore
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator createCart.
-	
-	cart add: self itemSellByTheStore.
-	self deny: cart isEmpty ! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780732!
-test07CartDoesNotHoldNotAddedItems
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator createCart.
-	
-	self deny: (cart includes: self itemSellByTheStore)! !
-!CashierTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780749!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ TusLibrosObjectGenerator createCart .
-	aCashier _ Cashier for: aCart.
-	
-	self 
-		should: [aCashier checkOut  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = aCashier invalidCartErrorMessage.
-			self assert: aCart isEmpty ]
-	
-	
-	
-	! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780709!
-test05CanNotAddMoreThanOneItemNotSellByTheStore
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator createCart.
-	
-	self 
-		should: [cart add: 2 of: self itemNotSellByTheStore  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:10:42' prior: 50780696!
-test04CanNotAddNonPositiveNumberOfItems
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator createCart.
-	
-	self 
-		should: [cart add: 0 of: self itemSellByTheStore ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidQuantityErrorMessage.
-			self assert: cart isEmpty ]! !
-
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 19:10:56'!
-ERROR!
-
-!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'FL 11/4/2019 19:10:56'!
-ERROR!
-
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 19:10:56'!
-ERROR!
-
-!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'FL 11/4/2019 19:10:56'!
-ERROR!
-
-!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'FL 11/4/2019 19:10:56'!
-ERROR!
-
-!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'FL 11/4/2019 19:10:56'!
-ERROR!
-
-!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'FL 11/4/2019 19:10:56'!
-ERROR!
-
-!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'FL 11/4/2019 19:10:56'!
-ERROR!
-
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 19:11:04'!
-ERROR!
-
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 19:11:22'!
-ERROR!
-
-!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'FL 11/4/2019 19:11:22'!
-ERROR!
-
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 19:11:22'!
-ERROR!
-
-!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'FL 11/4/2019 19:11:22'!
-ERROR!
-
-!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'FL 11/4/2019 19:11:22'!
-ERROR!
-
-!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'FL 11/4/2019 19:11:22'!
-ERROR!
-
-!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'FL 11/4/2019 19:11:22'!
-ERROR!
-
-!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'FL 11/4/2019 19:11:22'!
-ERROR!
-
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 19:11:25'!
-ERROR!
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:12:31' prior: 50780773!
-test01NewCartsAreCreatedEmpty
-
-	self assert: TusLibrosObjectGenerator new createCart isEmpty! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:12:35' prior: 50780779!
-test02CanNotAddItemsThatDoNotBelongToStore
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator new createCart.
-	
-	self 
-		should: [ cart add: self itemNotSellByTheStore ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:12:39' prior: 50780802!
-test03AfterAddingAnItemTheCartIsNotEmptyAnymore
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator new createCart.
-	
-	cart add: self itemSellByTheStore.
-	self deny: cart isEmpty ! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:12:44' prior: 50780847!
-test04CanNotAddNonPositiveNumberOfItems
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator new createCart.
-	
-	self 
-		should: [cart add: 0 of: self itemSellByTheStore ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidQuantityErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:12:51' prior: 50780833!
-test05CanNotAddMoreThanOneItemNotSellByTheStore
-
-	| cart |
-	
-	cart := TusLibrosObjectGenerator new createCart.
-	
-	self 
-		should: [cart add: 2 of: self itemNotSellByTheStore  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
-			self assert: cart isEmpty ]! !
-
-!classRemoval: #TusLibrosObjectGenerator stamp: 'FL 11/4/2019 19:14:19'!
-Object subclass: #TusLibrosObjectGenerator
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classRemoval: #Cashier stamp: 'FL 11/4/2019 19:14:19'!
-Object subclass: #Cashier
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classRemoval: #Cart stamp: 'FL 11/4/2019 19:14:20'!
-Object subclass: #Cart
-	instanceVariableNames: 'catalog items'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classRemoval: #CashierTest stamp: 'FL 11/4/2019 19:14:20'!
-TestCase subclass: #CashierTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classRemoval: #CartTest stamp: 'FL 11/4/2019 19:14:21'!
-TestCase subclass: #CartTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-----End fileIn of /home/flinari/Desktop/repo/isw-ejercicios/25-TusLibros/2/TusLibros.st----!
-
-TestCase subclass: #TusLibrosTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classDefinition: #TusLibrosTest category: #TusLibros stamp: 'FL 11/4/2019 19:15:10'!
-TestCase subclass: #TusLibrosTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-TestTusLibros subclass: #CartTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classDefinition: #CartTest category: #TusLibros stamp: 'FL 11/4/2019 19:16:38'!
-TestTusLibros subclass: #CartTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-Object subclass: #Cashier
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classDefinition: #Cashier category: #TusLibros stamp: 'FL 11/4/2019 19:16:56'!
-Object subclass: #Cashier
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-TestTusLibros subclass: #CashierTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!classDefinition: #CashierTest category: #TusLibros stamp: 'FL 11/4/2019 19:17:06'!
-TestTusLibros subclass: #CashierTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:18:19'!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ self createCart .
-	aCashier _ Cashier for: aCart.
-	
-	self 
-		should: [aCashier checkOut  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = aCashier invalidCartErrorMessage.
-			self assert: aCart isEmpty ]
-	
-	! !
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 19:18:40'!
-createCart
-	
-	^Cart acceptingItemsOf: self defaultCatalog! !
-
-!methodRemoval: CartTest #createCart stamp: 'FL 11/4/2019 19:18:40'!
-createCart
-	
-	^Cart acceptingItemsOf: self defaultCatalog!
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 19:18:54'!
-defaultCatalog
-	
-	^ Array with: self itemSellByTheStore! !
-
-!methodRemoval: CartTest #defaultCatalog stamp: 'FL 11/4/2019 19:18:54'!
-defaultCatalog
-	
-	^ Array with: self itemSellByTheStore!
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 19:19:03'!
-itemNotSellByTheStore
-	
-	^'invalidBook'! !
-
-!methodRemoval: CartTest #itemNotSellByTheStore stamp: 'FL 11/4/2019 19:19:03'!
-itemNotSellByTheStore
-	
-	^'invalidBook'!
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 19:19:08'!
-itemSellByTheStore
-	
-	^ 'validBook'! !
-
-!methodRemoval: CartTest #itemSellByTheStore stamp: 'FL 11/4/2019 19:19:08'!
-itemSellByTheStore
-	
-	^ 'validBook'!
-
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 19:19:14'!
+!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'LEB 11/6/2019 15:42:04'!
 PASSED!
 
-!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'FL 11/4/2019 19:19:14'!
+!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'LEB 11/6/2019 15:42:04'!
 PASSED!
 
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 19:19:14'!
+!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'LEB 11/6/2019 15:42:04'!
 PASSED!
 
-!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'FL 11/4/2019 19:19:14'!
+!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'LEB 11/6/2019 15:42:04'!
 PASSED!
 
-!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'FL 11/4/2019 19:19:14'!
+!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'LEB 11/6/2019 15:42:04'!
 PASSED!
 
-!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'FL 11/4/2019 19:19:14'!
+!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'LEB 11/6/2019 15:42:04'!
 PASSED!
 
-!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'FL 11/4/2019 19:19:14'!
+!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'LEB 11/6/2019 15:42:04'!
 PASSED!
 
-!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'FL 11/4/2019 19:19:14'!
+!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'LEB 11/6/2019 15:42:04'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:19:19'!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:42:06'!
+PASSED!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 15:42:06'!
+PASSED!
+
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 15:42:06'!
+PASSED!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 15:42:06'!
+PASSED!
+
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 15:42:06'!
+PASSED!
+
+Object subclass: #CreditCard
+	instanceVariableNames: 'expired number expiration owner'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/6/2019 15:42:26'!
+Object subclass: #CreditCard
+	instanceVariableNames: 'expired number expiration owner'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/6/2019 15:44:49' prior: 50777406!
+validCreditCard
+	"withNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName"
+	^CreditCard withNumber: 1 expiringOn: 0 ownedBy: 'Wilki'.! !
+
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:44:56'!
 ERROR!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:19:19'!
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 15:44:56'!
 ERROR!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:19:54'!
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 15:44:56'!
 ERROR!
-!Cashier class methodsFor: 'instance creation' stamp: 'FL 11/4/2019 19:20:04'!
-for: aCart 
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 15:44:56'!
+ERROR!
+
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 15:44:56'!
+PASSED!
+
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:45:04'!
+ERROR!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 15:45:04'!
+ERROR!
+
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 15:45:04'!
+ERROR!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 15:45:04'!
+ERROR!
+
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 15:45:04'!
+PASSED!
+
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:45:06'!
+ERROR!
+!CreditCard class methodsFor: 'instance creation' stamp: 'LEB 11/6/2019 15:45:18'!
+withNumber: aSmallInteger expiringOn: aSmallInteger2 ownedBy: aString 
 	"DO NOT FORGET TO RENAME COLLABORATORS AND REMOVE THIS COMMENT!!!!"
 	self shouldBeImplemented.
-	^self new initializeFor: aCart ! !
-!Cashier class methodsFor: 'instance creation' stamp: 'FL 11/4/2019 19:20:29' prior: 50781308!
-for: aCart 
-	
-	^self new initializeFor: aCart ! !
+	^self new initializeWithNumber: aSmallInteger expiringOn: aSmallInteger2 ownedBy: aString ! !
+!CreditCard class methodsFor: 'instance creation' stamp: 'LEB 11/6/2019 15:45:41' prior: 50777942!
+withNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName
+	^self new initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName! !
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:20:31'!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:46:17'!
 ERROR!
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'FL 11/4/2019 19:21:04'!
-Object subclass: #Cashier
-	instanceVariableNames: 'cart'
+!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/6/2019 15:46:36'!
+Object subclass: #CreditCard
+	instanceVariableNames: 'expired number expiration owner monthOfYear'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
-!Cashier methodsFor: 'initialize' stamp: 'FL 11/4/2019 19:21:04'!
-initializeFor: aCart 
+
+!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/6/2019 15:46:36'!
+Object subclass: #CreditCard
+	instanceVariableNames: 'expired number expiration owner monthOfYear name'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!CreditCard methodsFor: 'initialization' stamp: 'LEB 11/6/2019 15:46:36'!
+initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName 
 	self shouldBeImplemented.
-	cart := aCart.! !
-!Cashier methodsFor: 'initialize' stamp: 'FL 11/4/2019 19:21:10' prior: 50781330!
-initializeFor: aCart 
-	
-	cart := aCart.! !
+	number := aNumber.
+	monthOfYear := aMonthOfYear.
+	name := aName.! !
+!CreditCard methodsFor: 'initialization' stamp: 'LEB 11/6/2019 15:46:43' prior: 50777980!
+initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName 
+	number := aNumber.
+	monthOfYear := aMonthOfYear.
+	name := aName.! !
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:21:20'!
-ERROR!
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:21:42'!
-checkOut
-	self shouldBeImplemented.! !
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:22:20' prior: 50781342!
-checkOut
-	self error: 'holA'! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:22:22'!
-ERROR!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:22:22'!
-ERROR!
-!Cashier methodsFor: 'error message' stamp: 'FL 11/4/2019 19:22:45'!
-invalidCartErrorMessage
-	self shouldBeImplemented.! !
-!Cashier methodsFor: 'error message' stamp: 'FL 11/4/2019 19:23:07' prior: 50781357!
-invalidCartErrorMessage
-	^'The cart is empty'! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:23:08'!
-FAILURE!
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:23:30' prior: 50781347!
-checkOut
-	self error: self invalidCartErrorMessage.! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:23:31'!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:46:50'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:23:31'!
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 15:46:52'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:23:37'!
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 15:46:54'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:23:37'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:24:41' prior: 50781227!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ self createCart .
-	aCashier _ Cashier for: aCart.
-	
-	self 
-		should: [aCashier checkOut ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = aCashier invalidCartErrorMessage.
-			self assert: aCart isEmpty ]
-	
-	! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:30:34'!
-test02checkingOutRENAME_ME
-
-	| aCart aCashier |
-	aCart _ self createCart .
-	aCart add: self itemSellByTheStore.
-	aCashier _ Cashier for: aCart.
-	aCashier checkOut
-	
-	! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:31:23' prior: 50781400!
-test02checkingOutRENAME_ME
-
-	| aCart aCashier |
-	aCart _ self createCart .
-	aCart add: self itemSellByTheStore.
-	aCashier _ Cashier for: aCart.
-	aCashier checkOut! !
-!Cashier class methodsFor: 'instance creation' stamp: 'FL 11/4/2019 19:37:54'!
-for: aCart on: aSalesBook  
-	
-	^self new initializeFor: aCart ! !
-
-!methodRemoval: Cashier class #for: stamp: 'FL 11/4/2019 19:37:54'!
-for: aCart 
-	
-	^self new initializeFor: aCart !
-!Cashier class methodsFor: 'instance creation' stamp: 'FL 11/4/2019 19:38:32' prior: 50781416!
-for: aCart on: aSalesBook  
-	
-	^self new initializeFor: aCart on: aSalesBook.! !
-!Cashier methodsFor: 'initialize' stamp: 'FL 11/4/2019 19:38:40'!
-initializeFor: aCart on: aSalesBook.
-	
-	cart := aCart.! !
-
-!classDefinition: #Cashier category: #TusLibros stamp: 'FL 11/4/2019 19:38:51'!
-Object subclass: #Cashier
-	instanceVariableNames: 'cart salesBook'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-!Cashier methodsFor: 'initialize' stamp: 'FL 11/4/2019 19:38:47' prior: 50781430!
-initializeFor: aCart on: aSalesBook.
-	
-	cart := aCart.
-	salesBook := aSalesBook.! !
-
-!methodRemoval: Cashier #initializeFor: stamp: 'FL 11/4/2019 19:39:02'!
-initializeFor: aCart 
-	
-	cart := aCart.!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:39:40' prior: 50781387!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier |
-	aCart _ self createCart .
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	
-	self 
-		should: [aCashier checkOut ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = aCashier invalidCartErrorMessage.
-			self assert: aCart isEmpty ]
-	
-	! !
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 19:39:57'!
-defaultSalesBook
-	
-	^ 'jeje'! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:40:04'!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:46:56'!
 PASSED!
 
-----SNAPSHOT----(4 November 2019 19:40:12) CuisUniversity-3938.image priorSource: 14359030!
-
-----STARTUP---- (4 November 2019 19:41:50) as /home/flinari/Downloads/linux64/CuisUniversity-3938.image!
-
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:41:55'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:42:06' prior: 50781408!
-test02checkingOutRENAME_ME
-
-	| aCart aCashier |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aCashier _ Cashier for: aCart.
-	aCashier checkOut! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:42:15' prior: 50781481!
-test02checkingOutRENAME_ME
-
-	| aCart aCashier |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aCashier checkOut! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:45:22' prior: 50781451!
-test01cannotCheckOutEmptyCart
-
-	| aCart aCashier aSalesBook |
-	
-	aCart _ self createCart.
-	aSalesBook := self defaultSalesBook.
-	aCashier _ Cashier for: aCart on: aSalesBook.
-	
-	self 
-		should: [aCashier checkOut ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = aCashier invalidCartErrorMessage.
-			self assert: aCart isEmpty.
-			self assert: aSalesBook isEmpty ]
-	
-	! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:45:23'!
-FAILURE!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:45:30'!
-FAILURE!
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 19:45:54' prior: 50781465!
-defaultSalesBook
-	
-	^ OrderedCollection new.! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:45:57'!
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 15:46:56'!
 PASSED!
 
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:46:05'!
-ERROR!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:46:31' prior: 50781489!
-test02checkingOutRENAME_ME
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 15:46:56'!
+PASSED!
 
-	| aCart aCashier |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aCashier checkOut
-	self assert: True.! !
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 15:46:56'!
+PASSED!
 
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:46:32'!
-ERROR!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:46:41' prior: 50781531!
-test02checkingOutRENAME_ME
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 15:46:56'!
+PASSED!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:47:25'!
+isExpiredOn: aDate
+^expired! !
 
-	| aCart aCashier |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aCashier checkOut
-	self assert: true.! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:46:46' prior: 50781543!
-test02checkingOutRENAME_ME
+!methodRemoval: CreditCard #isExpiredOn: stamp: 'LEB 11/6/2019 15:47:30'!
+isExpiredOn: aDate
+^expired!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:48:09'!
+isExpired: aDate
+^expired! !
 
-	| aCart aCashier |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aCashier checkOut! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:47:54' prior: 50781553!
-test02checkingOutRENAME_ME
+!methodRemoval: CreditCard #isExpired stamp: 'LEB 11/6/2019 15:48:09'!
+isExpired
+^expired!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:48:23'!
+isExpiredOn: aDate
+^expired! !
 
-	| aCart aCashier aSalesBook |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: aCart on: aSalesBook .
-	aCashier checkOut
-	
-	self deny: aSalesBook isEmpty.! !
+!methodRemoval: CreditCard #isExpired: stamp: 'LEB 11/6/2019 15:48:40'!
+isExpired: aDate
+^expired!
 
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:47:58'!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:48:46'!
+PASSED!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 15:48:46'!
 ERROR!
 
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:47:58'!
-ERROR!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:48:07' prior: 50781562!
-test02checkingOutRENAME_ME
-
-	| aCart aCashier aSalesBook |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: aCart on: aSalesBook.
-	aCashier checkOut.
-	
-	self deny: aSalesBook isEmpty.! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:48:32' prior: 50781579!
-test02checkingOutRENAME_ME
-
-	| aCart aCashier aSalesBook |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: aCart on: aSalesBook.
-	aCashier checkOut.
-	
-	self deny: aSalesBook isEmpty.
-	self assert: (aSalesBook contains: self itemSellByTheStore).! !
-
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:48:35'!
-ERROR!
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:49:28' prior: 50781370!
-checkOut
-	cart isEmpty ifTrue: [self error: self invalidCartErrorMessage].! !
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:49:50' prior: 50781606!
-checkOut
-	cart isEmpty ifTrue: [self error: self invalidCartErrorMessage].
-	salesBook add: cart.! !
-
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:49:55'!
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 15:48:46'!
 ERROR!
 
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:49:55'!
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 15:48:46'!
 ERROR!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:50:42' prior: 50781590!
-test02checkingOutRENAME_ME
 
-	| aCart aCashier aSalesBook |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: aCart on: aSalesBook.
-	aCashier checkOut.
-	
-	self deny: aSalesBook isEmpty.
-	self assert: (aSalesBook includes: self itemSellByTheStore).! !
-
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:50:44'!
-FAILURE!
-
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:50:48'!
-FAILURE!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:54:57' prior: 50781624!
-test02checkingOutRENAME_ME
-
-	| aCart aCashier aSalesBook aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: aCart on: aSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self deny: aSalesBook isEmpty.
-	self assert: (aSalesBook includes: aTicket).! !
-
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:55:02'!
-FAILURE!
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 19:55:47' prior: 50781612!
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 15:48:46'!
+ERROR!
+!Cashier methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:49:22' prior: 50777739!
 checkOut
 	| aTicket |
 	cart isEmpty ifTrue: [self error: self invalidCartErrorMessage].
-	aTicket := #AguanteTDD.
-	salesBook add: aTicket.
-	^aTicket! !
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:55:50'!
-PASSED!
-
-!testRun: #CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:55:50'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:57:11'!
-test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook
-
-	| aCart aCashier aSalesBook aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: aCart on: aSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self deny: aSalesBook isEmpty.
-	self assert: (aSalesBook includes: aTicket).! !
-
-!methodRemoval: CashierTest #test02checkingOutRENAME_ME stamp: 'FL 11/4/2019 19:57:15'!
-test02checkingOutRENAME_ME
-
-	| aCart aCashier aSalesBook aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: aCart on: aSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self deny: aSalesBook isEmpty.
-	self assert: (aSalesBook includes: aTicket).!
-
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 19:57:17'!
-PASSED!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:57:23'!
-PASSED!
-
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 19:57:23'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:58:16'!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aSalesBook aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: aCart on: aSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self deny: aSalesBook isEmpty.
-	self assert: (aSalesBook includes: aTicket).! !
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 19:58:18'!
-PASSED!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 19:58:18'!
-PASSED!
-
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 19:58:18'!
-PASSED!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 19:58:18'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:58:45' prior: 50781713!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:58:54' prior: 50781744!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 19:59:41' prior: 50781673!
-test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook
-
-	| aCashier aSalesBook aTicket |
-	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: (self createCart add: self itemSellByTheStore) on: aSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self deny: aSalesBook isEmpty.
-	self assert: (aSalesBook includes: aTicket).! !
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:01:35' prior: 50781660!
-checkOut
-	| aTicket |
-	cart isEmpty ifTrue: [self error: self invalidCartErrorMessage].
-	
-	aTicket := OrderedCollection new.
-	salesBook add: aTicket.
-	^aTicket! !
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:07:44' prior: 50781781!
-checkOut
-	| aTicket |
-	cart isEmpty ifTrue: [self error: self invalidCartErrorMessage].
-	
-	aTicket := OrderedCollection new.
-	aTicket add: ('producto' -> 2) -> 10.
-	salesBook add: aTicket.
-	^aTicket! !
-
-aCart _ self createCart.!
-
-	aCart _ TestTusLibros createCart.!
-
-	self2 _ TestTusLibros new.!
-
-	aCart _ self2  createCart.!
-
-	aCart add: self2 itemSellByTheStore.!
-
-	aCart _ self2  createCart.!
-
-	aCart add: self2 itemSellByTheStore.!
-
-	aCashier _ Cashier for: aCart on: self2  defaultSalesBook.!
-
-	aTicket := aCashier checkOut.!
-
-	aTicket at: 0.!
-
-	anElement _ aTicket at: 1.!
-
-	anElement key!
-
-	anElement value!
-
-	anElement key!
-
-	anElement key key!
-
-	anElement key value!
-
-	anElement key!
-!Cashier methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:14:10' prior: 50781789!
-checkOut
-	| aTicket |
-	cart isEmpty ifTrue: [self error: self invalidCartErrorMessage].
+	(creditCard isExpiredOn: 1) ifTrue: [self error: self expiredCreditCardMessage].
 	
 	aTicket := cart getTicket.
 	salesBook add: aTicket.
 	^aTicket! !
-!Cart methodsFor: 'adding' stamp: 'FL 11/4/2019 20:14:36'!
-getTicket
 
-	! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:15:43' prior: 50781821!
-getTicket
-
-self items
-
-	! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:16:10' prior: 50781824!
-getTicket
-
-self items forEach: [].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:17:22' prior: 50781828!
-getTicket
-
-| aTicket |
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem ].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:17:30' prior: 50781832!
-getTicket
-
-
-
-
-
-
-| aTicket |
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem ].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:17:34' prior: 50781838!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem ].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:17:47' prior: 50781844!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem -> self  ].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:18:20' prior: 50781850!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) ].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:18:44' prior: 50781857!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> 2*(self occurrencesOf: anItem) ].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:18:51' prior: 50781864!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> self catalog*(self occurrencesOf: anItem) ].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:18:55' prior: 50781872!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> catalog*(self occurrencesOf: anItem) ].! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:19:20' prior: 50781881!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-self items forEach: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> 5*(self occurrencesOf: anItem) ].! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:20:51' prior: 50781755!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: 1 equals: aTicket size.! !
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:20:52'!
-ERROR!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:20:57'!
-ERROR!
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:21:12' prior: 50781890!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-items forEach: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> 5*(self occurrencesOf: anItem) ].! !
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:21:17'!
-ERROR!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:21:17'!
-ERROR!
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:21:31' prior: 50781919!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> 5*(self occurrencesOf: anItem) ].! !
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:21:35'!
-ERROR!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:21:35'!
-ERROR!
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:22:27' prior: 50781936!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> (5 * (self occurrencesOf: anItem)) ].! !
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:22:31'!
-ERROR!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:22:31'!
-ERROR!
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:23:08' prior: 50781952!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> (5 * (self occurrencesOf: anItem)) ].
-^aTicket! !
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:23:20'!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 15:49:26'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 20:23:20'!
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 15:49:26'!
 PASSED!
 
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 20:23:20'!
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 15:49:26'!
 PASSED!
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:23:20'!
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 15:49:26'!
 PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:24:40' prior: 50781899!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
 
-	| aCart aCashier aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key equals: 1.! !
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 15:49:26'!
+PASSED!
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:24:45'!
+!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'LEB 11/6/2019 15:49:28'!
+PASSED!
+
+!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'LEB 11/6/2019 15:49:28'!
+PASSED!
+
+!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'LEB 11/6/2019 15:49:28'!
+PASSED!
+
+!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'LEB 11/6/2019 15:49:28'!
+PASSED!
+
+!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'LEB 11/6/2019 15:49:28'!
+PASSED!
+
+!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'LEB 11/6/2019 15:49:28'!
+PASSED!
+
+!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'LEB 11/6/2019 15:49:28'!
+PASSED!
+
+!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'LEB 11/6/2019 15:49:28'!
+PASSED!
+
+TestTusLibros subclass: #CreditCardTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!classDefinition: #CreditCardTest category: #TusLibros stamp: 'LEB 11/6/2019 15:49:41'!
+TestTusLibros subclass: #CreditCardTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!CreditCardTest methodsFor: 'nil' stamp: 'LEB 11/6/2019 15:51:04'!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:51:04'!
+PASSED!
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:51:04'!
+PASSED!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:52:06' prior: 50778136!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard |
+creditCard := CreditCard withNumber: 1 expiringOn: 2 ownedBy: 3.
+
+self deny: creditCard isExpiredOn: 3.! !
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:52:25' prior: 50778151!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard |
+creditCard := CreditCard withNumber: 1 expiringOn: 2 ownedBy: 3.
+
+self deny: (creditCard isExpiredOn: 3).! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:52:26'!
+PASSED!
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:52:26'!
+PASSED!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:52:40' prior: 50778042!
+isExpiredOn: aDate
+^true! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:52:44'!
 FAILURE!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:25:14' prior: 50781994!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
 
-	| aCart aCashier aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:25:26' prior: 50782012!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:52:44'!
+FAILURE!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:53:59' prior: 50778161!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
 
-	| aCart aCashier aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: 5. "cambiar esto es asqueroso"! !
+aMonthOfYear := GregorianMonthOfYear year: 2020 monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:25:29'!
-PASSED!
+self deny: (creditCard isExpiredOn: aMonthOfYear - 1 day).! !
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:54:20' prior: 50778192!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 20:25:29'!
-PASSED!
+aMonthOfYear := GregorianMonthOfYear year: 2020 monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
 
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 20:25:29'!
-PASSED!
+self deny: (creditCard isExpiredOn: Date today).! !
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:25:30'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:26:09' prior: 50782028!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:54:21'!
+FAILURE!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:55:01' prior: 50778205!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
 
-	| aCart aCashier aTicket |
-	aCart _ self createCart.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: 5. "cambiar esto, es asqueroso"! !
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 20:28:29' prior: 50781249!
-defaultCatalog
-	| aCatalog |
-	aCatalog := Dictionary new.
-	aCatalog add: self itemSellByTheStore -> 5.
-	^ aCatalog.! !
+aMonthOfYear := GregorianMonthOfYear year: 2020 monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
 
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 20:28:41'!
-PASSED!
+self deny: (creditCard isExpiredOn: (Date year: 1 month: 1 day: 1)).! !
 
-!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'FL 11/4/2019 20:28:41'!
-PASSED!
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:55:02'!
+FAILURE!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:56:00' prior: 50778179!
+isExpiredOn: aDate
+^ expiration > aDate.! !
 
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 20:28:41'!
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 15:56:02'!
 ERROR!
 
-!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'FL 11/4/2019 20:28:41'!
-PASSED!
+!methodRemoval: CreditCard #initialize stamp: 'LEB 11/6/2019 15:56:52'!
+initialize
+expired := false.!
 
-!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'FL 11/4/2019 20:28:41'!
-PASSED!
+a := GregorianDate new.!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 15:58:12' prior: 50778222!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
 
-!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'FL 11/4/2019 20:28:41'!
+aMonthOfYear := GregorianMonthOfYear year: 2020 monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
+
+self deny: (creditCard isExpiredOn: (GregorianDate year: 1 month: 1 day: 1)).! !
+
+aMonthOfYear := GregorianMonthOfYear year: 2020 monthNumber: 6.!
+
+GregorianDate year: 1 month: 1 day: 1.!
+
+aDate := GregorianDate year: 1 month: 1 day: 1.!
+
+aDate := FixedGregorianDate year: 1 month: 1 dayNumber: 1.!
+
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.!
+
+aDate < aMonthOfYear.!
+
+aMonthOfYear > aDate.!
+
+aMonthOfYear < aDate.!
+
+aDate year.!
+
+aMonthOfYear year.!
+
+aDate distanceTo: aMonthOfYear.!
+
+aDate2 := GregorianMonthOfYear year: aDate year monthNumber: aDate monthNumber.!
+
+aDate2 := GregorianMonthOfYear year: aDate year monthNumber: aDate month.!
+
+aDate2 := GregorianMonthOfYear year: aDate year monthNumber: aDate monthNumber.!
+
+aDate2 := GregorianMonthOfYear year: aDate year monthNumber: aDate month number.!
+
+aDate2 < aMonthOfYear.!
+
+aDate2 < aMonthOfYear.!
+
+aDate year!
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.!
+
+aDate2 < aMonthOfYear.!
+
+aMonthOfYear < aDate.!
+
+aDate year.!
+
+Year new: 1.!
+
+Year.!
+
+1*Year.!
+
+Year yearNumber: 10.!
+
+aDate year.!
+
+Year yearNumber: 10.!
+
+Year yearNumber: 1 = aDate year.!
+
+Year yearNumber: 1!
+
+(Year yearNumber: 1) = aDate year.!
+
+aDate year.!
+
+(Year yearNumber: 1) = aDate year.!
+
+(Year number: 1) = aDate year.!
+
+(GregorianYear number: 1) = aDate year.!
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.!
+
+aMonthOfYear < aDate.!
+
+aDate < aMonthOfYear.!
+
+aMonthOfYear < aDate.!
+
+aMonthOfYear = aDate.!
+
+aMonthOfYear < aDate or: aMonthOfYear < aDate.!
+
+(aMonthOfYear < aDate or: aMonthOfYear < aDate) not.!
+
+(aMonthOfYear < aDate or: aMonthOfYear = aDate) not.!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:16:03' prior: 50778240!
+isExpiredOn: aDate
+^ (expiration < aDate or: expiration = aDate) not.
+! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:16:08'!
 ERROR!
 
-!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'FL 11/4/2019 20:28:41'!
-PASSED!
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:16:08'!
+ERROR!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:16:35' prior: 50778253!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
 
-!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'FL 11/4/2019 20:28:41'!
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear year: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
+
+self deny: (creditCard isExpiredOn: (GregorianDate year: 1 month: 1 day: 1)).! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:16:36'!
+ERROR!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:16:53' prior: 50778332!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
+
+self deny: (creditCard isExpiredOn: (GregorianDate year: 1 month: 1 day: 1)).! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:16:54'!
+ERROR!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:17:11' prior: 50778351!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
+
+self deny: (creditCard isExpiredOn: (FixedGregorianDate year: 1 month: 1 day: 1)).! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:17:12'!
+ERROR!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:17:31' prior: 50778370!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
+
+self deny: (creditCard isExpiredOn: (FixedGregorianDate year: 1 month: 1 day: 1)).! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:17:31'!
+ERROR!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:17:48' prior: 50778389!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 3.
+
+self deny: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1)).! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:17:48'!
 ERROR!
 
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 20:28:49'!
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:18:21'!
+ERROR!
+!CreditCard methodsFor: 'initialization' stamp: 'LEB 11/6/2019 16:18:57' prior: 50777989!
+initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName 
+	number := aNumber.
+	expiration := aMonthOfYear.
+	name := aName.! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:19:01'!
+FAILURE!
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:19:01'!
+FAILURE!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:19:31' prior: 50778408!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilki'.
+
+self deny: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1)).! !
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:19:35' prior: 50778449!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self deny: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1)).! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:19:39'!
+FAILURE!
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:19:47'!
+FAILURE!
+
+(expiration < aDate or: expiration = aDate)!
+
+(expiration < aDate or: expiration = aDate) not!
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:21:11' prior: 50778317!
+isExpiredOn: aDate
+^ (expiration < aDate or: expiration = aDate).
+! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:21:13'!
 PASSED!
 
-!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'FL 11/4/2019 20:28:49'!
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:21:13'!
+PASSED!
+!CreditCardTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:21:31' prior: 50778464!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self deny: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:21:32'!
 PASSED!
 
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 20:28:49'!
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:21:32'!
+PASSED!
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:23:01'!
+test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self deny: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:23:09' prior: 50778544!
+test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self assert: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 999999 monthNumber: 1 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:23:10'!
+PASSED!
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:23:10'!
+PASSED!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:23:10'!
+PASSED!
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:23:32' prior: 50778572!
+test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self assert: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 2020 monthNumber: 6 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:23:33'!
+FAILURE!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:24:30' prior: 50778493!
+isExpiredOn: aDate
+^ (expiration < aDate).
+! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:24:34'!
+PASSED!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:24:34'!
+FAILURE!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:24:34'!
+FAILURE!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:24:38'!
+FAILURE!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:24:38'!
+FAILURE!
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:25:01' prior: 50778614!
+test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self assert: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 2020 monthNumber: 7 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:25:02'!
+PASSED!
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:25:02'!
+PASSED!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:25:02'!
+PASSED!
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:25:09'!
+test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self assert: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 2020 monthNumber: 7 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+!methodRemoval: CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:25:11'!
+test02creditCardIsExpiredWhenTheGivenDateIsGreaterOrEqualThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self assert: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 2020 monthNumber: 7 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"!
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:25:28'!
+test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self assert: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 2020 monthNumber: 6 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:25:32'!
+PASSED!
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:25:34'!
+PASSED!
+
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:25:35'!
+FAILURE!
+
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:25:35'!
+FAILURE!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:25:50' prior: 50778647!
+isExpiredOn: aDate
+^ (expiration < aDate) or: [expiration = aDate].
+! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:25:56'!
+PASSED!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:25:56'!
+PASSED!
+
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:25:56'!
+FAILURE!
+
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:25:56'!
+FAILURE!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:25:59'!
+PASSED!
+
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:26:01'!
+FAILURE!
+
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:26:01'!
+FAILURE!
+
+(GregorianYear number: 1) = aDate year.!
+
+aDate year.!
+
+aDate.!
+
+aMonthOfYear = aDate!
+
+aMonthOfYear = aDate.!
+
+aMonthOfYear < aDate.!
+
+aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.!
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 3) monthNumber: 4.!
+
+aMonthOfYear < aDate.!
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 3) monthNumber: 2.!
+
+aMonthOfYear < aDate.!
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 3) monthNumber: 3.!
+
+aMonthOfYear < aDate.!
+
+aMonthOfYear = aDate.!
+
+aMonthOfYear < aDate.!
+
+aDate monthOfYear !
+
+aMonthOfYear < aDate monthOfYear .!
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 3) monthNumber: 4.!
+
+aMonthOfYear < aDate monthOfYear.!
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 3) monthNumber: 2.!
+
+aMonthOfYear < aDate monthOfYear.!
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 3) monthNumber: 3.!
+
+aMonthOfYear < aDate monthOfYear.!
+
+aDate monthOfYear < aMonthOfYear.!
+
+(aDate monthOfYear < aMonthOfYear) not.!
+
+(aDate monthOfYear < aMonthOfYear) not.!
+
+(aDate monthOfYear < aMonthOfYear) not.!
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:29:03' prior: 50778818!
+isExpiredOn: aDate
+^ (aDate monthOfYear < expiration) not.
+! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:29:05'!
+PASSED!
+
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:29:05'!
+PASSED!
+
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:29:05'!
+PASSED!
+
+Object subclass: #CreditCard
+	instanceVariableNames: 'number expiration owner'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/6/2019 16:29:26'!
+Object subclass: #CreditCard
+	instanceVariableNames: 'number expiration owner'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!CreditCard methodsFor: 'initialization' stamp: 'LEB 11/6/2019 16:29:49' prior: 50778432!
+initializeWithNumber: aNumber expiringOn: anExpirationMonthOfYear ownedBy: anOwnerName 
+	number := aNumber.
+	expiration := anExpirationMonthOfYear.
+	owner := anOwnerName.! !
+!CreditCard methodsFor: 'initialization' stamp: 'LEB 11/6/2019 16:30:03' prior: 50778921!
+initializeWithNumber: aNumber expiringOn: anExpirationMonthOfYear ownedBy: anOwnerName 
+	number := aNumber.
+	expiration := anExpirationMonthOfYear.
+	owner := anOwnerName.! !
+
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 16:30:05'!
+PASSED!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:30:05'!
 ERROR!
 
-!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'FL 11/4/2019 20:28:49'!
-PASSED!
-
-!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'FL 11/4/2019 20:28:49'!
-PASSED!
-
-!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'FL 11/4/2019 20:28:49'!
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:30:05'!
 ERROR!
 
-!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'FL 11/4/2019 20:28:49'!
-PASSED!
-
-!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'FL 11/4/2019 20:28:49'!
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:30:05'!
 ERROR!
 
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 20:29:03'!
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:30:05'!
 ERROR!
-!Cart methodsFor: 'assertions' stamp: 'FL 11/4/2019 20:29:37' prior: 50781021!
-assertIsValidItem: anItem
 
-	(catalog includesKey: anItem) ifFalse: [ self error: self invalidItemErrorMessage ]! !
-
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 20:29:39'!
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:30:08'!
 PASSED!
 
-!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'FL 11/4/2019 20:29:45'!
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:30:08'!
 PASSED!
 
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 20:29:47'!
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:30:08'!
+PASSED!
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/6/2019 16:33:32' prior: 50777388!
+expiredCreditCard
+	| aCreditCard aMonthOfYear |
+	aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 0) monthNumber: 1.
+	aCreditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+	^aCreditCard.! !
+
+!methodRemoval: CreditCard #expire stamp: 'LEB 11/6/2019 16:33:41'!
+expire
+expired := true.!
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:33:57'!
 PASSED!
 
-!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'FL 11/4/2019 20:29:47'!
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:33:57'!
 PASSED!
 
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 20:29:47'!
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:33:57'!
 PASSED!
 
-!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'FL 11/4/2019 20:29:47'!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 16:33:59'!
 PASSED!
 
-!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'FL 11/4/2019 20:29:47'!
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:33:59'!
+ERROR!
+
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:33:59'!
+ERROR!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:33:59'!
+ERROR!
+
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:33:59'!
+ERROR!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:34:02'!
+ERROR!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:34:02'!
+ERROR!
+!Cashier class methodsFor: 'instance creation' stamp: 'LEB 11/6/2019 16:35:08' prior: 50777765!
+for: aCart on: aSalesBook with: aCreditCard
+	
+	^self new initializeFor: aCart on: aSalesBook with: aCreditCard.! !
+
+1/1/1!
+
+{1/1/1}!
+
+{1\1\1}!
+!Cashier class methodsFor: 'instance creation' stamp: 'LEB 11/6/2019 16:38:23'!
+for: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate 
+	
+	^self new initializeFor: aCart on: aSalesBook with: aCreditCard.! !
+
+!methodRemoval: Cashier class #for:on:with: stamp: 'LEB 11/6/2019 16:38:23'!
+for: aCart on: aSalesBook with: aCreditCard
+	
+	^self new initializeFor: aCart on: aSalesBook with: aCreditCard.!
+
+!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'LEB 11/6/2019 16:38:34'!
 PASSED!
 
-!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'FL 11/4/2019 20:29:47'!
+!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'LEB 11/6/2019 16:38:34'!
 PASSED!
 
-!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'FL 11/4/2019 20:29:47'!
+!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'LEB 11/6/2019 16:38:34'!
 PASSED!
 
-!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'FL 11/4/2019 20:29:47'!
+!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'LEB 11/6/2019 16:38:34'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 20:29:50'!
+!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'LEB 11/6/2019 16:38:34'!
 PASSED!
 
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 20:29:50'!
+!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'LEB 11/6/2019 16:38:34'!
 PASSED!
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:29:50'!
+!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'LEB 11/6/2019 16:38:34'!
 PASSED!
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 20:31:14'!
-createEmptyCartWithDefaultCatalog
-	
-	^Cart acceptingItemsOf: self defaultCatalog! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781100!
-test02CanNotAddItemsThatDoNotBelongToStore
 
-	| cart |
-	
-	cart := self createEmptyCartWithDefaultCatalog.
-	
-	self 
-		should: [ cart add: self itemNotSellByTheStore ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781142!
-test05CanNotAddMoreThanOneItemNotSellByTheStore
+!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'LEB 11/6/2019 16:38:34'!
+PASSED!
 
-	| cart |
-	
-	cart := self createEmptyCartWithDefaultCatalog.
-	
-	self 
-		should: [cart add: 2 of: self itemNotSellByTheStore  ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781135!
-test07CartDoesNotHoldNotAddedItems
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:38:36'!
+PASSED!
 
-	| cart |
-	
-	cart := self createEmptyCartWithDefaultCatalog.
-	
-	self deny: (cart includes: self itemSellByTheStore)! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781127!
-test03AfterAddingAnItemTheCartIsNotEmptyAnymore
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:38:36'!
+PASSED!
 
-	| cart |
-	
-	cart := self createEmptyCartWithDefaultCatalog.
-	
-	cart add: self itemSellByTheStore.
-	self deny: cart isEmpty ! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781087!
-test04CanNotAddNonPositiveNumberOfItems
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:38:36'!
+PASSED!
 
-	| cart |
-	
-	cart := self createEmptyCartWithDefaultCatalog.
-	
-	self 
-		should: [cart add: 0 of: self itemSellByTheStore ]
-		raise: Error - MessageNotUnderstood
-		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidQuantityErrorMessage.
-			self assert: cart isEmpty ]! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781113!
-test08CartRemembersTheNumberOfAddedItems
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 16:38:38'!
+ERROR!
 
-	| cart |
-	
-	cart := self createEmptyCartWithDefaultCatalog.
-	
-	cart add: 2 of: self itemSellByTheStore.
-	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781155!
-test06CartRemembersAddedItems
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:38:38'!
+ERROR!
 
-	| cart |
-	
-	cart := self createEmptyCartWithDefaultCatalog.
-	
-	cart add: self itemSellByTheStore.
-	self assert: (cart includes: self itemSellByTheStore)! !
-!CartTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781122!
-test01NewCartsAreCreatedEmpty
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:38:38'!
+ERROR!
 
-	self assert: self createEmptyCartWithDefaultCatalog isEmpty! !
-!CashierTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50782063!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:38:38'!
+ERROR!
 
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: 5. "cambiar esto, es asqueroso"! !
-!CashierTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781498!
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:38:38'!
+ERROR!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:39:33' prior: 50777507!
 test01cannotCheckOutEmptyCart
 
-	| aCart aCashier aSalesBook |
+	| aCart aCashier aSalesBook aDate |
 	
 	aCart _ self createEmptyCartWithDefaultCatalog.
 	aSalesBook := self defaultSalesBook.
-	aCashier _ Cashier for: aCart on: aSalesBook.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: aSalesBook with: self validCreditCard onDate: aDate.
 	
 	self 
 		should: [aCashier checkOut ]
@@ -1530,764 +1321,166 @@ test01cannotCheckOutEmptyCart
 			self assert: aSalesBook isEmpty ]
 	
 	! !
-!CashierTest methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 20:31:14' prior: 50781766!
+
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 16:39:53'!
+PASSED!
+
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 16:39:53'!
+PASSED!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:39:53'!
+ERROR!
+
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:39:53'!
+ERROR!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:39:53'!
+ERROR!
+
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:39:53'!
+ERROR!
+
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 16:40:00'!
+PASSED!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:40:53' prior: 50777525!
 test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook
 
-	| aCashier aSalesBook aTicket |
+	| aCashier aSalesBook aTicket aCart aDate |
 	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: (self createEmptyCartWithDefaultCatalog add: self itemSellByTheStore) on: aSalesBook.
+	aCart := self createEmptyCartWithDefaultCatalog add: self itemSellByTheStore.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: aSalesBook with: self validCreditCard onDate: aDate.
 	aTicket := aCashier checkOut.
 	
 	self deny: aSalesBook isEmpty.
 	self assert: (aSalesBook includes: aTicket).! !
 
-!methodRemoval: TestTusLibros #createCart stamp: 'FL 11/4/2019 20:31:14'!
-createCart
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:40:57'!
+ERROR!
+!Cashier class methodsFor: 'instance creation' stamp: 'LEB 11/6/2019 16:41:26' prior: 50779034!
+for: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate 
 	
-	^Cart acceptingItemsOf: self defaultCatalog!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:31:55' prior: 50782283!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
+	^self new initializeFor: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate.! !
+!Cashier methodsFor: 'initialize' stamp: 'LEB 11/6/2019 16:41:39'!
+initializeFor: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate
 	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
+	cart := aCart.
+	salesBook := aSalesBook.
+	creditCard := aCreditCard.! !
+!Cashier methodsFor: 'initialize' stamp: 'LEB 11/6/2019 16:41:47' prior: 50779185!
+initializeFor: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate
 	
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).! !
+	cart := aCart.
+	salesBook := aSalesBook.
+	creditCard := aCreditCard.! !
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:31:56'!
-PASSED!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 20:31:56'!
-PASSED!
-
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 20:31:56'!
-PASSED!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:31:56'!
-PASSED!
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:32:31' prior: 50781969!
-getTicket
-| aTicket |
-
-aTicket _ OrderedCollection new.
-items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> ((catalog at: anItem) * (self occurrencesOf: anItem)) ].
-^aTicket! !
-
-!testRun: #CartTest #test01NewCartsAreCreatedEmpty stamp: 'FL 11/4/2019 20:32:34'!
-PASSED!
-
-!testRun: #CartTest #test02CanNotAddItemsThatDoNotBelongToStore stamp: 'FL 11/4/2019 20:32:34'!
-PASSED!
-
-!testRun: #CartTest #test03AfterAddingAnItemTheCartIsNotEmptyAnymore stamp: 'FL 11/4/2019 20:32:34'!
-PASSED!
-
-!testRun: #CartTest #test04CanNotAddNonPositiveNumberOfItems stamp: 'FL 11/4/2019 20:32:34'!
-PASSED!
-
-!testRun: #CartTest #test05CanNotAddMoreThanOneItemNotSellByTheStore stamp: 'FL 11/4/2019 20:32:34'!
-PASSED!
-
-!testRun: #CartTest #test06CartRemembersAddedItems stamp: 'FL 11/4/2019 20:32:34'!
-PASSED!
-
-!testRun: #CartTest #test07CartDoesNotHoldNotAddedItems stamp: 'FL 11/4/2019 20:32:34'!
-PASSED!
-
-!testRun: #CartTest #test08CartRemembersTheNumberOfAddedItems stamp: 'FL 11/4/2019 20:32:34'!
-PASSED!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 20:32:37'!
-PASSED!
-
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 20:32:37'!
-PASSED!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:32:37'!
-PASSED!
-
-	anElement _ aTicket at: 1.!
-
-Object subclass: #Ticket
-	instanceVariableNames: ''
+Object subclass: #Cashier
+	instanceVariableNames: 'cart salesBook creditCard date'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!classDefinition: #Ticket category: #TusLibros stamp: 'FL 11/4/2019 20:46:25'!
-Object subclass: #Ticket
-	instanceVariableNames: ''
+!classDefinition: #Cashier category: #TusLibros stamp: 'LEB 11/6/2019 16:42:13'!
+Object subclass: #Cashier
+	instanceVariableNames: 'cart salesBook creditCard date'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:47:09' prior: 50782376!
-getTicket
-| aTicket |
-
-aTicket _ Ticket new.
-"items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> ((catalog at: anItem) * (self occurrencesOf: anItem)) ]."
-^aTicket! !
-!Cart methodsFor: 'TBD' stamp: 'FL 11/4/2019 20:54:55' prior: 50782433!
-getTicket
-"
-aTicket _ Ticket new.
-items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> ((catalog at: anItem) * (self occurrencesOf: anItem)) ].
-"
-
-^ items inject: 0 into: [:total :anItem | total + ((catalog at: anItem) * (self occurrencesOf: anItem)) ]! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:55:21' prior: 50782340!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
+!Cashier methodsFor: 'initialize' stamp: 'LEB 11/6/2019 16:42:24' prior: 50779193!
+initializeFor: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate
 	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: 5 equals: aTicket.
-	"
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
+	cart := aCart.
+	salesBook := aSalesBook.
+	creditCard := aCreditCard.
+	date := aGregorianDate.! !
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:55:21'!
+!methodRemoval: Cashier #initializeFor:on:with: stamp: 'LEB 11/6/2019 16:42:26'!
+initializeFor: aCart on: aSalesBook with: aCreditCard .
+	
+	cart := aCart.
+	salesBook := aSalesBook.
+	creditCard := aCreditCard.!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:42:29'!
+ERROR!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:42:29'!
+ERROR!
+!Cashier methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:42:48' prior: 50778069!
+checkOut
+	| aTicket |
+	cart isEmpty ifTrue: [self error: self invalidCartErrorMessage].
+	(creditCard isExpiredOn: date) ifTrue: [self error: self expiredCreditCardMessage].
+	
+	aTicket := cart getTicket.
+	salesBook add: aTicket.
+	^aTicket! !
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:42:51'!
+ERROR!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:42:51'!
+ERROR!
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/6/2019 16:44:12' prior: 50777892!
+validCreditCard
+	| aCreditCard aMonthOfYear |
+	aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999) monthNumber: 12.
+	aCreditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen2'.
+	^aCreditCard.! !
+
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:44:16'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 20:55:21'!
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:44:16'!
 PASSED!
 
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 20:55:21'!
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:44:16'!
 PASSED!
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:55:21'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:55:52' prior: 50782454!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	"
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:55:52'!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 16:44:19'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 20:55:52'!
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:44:19'!
 PASSED!
 
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 20:55:52'!
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:44:19'!
+ERROR!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:44:19'!
+ERROR!
+
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:44:19'!
+ERROR!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:44:22'!
+ERROR!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:44:22'!
+ERROR!
+
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:44:26'!
+ERROR!
+
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:44:26'!
+ERROR!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:44:29'!
 PASSED!
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:55:52'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:56:03' prior: 50782491!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:44:31'!
+ERROR!
 
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:56:08' prior: 50782530!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:56:16' prior: 50782554!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:56:23' prior: 50782579!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:57:03'!
-test03checkingOutACartWithAnItemReturnsATicketWithTheTotal
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-
-!methodRemoval: CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue stamp: 'FL 11/4/2019 20:57:06'!
-test03checkingOutACartWithAnItemReturnsATicketWithThatItemAndItsValue
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:58:06'!
-test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:58:21'!
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:44:31'!
+ERROR!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:44:51' prior: 50777540!
 test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 
-	| aCart aCashier aTicket |
+	| aCart aCashier aTicket aDate |
 	aCart _ self createEmptyCartWithDefaultCatalog.
 	aCart add: self itemSellByTheStore.
 	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self validCreditCard onDate: aDate.
 	aTicket := aCashier checkOut.
 	
 	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
@@ -2394,385 +1587,16 @@ test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 	self assert: (aTicket at: 1) key value equals: 1.
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
-
-!methodRemoval: CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheTotal stamp: 'FL 11/4/2019 20:58:21'!
-test03checkingOutACartWithAnItemReturnsATicketWithTheTotal
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"!
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 20:59:13'!
-itemSellByTheStore2
-	
-	^ 'validBook2'! !
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 20:59:27' prior: 50782082!
-defaultCatalog
-	| aCatalog |
-	aCatalog := Dictionary new.
-	aCatalog add: self itemSellByTheStore -> 5.
-	aCatalog add: self itemSellByTheStore2 -> 99099999999.
-	^ aCatalog.! !
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 20:59:45' prior: 50782692!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:45:00' prior: 50777570!
 test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
 
-	| aCart aCashier aTicket |
+	| aCart aCashier aTicket aDate |
 	aCart _ self createEmptyCartWithDefaultCatalog.
 	aCart add: self itemSellByTheStore.
 	aCart add: self itemSellByTheStore2.
 	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-
-!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'FL 11/4/2019 20:59:49'!
-FAILURE!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 21:00:29' prior: 50782791!
-test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	aCart add: self itemSellByTheStore2.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
-	
-	self assert: ((self defaultCatalog at: self itemSellByTheStore) + self defaultCatalog at: self itemSellByTheStore2) equals: aTicket.
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	"
-	NO CORREGIR LO SIGUIENTE:
-	self assert: 1 equals: aTicket size.
-	self assert: (aTicket at: 1) key key equals: self itemSellByTheStore.
-	self assert: (aTicket at: 1) key value equals: 1.
-	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
-	"! !
-
-!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'FL 11/4/2019 21:00:30'!
-PASSED!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 21:00:30'!
-PASSED!
-
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 21:00:30'!
-PASSED!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'FL 11/4/2019 21:00:30'!
-PASSED!
-
-!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'FL 11/4/2019 21:00:30'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 21:01:02' prior: 50782826!
-test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
-
-	| aCart aCashier aTicket |
-	aCart _ self createEmptyCartWithDefaultCatalog.
-	aCart add: self itemSellByTheStore.
-	aCart add: self itemSellByTheStore2.
-	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self validCreditCard onDate: aDate.
 	aTicket := aCashier checkOut.
 	
 	self assert: (self defaultCatalog at: self itemSellByTheStore) + (self defaultCatalog at: self itemSellByTheStore2) equals: aTicket.
@@ -2878,44 +1702,32 @@ test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
 
-!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'FL 11/4/2019 21:01:02'!
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:45:05'!
 PASSED!
 
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 21:01:02'!
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:45:06'!
 PASSED!
 
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 21:01:02'!
-PASSED!
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:45:08'!
+ERROR!
 
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'FL 11/4/2019 21:01:02'!
-PASSED!
-
-!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'FL 11/4/2019 21:01:02'!
-PASSED!
-
-!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'FL 11/4/2019 21:01:13'!
-PASSED!
-
-!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'FL 11/4/2019 21:01:13'!
-PASSED!
-
-!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'FL 11/4/2019 21:01:13'!
-PASSED!
-
-!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'FL 11/4/2019 21:01:13'!
-PASSED!
-
-!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'FL 11/4/2019 21:01:13'!
-PASSED!
-!CashierTest methodsFor: 'tests' stamp: 'FL 11/4/2019 21:02:13'!
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:45:08'!
+ERROR!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:45:18' prior: 50777603!
 test05cannotCheckoutWithAnExpiredCreditCard
 
-	| aCart aCashier aTicket |
+	| aCart aCashier aDate |
 	aCart _ self createEmptyCartWithDefaultCatalog.
 	aCart add: self itemSellByTheStore.
 	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook.
-	aTicket := aCashier checkOut.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self expiredCreditCard onDate: aDate.
+	self 
+		should: [aCashier checkOut ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = aCashier expiredCreditCardMessage.
+		]
 	
 	
 	
@@ -3017,33 +1829,38 @@ test05cannotCheckoutWithAnExpiredCreditCard
 	self assert: (aTicket at: 1) key value equals: 1.
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
-!Cashier methodsFor: 'initialize' stamp: 'FL 11/4/2019 21:03:47'!
-initializeFor: aCart on: aSalesBook with: aCreditCard .
-	
-	cart := aCart.
-	salesBook := aSalesBook.! !
-!ExtractMethodNewSelectorPrecondition methodsFor: 'initialization' stamp: 'FL 11/4/2019 21:03:47'!
-initializeFor: aSelectorToValidate on: aClassToDefineSelector with: aCreditCard 
 
-	selectorToValidate _ aSelectorToValidate.
-	classToDefineSelector _ aClassToDefineSelector! !
-!ExtractMethodNewSelectorPrecondition class methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 21:03:47' prior: 50747207!
-for: aSelectorToValidate on: aClass 
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:45:20'!
+ERROR!
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/6/2019 16:45:43' prior: 50778971!
+expiredCreditCard
+	| aCreditCard aMonthOfYear |
+	aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 1.
+	aCreditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+	^aCreditCard.! !
 
-	^ self new initializeFor: aSelectorToValidate on: aClass with: self validCreditCard! !
-!Cashier class methodsFor: 'as yet unclassified' stamp: 'FL 11/4/2019 21:03:48' prior: 50781425!
-for: aCart on: aSalesBook  
-	
-	^self new initializeFor: aCart on: aSalesBook with: self validCreditCard.! !
+!testRun: #CreditCardTest #test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate stamp: 'LEB 11/6/2019 16:45:57'!
+PASSED!
 
-!methodRemoval: Cashier #initializeFor:on: stamp: 'FL 11/4/2019 21:03:48'!
-initializeFor: aCart on: aSalesBook.
-	
-	cart := aCart.
-	salesBook := aSalesBook.!
+!testRun: #CreditCardTest #test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate stamp: 'LEB 11/6/2019 16:45:57'!
+PASSED!
 
-!methodRemoval: ExtractMethodNewSelectorPrecondition #initializeFor:on: stamp: 'FL 11/4/2019 21:03:48'!
-initializeFor: aSelectorToValidate on: aClassToDefineSelector
+!testRun: #CreditCardTest #test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate stamp: 'LEB 11/6/2019 16:45:57'!
+PASSED!
 
-	selectorToValidate _ aSelectorToValidate.
-	classToDefineSelector _ aClassToDefineSelector!
+!testRun: #CashierTest #test01cannotCheckOutEmptyCart stamp: 'LEB 11/6/2019 16:45:59'!
+PASSED!
+
+!testRun: #CashierTest #test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook stamp: 'LEB 11/6/2019 16:45:59'!
+PASSED!
+
+!testRun: #CashierTest #test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue stamp: 'LEB 11/6/2019 16:45:59'!
+PASSED!
+
+!testRun: #CashierTest #test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues stamp: 'LEB 11/6/2019 16:45:59'!
+PASSED!
+
+!testRun: #CashierTest #test05cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/6/2019 16:45:59'!
+PASSED!
+
+----SNAPSHOT----(6 November 2019 16:46:03) CuisUniversity-3938.image priorSource: 14277766!

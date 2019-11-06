@@ -1,4 +1,4 @@
-!classDefinition: #TestTusLibros category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #TestTusLibros category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 TestCase subclass: #TestTusLibros
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -23,11 +23,11 @@ defaultSalesBook
 	
 	^ OrderedCollection new.! !
 
-!TestTusLibros methodsFor: 'support' stamp: 'EEEE 11/4/2019 21:15:58'!
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/6/2019 16:45:43'!
 expiredCreditCard
-	| aCreditCard |
-	aCreditCard := CreditCard new.
-	aCreditCard expire.
+	| aCreditCard aMonthOfYear |
+	aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 1.
+	aCreditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
 	^aCreditCard.! !
 
 !TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 19:19:03'!
@@ -45,13 +45,15 @@ itemSellByTheStore2
 	
 	^ 'validBook2'! !
 
-!TestTusLibros methodsFor: 'support' stamp: 'EEEE 11/4/2019 21:16:47'!
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/6/2019 16:44:12'!
 validCreditCard
-
-	^CreditCard new.! !
+	| aCreditCard aMonthOfYear |
+	aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999) monthNumber: 12.
+	aCreditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen2'.
+	^aCreditCard.! !
 
 
-!classDefinition: #CartTest category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #CartTest category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 TestTusLibros subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -145,21 +147,22 @@ test08CartRemembersTheNumberOfAddedItems
 	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #CashierTest category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 TestTusLibros subclass: #CashierTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CashierTest methodsFor: 'tests' stamp: 'EEEE 11/4/2019 21:07:03'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:39:33'!
 test01cannotCheckOutEmptyCart
 
-	| aCart aCashier aSalesBook |
+	| aCart aCashier aSalesBook aDate |
 	
 	aCart _ self createEmptyCartWithDefaultCatalog.
 	aSalesBook := self defaultSalesBook.
-	aCashier _ Cashier for: aCart on: aSalesBook with: self validCreditCard.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: aSalesBook with: self validCreditCard onDate: aDate.
 	
 	self 
 		should: [aCashier checkOut ]
@@ -171,26 +174,28 @@ test01cannotCheckOutEmptyCart
 	
 	! !
 
-!CashierTest methodsFor: 'tests' stamp: 'EEEE 11/4/2019 21:07:03'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:40:53'!
 test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSalesBook
 
-	| aCashier aSalesBook aTicket |
+	| aCashier aSalesBook aTicket aCart aDate |
 	aSalesBook _ self defaultSalesBook.
-	
-	aCashier _ Cashier for: (self createEmptyCartWithDefaultCatalog add: self itemSellByTheStore) on: aSalesBook with: self validCreditCard.
+	aCart := self createEmptyCartWithDefaultCatalog add: self itemSellByTheStore.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: aSalesBook with: self validCreditCard onDate: aDate.
 	aTicket := aCashier checkOut.
 	
 	self deny: aSalesBook isEmpty.
 	self assert: (aSalesBook includes: aTicket).! !
 
-!CashierTest methodsFor: 'tests' stamp: 'EEEE 11/4/2019 21:07:03'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:44:51'!
 test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 
-	| aCart aCashier aTicket |
+	| aCart aCashier aTicket aDate |
 	aCart _ self createEmptyCartWithDefaultCatalog.
 	aCart add: self itemSellByTheStore.
 	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self validCreditCard.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self validCreditCard onDate: aDate.
 	aTicket := aCashier checkOut.
 	
 	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
@@ -298,15 +303,16 @@ test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
 
-!CashierTest methodsFor: 'tests' stamp: 'EEEE 11/4/2019 21:07:03'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:45:00'!
 test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
 
-	| aCart aCashier aTicket |
+	| aCart aCashier aTicket aDate |
 	aCart _ self createEmptyCartWithDefaultCatalog.
 	aCart add: self itemSellByTheStore.
 	aCart add: self itemSellByTheStore2.
 	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self validCreditCard.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self validCreditCard onDate: aDate.
 	aTicket := aCashier checkOut.
 	
 	self assert: (self defaultCatalog at: self itemSellByTheStore) + (self defaultCatalog at: self itemSellByTheStore2) equals: aTicket.
@@ -412,14 +418,15 @@ test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
 
-!CashierTest methodsFor: 'tests' stamp: 'EEEE 11/4/2019 21:13:21'!
+!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:45:18'!
 test05cannotCheckoutWithAnExpiredCreditCard
 
-	| aCart aCashier |
+	| aCart aCashier aDate |
 	aCart _ self createEmptyCartWithDefaultCatalog.
 	aCart add: self itemSellByTheStore.
 	
-	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self expiredCreditCard.
+	aDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.
+	aCashier _ Cashier for: aCart on: self defaultSalesBook with: self expiredCreditCard onDate: aDate.
 	self 
 		should: [aCashier checkOut ]
 		raise: Error - MessageNotUnderstood
@@ -529,7 +536,189 @@ test05cannotCheckoutWithAnExpiredCreditCard
 	"! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #CreditCardTest category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
+TestTusLibros subclass: #CreditCardTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:21:31'!
+test01creditCardIsNotExpiredWhenItsExpirationDateIsGreaterThanAGivenDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self deny: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:25:09'!
+test02creditCardIsExpiredWhenTheGivenDateIsGreaterThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self assert: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 2020 monthNumber: 7 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+!CreditCardTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 16:25:28'!
+test03creditCardIsExpiredWhenTheGivenDateIsEqualThanExpirationDate
+| creditCard aMonthOfYear |
+
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6.
+creditCard := CreditCard withNumber: 1 expiringOn: aMonthOfYear ownedBy: 'wilkinsen'.
+
+self assert: (creditCard isExpiredOn: (FixedGregorianDate yearNumber: 2020 monthNumber: 6 dayNumber: 1)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"
+aDate := FixedGregorianDate yearNumber: 1 monthNumber: 1 dayNumber: 1.
+aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 1) monthNumber: 6.
+
+aDate2 := GregorianMonthOfYear year: aDate year number monthNumber: aDate month number.
+aDate2 < aMonthOfYear.
+
+(aMonthOfYear > aDate or: aMonthOfYear = aDate) not.
+
+aDate year.
+
+(GregorianYear number: 1) = aDate year.
+"! !
+
+
+!classDefinition: #Cart category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -607,7 +796,7 @@ items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> ((ca
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: 'Cart class' category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 Cart class
 	instanceVariableNames: ''!
 
@@ -617,26 +806,27 @@ acceptingItemsOf: aCatalog
 	^self new initializeAcceptingItemsOf: aCatalog ! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #Cashier category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 Object subclass: #Cashier
-	instanceVariableNames: 'cart salesBook creditCard'
+	instanceVariableNames: 'cart salesBook creditCard date'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cashier methodsFor: 'initialize' stamp: 'EEEE 11/4/2019 21:05:42'!
-initializeFor: aCart on: aSalesBook with: aCreditCard .
+!Cashier methodsFor: 'initialize' stamp: 'LEB 11/6/2019 16:42:24'!
+initializeFor: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate
 	
 	cart := aCart.
 	salesBook := aSalesBook.
-	creditCard := aCreditCard.! !
+	creditCard := aCreditCard.
+	date := aGregorianDate.! !
 
 
-!Cashier methodsFor: 'as yet unclassified' stamp: 'EEEE 11/4/2019 21:17:34'!
+!Cashier methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:42:48'!
 checkOut
 	| aTicket |
 	cart isEmpty ifTrue: [self error: self invalidCartErrorMessage].
-	creditCard isExpired ifTrue: [self error: self expiredCreditCardMessage].
+	(creditCard isExpiredOn: date) ifTrue: [self error: self expiredCreditCardMessage].
 	
 	aTicket := cart getTicket.
 	salesBook add: aTicket.
@@ -653,37 +843,47 @@ invalidCartErrorMessage
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: 'Cashier class' category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 Cashier class
 	instanceVariableNames: ''!
 
-!Cashier class methodsFor: 'instance creation' stamp: 'EEEE 11/4/2019 21:07:19'!
-for: aCart on: aSalesBook with: aCreditCard   
+!Cashier class methodsFor: 'instance creation' stamp: 'LEB 11/6/2019 16:41:26'!
+for: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate 
 	
-	^self new initializeFor: aCart on: aSalesBook with: aCreditCard.! !
+	^self new initializeFor: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate.! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 Object subclass: #CreditCard
-	instanceVariableNames: 'expired'
+	instanceVariableNames: 'number expiration owner'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CreditCard methodsFor: 'as yet unclassified' stamp: 'EEEE 11/4/2019 21:15:15'!
-expire
-expired := true.! !
+!CreditCard methodsFor: 'as yet unclassified' stamp: 'LEB 11/6/2019 16:29:03'!
+isExpiredOn: aDate
+^ (aDate monthOfYear < expiration) not.
+! !
 
-!CreditCard methodsFor: 'as yet unclassified' stamp: 'EEEE 11/4/2019 21:16:21'!
-initialize
-expired := false.! !
 
-!CreditCard methodsFor: 'as yet unclassified' stamp: 'EEEE 11/4/2019 21:14:29'!
-isExpired
-^expired! !
+!CreditCard methodsFor: 'initialization' stamp: 'LEB 11/6/2019 16:30:03'!
+initializeWithNumber: aNumber expiringOn: anExpirationMonthOfYear ownedBy: anOwnerName 
+	number := aNumber.
+	expiration := anExpirationMonthOfYear.
+	owner := anOwnerName.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
+CreditCard class
+	instanceVariableNames: ''!
+
+!CreditCard class methodsFor: 'instance creation' stamp: 'LEB 11/6/2019 15:45:41'!
+withNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName
+	^self new initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -691,7 +891,7 @@ Object subclass: #MerchantProcessor
 	category: 'TusLibros'!
 
 
-!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 MerchantProcessor subclass: #MerchantProcessorMOCK
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -699,7 +899,7 @@ MerchantProcessor subclass: #MerchantProcessorMOCK
 	category: 'TusLibros'!
 
 
-!classDefinition: #Ticket category: #TusLibros stamp: 'EEEE 11/4/2019 21:33:01'!
+!classDefinition: #Ticket category: #TusLibros stamp: 'LEB 11/6/2019 16:46:08'!
 Object subclass: #Ticket
 	instanceVariableNames: ''
 	classVariableNames: ''
