@@ -1,0 +1,693 @@
+
+
+----STARTUP---- (7 November 2019 19:39:47) as /home/lbarrios/CuisUniversity/TusLibros-3/CuisUniversity-3938.image!
+
+
+----SNAPSHOT----(7 November 2019 19:39:52) CuisUniversity-3938.image priorSource: 14319118!
+
+----End fileIn of /home/lbarrios/Documents/isw-ejercicios/25-TusLibros/3/TusLibros.st----!
+
+----SNAPSHOT----(7 November 2019 19:41:06) CuisUniversity-3938.image priorSource: 14262705!
+
+TestTusLibros subclass: #RestInterfaceTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!classDefinition: #RestInterfaceTest category: #TusLibros stamp: 'LEB 11/7/2019 19:41:26'!
+TestTusLibros subclass: #RestInterfaceTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!RestInterfaceTest methodsFor: 'nil' stamp: 'LEB 11/7/2019 19:42:02'!
+test01cannotCreateCartWithInvalidCredencials
+! !
+
+!classDefinition: #RestInterface category: #TusLibros stamp: 'LEB 11/7/2019 19:43:52'!
+Object subclass: #RestInterface
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:43:45' prior: 50778076!
+test01cannotCreateCartWithInvalidCredencials
+
+| aPassword anUsername interface |
+anUsername _ 'usuario'.
+aPassword _ 'password'.
+
+interface _ RestInterface new.
+interface createCartForClientId: anUsername identifiedByPassword: aPassword! !
+
+----SNAPSHOT----(7 November 2019 19:44:17) CuisUniversity-3938.image priorSource: 14285149!
+
+----QUIT----(7 November 2019 19:44:22) CuisUniversity-3938.image priorSource: 14286319!
+
+----STARTUP---- (7 November 2019 19:44:28) as /home/lbarrios/CuisUniversity/TusLibros-3/CuisUniversity-3938.image!
+
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:47:00'!
+test01cannotCreateCartWithInvalidUserCredencials
+
+| aPassword anUsername interface |
+anUsername _ 'usuario'.
+aPassword _ 'password'.
+
+interface _ RestInterface new.
+
+self 
+	should: [interface createCartForClientId: anUsername identifiedByPassword: aPassword ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencials.
+	]
+
+! !
+
+!methodRemoval: RestInterfaceTest #test01cannotCreateCartWithInvalidCredencials stamp: 'LEB 11/7/2019 19:47:04'!
+test01cannotCreateCartWithInvalidCredencials
+
+| aPassword anUsername interface |
+anUsername _ 'usuario'.
+aPassword _ 'password'.
+
+interface _ RestInterface new.
+interface createCartForClientId: anUsername identifiedByPassword: aPassword!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 19:47:08'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:47:26'!
+createCartForClientId: aString identifiedByPassword: aString2 
+	self shouldBeImplemented.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:47:49' prior: 50778139!
+createCartForClientId: aString identifiedByPassword: aString2 
+	self error.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:47:58' prior: 50778145!
+createCartForClientId: aString identifiedByPassword: aString2 
+	self error: self invalidUserCredencials.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:48:35' prior: 50778151!
+createCartForClientId: aString identifiedByPassword: aString2 
+	self error: self class invalidUserCredencials.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 19:48:37'!
+ERROR!
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 19:48:59'!
+invalidUserCredencials
+	self shouldBeImplemented.! !
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 19:49:11' prior: 50778168!
+invalidUserCredencials
+	^'El usuario o el password no es válido'.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 19:49:16'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 19:49:16'!
+PASSED!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:51:23'!
+test02createdCartListPurchasesIsEmpty
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+
+interface _ RestInterface new.
+
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:52:40' prior: 50778186!
+test02createdCartListPurchasesIsEmpty
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+
+interface _ RestInterface new.
+
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.
+self assert: interface listPurchasesForCart: cartId isEmpty.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:52:46' prior: 50778198!
+test02createdCartListPurchasesIsEmpty
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+
+interface _ RestInterface new.
+
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.
+self assert: (interface listPurchasesForCart: cartId isEmpty).! !
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 19:52:50'!
+ERROR!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:53:08' prior: 50778108!
+test01cannotCreateCartWithInvalidUserCredencials
+
+| aPassword anUsername interface |
+anUsername _ 'usuario invalido'.
+aPassword _ 'password invalido'.
+
+interface _ RestInterface new.
+
+self 
+	should: [interface createCartForClientId: anUsername identifiedByPassword: aPassword ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencials.
+	]
+
+! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:53:26' prior: 50778229!
+test01cannotCreateCartWithInvalidUserCredencials
+
+| interface aInvalidPassword anInvalidUsername |
+anInvalidUsername _ 'usuario invalido'.
+aInvalidPassword _ 'password invalido'.
+
+interface _ RestInterface new.
+
+self 
+	should: [interface createCartForClientId: anInvalidUsername identifiedByPassword: aInvalidPassword ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencials.
+	]
+
+! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:55:02' prior: 50778158!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+('usuario invalido' = anUsername or: ['password invalido' = aPassword]) ifTrue: [self error: self class invalidUserCredencials.].! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:55:08' prior: 50778264!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+('usuario invalido' = anUsername or: ['password invalido' = aPassword]) ifTrue: [self error: self class invalidUserCredencials.].! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 19:55:14'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 19:55:16'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 19:55:16'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 19:55:31'!
+ERROR!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:56:17' prior: 50778212!
+test02createdCartListPurchasesIsEmpty
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+
+interface _ RestInterface new.
+
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.
+self assert: ((interface listPurchasesForCart: cartId) isEmpty).! !
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 19:56:18'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:56:27'!
+listPurchasesForCart: aRestInterface 
+	self shouldBeImplemented.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 19:56:37' prior: 50778315!
+listPurchasesForCart: aRestInterface 
+	^ OrderedCollection new.! !
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 19:56:42'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 19:56:42'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 19:56:42'!
+PASSED!
+
+----SNAPSHOT----(7 November 2019 19:56:53) CuisUniversity-3938.image priorSource: 14286412!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:01:26'!
+test03cannotListCartForAnInvalidCartId
+
+| cartId interface |
+interface _ RestInterface new.
+cartId _ #invalidCartId.
+
+interface listPurchasesForCart: cartId.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:01:41' prior: 50778340!
+test03cannotListCartForAnInvalidCartId
+
+| cartId interface |
+interface _ RestInterface new.
+cartId _ #invalidCartId.
+self 
+	should: [interface listPurchasesForCart: cartId.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencials.
+	]! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:01:42' prior: 50778349!
+test03cannotListCartForAnInvalidCartId
+
+| cartId interface |
+interface _ RestInterface new.
+cartId _ #invalidCartId.
+
+self 
+	should: [interface listPurchasesForCart: cartId.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencials.
+	]! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:01:48' prior: 50778363!
+test03cannotListCartForAnInvalidCartId
+
+| cartId interface |
+interface _ RestInterface new.
+cartId _ #invalidCartId.
+
+self 
+	should: [interface listPurchasesForCart: cartId.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidCartId.
+	]! !
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:01:53'!
+FAILURE!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:01:53'!
+FAILURE!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:02:33' prior: 50778321!
+listPurchasesForCart: aCartId
+
+	^ OrderedCollection new.! !
+
+----End fileIn of /home/lbarrios/CuisUniversity/TusLibros-3/Packages/TerseGuide.pck.st----!
+
+!classDefinition: #RestInterface category: #TusLibros stamp: 'LEB 11/7/2019 20:05:02'!
+Object subclass: #RestInterface
+	instanceVariableNames: 'carts'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:04:59' prior: 50778397!
+listPurchasesForCart: aCartId
+	(carts includes: aCartId) ifTrue: [^ OrderedCollection new.]! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:06:17' prior: 50781421!
+listPurchasesForCart: aCartId
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdMessage]
+	
+	^ OrderedCollection new.! !
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 20:06:52'!
+invalidUserCredencialsErrorMessage
+	^'El usuario o el password no es válido'.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:06:52' prior: 50778246!
+test01cannotCreateCartWithInvalidUserCredencials
+
+| interface aInvalidPassword anInvalidUsername |
+anInvalidUsername _ 'usuario invalido'.
+aInvalidPassword _ 'password invalido'.
+
+interface _ RestInterface new.
+
+self 
+	should: [interface createCartForClientId: anInvalidUsername identifiedByPassword: aInvalidPassword ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencialsErrorMessage.
+	]
+
+! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:06:53' prior: 50778274!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+('usuario invalido' = anUsername or: ['password invalido' = aPassword]) ifTrue: [self error: self class invalidUserCredencialsErrorMessage.].! !
+
+!methodRemoval: RestInterface class #invalidUserCredencials stamp: 'LEB 11/7/2019 20:06:53'!
+invalidUserCredencials
+	^'El usuario o el password no es válido'.!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:07:03' prior: 50778377!
+test03cannotListCartForAnInvalidCartId
+
+| cartId interface |
+interface _ RestInterface new.
+cartId _ #invalidCartId.
+
+self 
+	should: [interface listPurchasesForCart: cartId.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
+	]! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:07:10' prior: 50781428!
+listPurchasesForCart: aCartId
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage]
+	
+	^ OrderedCollection new.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:07:27' prior: 50781490!
+listPurchasesForCart: aCartId
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	^ OrderedCollection new.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:07:33'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:07:33'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:07:33'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:07:37'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:08:10'!
+initialize
+carts _ Dictionary new.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:08:14'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:08:14'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:08:14'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:08:16'!
+ERROR!
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 20:08:31'!
+invalidCartIdErrorMessage
+	self shouldBeImplemented.! !
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 20:08:48' prior: 50781538!
+invalidCartIdErrorMessage
+	^'El id de carrito no es válido.'! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:08:54'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:08:54'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:08:54'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:08:54'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:08:59'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:09:02'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:09:02'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:09:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:09:11'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:09:11'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:11:14' prior: 50781461!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+('usuario invalido' = anUsername or: ['password invalido' = aPassword]) ifTrue: [self error: self class invalidUserCredencialsErrorMessage.].
+
+carts add: 1->(#Carrito).! !
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:11:33'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:11:33'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:11:51' prior: 50781583!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+('usuario invalido' = anUsername or: ['password invalido' = aPassword]) ifTrue: [self error: self class invalidUserCredencialsErrorMessage.].
+
+carts add: 1->(#Carrito).
+^1.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:12:39' prior: 50781601!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+('usuario invalido' = anUsername or: ['password invalido' = aPassword]) ifTrue: [self error: self class invalidUserCredencialsErrorMessage.].
+
+carts add: (1+carts size)->(#Carrito).
+^(carts size).! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:13:19' prior: 50781612!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+| newCartId |
+('usuario invalido' = anUsername or: ['password invalido' = aPassword]) ifTrue: [self error: self class invalidUserCredencialsErrorMessage.].
+
+newCartId := 1+carts size.
+
+carts add: newCartId->(#Carrito).
+^newCartId.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:13:24'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:13:24'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:13:24'!
+PASSED!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:18:28'!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| cartId interface |
+interface _ RestInterface new.
+cartId _ #invalidCartId.
+! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:20:06' prior: 50781647!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+interface _ RestInterface new.
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.
+interface addToCart: cartId isbn: 'item' quantity: 1.
+
+self assert: ((interface listPurchasesForCart: cartId) isEmpty).! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:20:42' prior: 50781655!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+interface _ RestInterface new.
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.
+interface addToCart: (self itemSellByTheStore) isbn: 'item' quantity: 1.
+
+self assert: ((interface listPurchasesForCart: cartId) isEmpty).! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:20:54' prior: 50781671!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+interface _ RestInterface new.
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 1.
+
+self assert: ((interface listPurchasesForCart: cartId) isEmpty).! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:22:16' prior: 50781688!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+interface _ RestInterface new.
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 1.
+
+self assert: ((interface listPurchasesForCart: cartId) includesKey: (self itemSellByTheStore)).
+self assert: 1 equals: ((interface listPurchasesForCart: cartId) at: (self itemSellByTheStore)).! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:22:19' prior: 50781705!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| aPassword anUsername interface cartId |
+anUsername _ 'usuario valido'.
+aPassword _ 'password valida'.
+interface _ RestInterface new.
+cartId _ interface createCartForClientId: anUsername identifiedByPassword: aPassword.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 1.
+
+self assert: ((interface listPurchasesForCart: cartId) includesKey: (self itemSellByTheStore)).
+self assert: 1 equals: ((interface listPurchasesForCart: cartId) at: (self itemSellByTheStore)).! !
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/7/2019 20:23:05'!
+validUsername
+
+^'valid username'! !
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/7/2019 20:23:12'!
+invalidUsername
+
+^'invalid username'! !
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/7/2019 20:23:19'!
+validPassword
+
+^'invalid password'! !
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/7/2019 20:23:22'!
+invalidPassword
+
+^'valid password'! !
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/7/2019 20:23:29' prior: 50781754!
+validPassword
+
+^'valid password'! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:23:48' prior: 50781442!
+test01cannotCreateCartWithInvalidUserCredencials
+
+| interface |
+
+interface _ RestInterface new.
+
+self 
+	should: [interface createCartForClientId: self invalidUsername identifiedByPassword: self invalidPassword ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencialsErrorMessage.
+	]
+
+! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:23:51'!
+FAILURE!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:23:56'!
+FAILURE!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:23:56'!
+FAILURE!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:24:29' prior: 50781624!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+| newCartId |
+('invalid username' = anUsername or: ['invalid password' = aPassword]) ifTrue: [self error: self class invalidUserCredencialsErrorMessage.].
+
+newCartId := 1+carts size.
+
+carts add: newCartId->(#Carrito).
+^newCartId.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:24:34'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:24:35'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:24:36'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:24:37'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:24:37'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:24:45'!
+addToCart: aSmallInteger isbn: aString quantity: aSmallInteger3 
+	self shouldBeImplemented.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:25:10' prior: 50781825!
+addToCart: cartId isbn: anIsbn quantity: anAmount
+	^true.! !
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:25:12'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:25:38' prior: 50781498!
+listPurchasesForCart: aCartId
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	^ Dictionary new.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:26:39' prior: 50781726!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| interface cartId |
+interface _ RestInterface new.
+cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 1.
+
+self assert: ((interface listPurchasesForCart: cartId) includesKey: (self itemSellByTheStore)).
+self assert: 1 equals: ((interface listPurchasesForCart: cartId) at: (self itemSellByTheStore)).! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:26:56' prior: 50778298!
+test02createdCartListPurchasesIsEmpty
+
+| interface cartId |
+interface _ RestInterface new.
+
+cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
+self assert: ((interface listPurchasesForCart: cartId) isEmpty).! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:26:59'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:26:59'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:26:59'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:26:59'!
+FAILURE!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:26:59'!
+FAILURE!
+
+!classDefinition: #RestInterface category: #TusLibros stamp: 'LEB 11/7/2019 20:27:57'!
+Object subclass: #RestInterface
+	instanceVariableNames: 'carts catalog'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:27:56' prior: 50781794!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+| newCartId |
+('invalid username' = anUsername or: ['invalid password' = aPassword]) ifTrue: [self error: self class invalidUserCredencialsErrorMessage.].
+
+newCartId := 1+carts size.
+
+carts add: newCartId->(Cart acceptingItemsOf: catalog).
+^newCartId.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 20:28:04'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 20:28:04'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 20:28:04'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:28:04'!
+FAILURE!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:28:04'!
+FAILURE!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:29:46' prior: 50781832!
+addToCart: cartId isbn: anIsbn quantity: anAmount
+	| cart |
+	cart _ carts at: cartId ifAbsent: [self error: 'dale la concha de tu madre'].
+! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:31:01' prior: 50781937!
+addToCart: cartId isbn: anIsbn quantity: anAmount
+	| cart |
+	cart _ carts at: cartId ifAbsent: [self error: 'dale la concha de tu madre'].
+
+	cart add: anAmount of: anIsbn.
+! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:31:16' prior: 50781945!
+addToCart: cartId isbn: anIsbn quantity: anAmount
+	| cart |
+	
+	cart _ carts at: cartId ifAbsent: [self error: 'dale la concha de tu madre'].
+	cart add: anAmount of: anIsbn.
+! !
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:31:31'!
+ERROR!
+
+----SNAPSHOT----(7 November 2019 20:35:52) CuisUniversity-3938.image priorSource: 14293943!
