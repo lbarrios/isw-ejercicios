@@ -691,3 +691,522 @@ addToCart: cartId isbn: anIsbn quantity: anAmount
 ERROR!
 
 ----SNAPSHOT----(7 November 2019 20:35:52) CuisUniversity-3938.image priorSource: 14293943!
+!CartTest methodsFor: 'tests' stamp: 'LEB 11/7/2019 20:54:26'!
+test09EachExecutesClosure
+
+	| counter cart |
+	counter := 0.
+	
+	cart := self createEmptyCartWithDefaultCatalog.
+	
+	cart add: 10 of: self itemSellByTheStore.
+	cart each: [:item | counter := counter + 1].
+	self assert: 10 equals: counter.! !
+
+!testRun: #CartTest #test09EachExecutesClosure stamp: 'LEB 11/7/2019 20:54:33'!
+ERROR!
+
+!testRun: #CartTest #test09EachExecutesClosure stamp: 'LEB 11/7/2019 20:54:33'!
+ERROR!
+!Cart methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:54:39'!
+each: aBlockClosure 
+	self shouldBeImplemented.! !
+!Cart methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:55:29' prior: 50781985!
+each: aBlockClosure 
+	items do: [:item | aBlockClosure value: item].! !
+
+!testRun: #CartTest #test09EachExecutesClosure stamp: 'LEB 11/7/2019 20:55:33'!
+PASSED!
+
+!testRun: #CartTest #test09EachExecutesClosure stamp: 'LEB 11/7/2019 20:55:37'!
+PASSED!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:56:38' prior: 50781841!
+listPurchasesForCart: aCartId
+	| purchases |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	purchases _ Dictionary new.
+	^ purchases.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:56:58'!
+listCart: aCartId
+	| purchases |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	purchases _ Dictionary new.
+	^ purchases.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:56:58' prior: 50781849!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| interface cartId |
+interface _ RestInterface new.
+cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 1.
+
+self assert: ((interface listCart: cartId) includesKey: (self itemSellByTheStore)).
+self assert: 1 equals: ((interface listCart: cartId) at: (self itemSellByTheStore)).! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:56:58' prior: 50781476!
+test03cannotListCartForAnInvalidCartId
+
+| cartId interface |
+interface _ RestInterface new.
+cartId _ #invalidCartId.
+
+self 
+	should: [interface listCart: cartId.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
+	]! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:56:58' prior: 50781868!
+test02createdCartListPurchasesIsEmpty
+
+| interface cartId |
+interface _ RestInterface new.
+
+cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
+self assert: ((interface listCart: cartId) isEmpty).! !
+
+!methodRemoval: RestInterface #listPurchasesForCart: stamp: 'LEB 11/7/2019 20:56:58'!
+listPurchasesForCart: aCartId
+	| purchases |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	purchases _ Dictionary new.
+	^ purchases.!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:57:18' prior: 50782010!
+listCart: aCartId
+	| cartList |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	cartList _ Dictionary new.
+	
+	^ cartList.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:59:14' prior: 50782071!
+listCart: aCartId
+	| cartList cart |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	cartList _ Dictionary new.
+	cart := carts at: aCartId.
+	cart each: [:item | cartList add: item->1+(cart at:item ifAbsent:[0]) ]
+	^ cartList.! !
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:59:20'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:59:20'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:59:53' prior: 50782080!
+listCart: aCartId
+	| cartList cart |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	cartList _ Dictionary new.
+	cart := carts at: aCartId.
+	cart each: [:item | cartList add: item->1+(cart at:item ifAbsent:[0]) ]
+	^ cartList.! !
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:59:56'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 20:59:56'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:00:57'!
+initializeWithCatalog: aCatalog
+
+carts _ Dictionary new.! !
+
+!methodRemoval: RestInterface #initialize stamp: 'LEB 11/7/2019 21:01:00'!
+initialize
+carts _ Dictionary new.!
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 21:01:36'!
+withCatalog: aCatalog
+^self new initializeWithCatalog: aCatalog.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:01:56' prior: 50782119!
+initializeWithCatalog: aCatalog
+
+carts _ Dictionary new.
+catalog _ aCatalog.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:02:21' prior: 50781767!
+test01cannotCreateCartWithInvalidUserCredencials
+
+| interface |
+
+interface _ RestInterface withCatalog: #A.
+
+self 
+	should: [interface createCartForClientId: self invalidUsername identifiedByPassword: self invalidPassword ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencialsErrorMessage.
+	]
+
+! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:02:36' prior: 50782139!
+test01cannotCreateCartWithInvalidUserCredencials
+
+| interface |
+
+interface _ RestInterface withCatalog: self defaultCatalog.
+
+self 
+	should: [interface createCartForClientId: self invalidUsername identifiedByPassword: self invalidPassword ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencialsErrorMessage.
+	]
+
+! !
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/7/2019 21:02:50'!
+defaultRestInterface
+	
+	^ RestInterface withCatalog: self defaultCatalog.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:03:29' prior: 50782155!
+test01cannotCreateCartWithInvalidUserCredencials
+
+| interface |
+
+interface _ self defaultRestInterface.
+
+self 
+	should: [interface createCartForClientId: self invalidUsername identifiedByPassword: self invalidPassword ]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidUserCredencialsErrorMessage.
+	]
+
+! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:03:34' prior: 50782051!
+test02createdCartListPurchasesIsEmpty
+
+| interface cartId |
+interface _ self defaultRestInterface.
+
+cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
+self assert: ((interface listCart: cartId) isEmpty).! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:03:39' prior: 50782037!
+test03cannotListCartForAnInvalidCartId
+
+| cartId interface |
+interface _ self defaultRestInterface.
+
+cartId _ #invalidCartId.
+
+self 
+	should: [interface listCart: cartId.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
+	]! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:03:43' prior: 50782019!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| interface cartId |
+interface _ self defaultRestInterface.
+
+cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 1.
+
+self assert: ((interface listCart: cartId) includesKey: (self itemSellByTheStore)).
+self assert: 1 equals: ((interface listCart: cartId) at: (self itemSellByTheStore)).! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 21:03:49'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 21:03:54'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:03:55'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 21:03:55'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:03:55'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:03:58'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:03:58'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:04:21' prior: 50782100!
+listCart: aCartId
+	| cartList cart |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	cartList _ Dictionary new.
+	cart := carts at: aCartId.
+	cart each: [:item | cartList add: item->1+(cart at:item ifAbsent:[0]) ].
+	^ cartList.! !
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:04:31'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 21:04:33'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:04:37'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:04:37'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:05:10' prior: 50782261!
+listCart: aCartId
+	| cartList cart |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	cartList _ Dictionary new.
+	cart := carts at: aCartId.
+	cart each: [:item | cartList add: item->1+(cartList at:item ifAbsent:[0]) ].
+	^ cartList.! !
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:05:13'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:05:13'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:05:19'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:05:19'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:05:36' prior: 50782288!
+listCart: aCartId
+	| cartList cart |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	cartList _ Dictionary new.
+	cart := carts at: aCartId.
+	cart each: [:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
+	^ cartList.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 21:05:37'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:05:37'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 21:05:37'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:05:37'!
+PASSED!
+
+----SNAPSHOT----(7 November 2019 21:05:47) CuisUniversity-3938.image priorSource: 14410091!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:06:18' prior: 50782218!
+test04listingACartAfterAddingAnItemContainsThatItem
+
+| interface cartId |
+interface _ self defaultRestInterface.
+
+cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 5.
+
+self assert: ((interface listCart: cartId) includesKey: (self itemSellByTheStore)).
+self assert: 5 equals: ((interface listCart: cartId) at: (self itemSellByTheStore)).! !
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:06:20'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 21:06:20'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:06:20'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 21:06:20'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:06:20'!
+PASSED!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:06:57' prior: 50782316!
+listCart: aCartId
+	| cartList cart |
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	cart := carts at: aCartId.
+	
+	cartList _ Dictionary new.
+	cart each: [:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
+	^ cartList.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:07:02' prior: 50782382!
+listCart: aCartId
+	| cartList cart |
+	
+	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+	cart := carts at: aCartId.
+	
+	cartList _ Dictionary new.
+	cart each: [:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
+	^ cartList.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:07:20' prior: 50782394!
+listCart: aCartId
+	| cartList cart |
+	
+	cart := carts at: aCartId ifAbsent: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	
+	cartList _ Dictionary new.
+	cart each: [:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
+	^ cartList.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:07:22' prior: 50782406!
+listCart: aCartId
+	| cartList cart |
+	
+	cart := carts at: aCartId ifAbsent: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	cartList _ Dictionary new.
+	cart each: [:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
+	^ cartList.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 21:07:48'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:07:48'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 21:07:48'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:07:48'!
+PASSED!
+!TestTusLibros methodsFor: 'nil' stamp: 'LEB 11/7/2019 21:10:23'!
+defaultCredentials
+^ Dictionary new add: (self validUsername)->(self validPassword); yourself.! !
+!TestTusLibros methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:10:55' prior: 50782443!
+defaultCredentials
+
+| credentials |
+credentials := Dictionary new.
+credentials add: (self validUsername)->(self validPassword).
+^credentials.! !
+!TestTusLibros methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:10:58' prior: 50782450!
+defaultCredentials
+| credentials |
+
+credentials := Dictionary new.
+credentials add: (self validUsername)->(self validPassword).
+^credentials.! !
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/7/2019 21:11:18' prior: 50782170!
+defaultRestInterface
+	
+	^ RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials.! !
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 21:11:39'!
+withCatalog: aCatalog withCredentials: aCredentialsDictionary
+^self new initializeWithCatalog: aCatalog withCredentials: aCredentialsDictionary.! !
+
+!classDefinition: #RestInterface category: #TusLibros stamp: 'LEB 11/7/2019 21:11:59'!
+Object subclass: #RestInterface
+	instanceVariableNames: 'carts catalog credentials'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:11:57'!
+initializeWithCatalog: aCatalog withCredentials: aCredentialsDictionary
+
+carts _ Dictionary new.
+catalog _ aCatalog.
+credentials _ aCredentialsDictionary.! !
+
+!methodRemoval: RestInterface #initializeWithCatalog: stamp: 'LEB 11/7/2019 21:12:03'!
+initializeWithCatalog: aCatalog
+
+carts _ Dictionary new.
+catalog _ aCatalog.!
+
+!methodRemoval: RestInterface class #withCatalog: stamp: 'LEB 11/7/2019 21:12:06'!
+withCatalog: aCatalog
+^self new initializeWithCatalog: aCatalog.!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:13:19' prior: 50781954!
+addToCart: cartId isbn: anIsbn quantity: anAmount
+	| cart |
+	
+	cart _ carts at: cartId ifAbsent: [self error: self class invalidCartIdMessage].
+	cart add: anAmount of: anIsbn.
+! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:14:06'!
+test05cannotAddToAnInvalidIdCart
+
+| interface |
+interface _ self defaultRestInterface.
+
+interface addToCart: #jeje isbn: (self itemSellByTheStore) quantity: 5.! !
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:14:26' prior: 50782515!
+test05cannotAddToAnInvalidIdCart
+
+| interface |
+interface _ self defaultRestInterface.
+
+self 
+	should: [interface addToCart: #jeje isbn: (self itemSellByTheStore) quantity: 5.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
+	]! !
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/7/2019 21:14:30'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:14:46' prior: 50782506!
+addToCart: cartId isbn: anIsbn quantity: anAmount
+	| cart |
+	
+	cart _ carts at: cartId ifAbsent: [self error: self class invalidCartIdErrorMessage].
+	cart add: anAmount of: anIsbn.
+! !
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/7/2019 21:14:49'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:14:53'!
+PASSED!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:17:30' prior: 50781905!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+
+| newCartId |
+(self isValidPassword: aPassword forUsername: anUsername) ifFalse: [self error: self class invalidUserCredencialsErrorMessage.].
+
+newCartId _ 1+carts size.
+
+carts add: newCartId->(Cart acceptingItemsOf: catalog).
+^newCartId.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 21:17:32'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:17:33'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 21:17:33'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:17:33'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/7/2019 21:17:33'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:17:44'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:17:44'!
+ERROR!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:17:51'!
+isValidPassword: aString forUsername: aString2 
+	self shouldBeImplemented.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:19:12' prior: 50782595!
+isValidPassword: aPassword forUsername: anUsername
+	
+	^aPassword = (credentials at: anUsername ifAbsent: [^false.]).! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/7/2019 21:19:21'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02createdCartListPurchasesIsEmpty stamp: 'LEB 11/7/2019 21:19:21'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/7/2019 21:19:21'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/7/2019 21:19:21'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/7/2019 21:19:21'!
+PASSED!
+
+----SNAPSHOT----(7 November 2019 21:20:03) CuisUniversity-3938.image priorSource: 14422125!

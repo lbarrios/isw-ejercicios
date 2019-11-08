@@ -1,4 +1,4 @@
-!classDefinition: #TestTusLibros category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #TestTusLibros category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 TestCase subclass: #TestTusLibros
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -22,6 +22,11 @@ defaultCatalog
 	aCatalog add: self itemSellByTheStore -> 5.
 	aCatalog add: self itemSellByTheStore2 -> 99099999999.
 	^ aCatalog.! !
+
+!TestTusLibros methodsFor: 'support' stamp: 'LEB 11/7/2019 21:11:18'!
+defaultRestInterface
+	
+	^ RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials.! !
 
 !TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 19:45:54'!
 defaultSalesBook
@@ -77,8 +82,17 @@ validUsername
 
 ^'valid username'! !
 
+
+!TestTusLibros methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:10:58'!
+defaultCredentials
+| credentials |
+
+credentials := Dictionary new.
+credentials add: (self validUsername)->(self validPassword).
+^credentials.! !
+
 
-!classDefinition: #CartTest category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #CartTest category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 TestTusLibros subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -171,8 +185,20 @@ test08CartRemembersTheNumberOfAddedItems
 	cart add: 2 of: self itemSellByTheStore.
 	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
 
+!CartTest methodsFor: 'tests' stamp: 'LEB 11/7/2019 20:54:26'!
+test09EachExecutesClosure
+
+	| counter cart |
+	counter := 0.
+	
+	cart := self createEmptyCartWithDefaultCatalog.
+	
+	cart add: 10 of: self itemSellByTheStore.
+	cart each: [:item | counter := counter + 1].
+	self assert: 10 equals: counter.! !
+
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #CashierTest category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 TestTusLibros subclass: #CashierTest
 	instanceVariableNames: 'anEmptyCart aCartWithAnItem aSalesbook anArbitraryDate'
 	classVariableNames: ''
@@ -596,7 +622,7 @@ aSalesbook := self defaultSalesBook.
 anArbitraryDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.! !
 
 
-!classDefinition: #CreditCardTest category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #CreditCardTest category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 TestTusLibros subclass: #CreditCardTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -778,19 +804,19 @@ aDate year.
 "! !
 
 
-!classDefinition: #RestInterfaceTest category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #RestInterfaceTest category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 TestTusLibros subclass: #RestInterfaceTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:23:48'!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:03:29'!
 test01cannotCreateCartWithInvalidUserCredencials
 
 | interface |
 
-interface _ RestInterface new.
+interface _ self defaultRestInterface.
 
 self 
 	should: [interface createCartForClientId: self invalidUsername identifiedByPassword: self invalidPassword ]
@@ -801,42 +827,57 @@ self
 
 ! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:26:56'!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:03:34'!
 test02createdCartListPurchasesIsEmpty
 
 | interface cartId |
-interface _ RestInterface new.
+interface _ self defaultRestInterface.
 
 cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
-self assert: ((interface listPurchasesForCart: cartId) isEmpty).! !
+self assert: ((interface listCart: cartId) isEmpty).! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:07:03'!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:03:39'!
 test03cannotListCartForAnInvalidCartId
 
 | cartId interface |
-interface _ RestInterface new.
+interface _ self defaultRestInterface.
+
 cartId _ #invalidCartId.
 
 self 
-	should: [interface listPurchasesForCart: cartId.]
+	should: [interface listCart: cartId.]
 	raise: Error - MessageNotUnderstood
 	withExceptionDo: [ :anError |
 		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:26:39'!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:06:18'!
 test04listingACartAfterAddingAnItemContainsThatItem
 
 | interface cartId |
-interface _ RestInterface new.
-cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
-interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 1.
+interface _ self defaultRestInterface.
 
-self assert: ((interface listPurchasesForCart: cartId) includesKey: (self itemSellByTheStore)).
-self assert: 1 equals: ((interface listPurchasesForCart: cartId) at: (self itemSellByTheStore)).! !
+cartId _ interface createCartForClientId: self validUsername identifiedByPassword: self validPassword.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 5.
+
+self assert: ((interface listCart: cartId) includesKey: (self itemSellByTheStore)).
+self assert: 5 equals: ((interface listCart: cartId) at: (self itemSellByTheStore)).! !
+
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:14:26'!
+test05cannotAddToAnInvalidIdCart
+
+| interface |
+interface _ self defaultRestInterface.
+
+self 
+	should: [interface addToCart: #jeje isbn: (self itemSellByTheStore) quantity: 5.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
+	]! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #Cart category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -912,9 +953,14 @@ items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> ((ca
 
 ^ items inject: 0 into: [:total :anItem | total + ((catalog at: anItem) * (self occurrencesOf: anItem)) ]! !
 
+
+!Cart methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:55:29'!
+each: aBlockClosure 
+	items do: [:item | aBlockClosure value: item].! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: 'Cart class' category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 Cart class
 	instanceVariableNames: ''!
 
@@ -924,7 +970,7 @@ acceptingItemsOf: aCatalog
 	^self new initializeAcceptingItemsOf: aCatalog ! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #Cashier category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook creditCard date merchantProcessor'
 	classVariableNames: ''
@@ -969,7 +1015,7 @@ merchantProcessorErrorMessage
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: 'Cashier class' category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -979,7 +1025,7 @@ for: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate withMerchantP
 	^self new initializeFor: aCart on: aSalesBook with: aCreditCard onDate: aGregorianDate withMerchantProcessor: aMerchantProcessor.! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 Object subclass: #CreditCard
 	instanceVariableNames: 'number expiration owner'
 	classVariableNames: ''
@@ -1000,7 +1046,7 @@ initializeWithNumber: aNumber expiringOn: anExpirationMonthOfYear ownedBy: anOwn
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -1009,7 +1055,7 @@ withNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName
 	^self new initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -1023,7 +1069,7 @@ self shouldBeImplemented.
 ! !
 
 
-!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 MerchantProcessor subclass: #MerchantProcessorMOCK
 	instanceVariableNames: 'blockClosure'
 	classVariableNames: ''
@@ -1041,7 +1087,7 @@ initializeWith: aBlockClosure
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'MerchantProcessorMOCK class' category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: 'MerchantProcessorMOCK class' category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 MerchantProcessorMOCK class
 	instanceVariableNames: ''!
 
@@ -1050,45 +1096,57 @@ with: aBlockClosure
 	^self new initializeWith: aBlockClosure ! !
 
 
-!classDefinition: #RestInterface category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: #RestInterface category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 Object subclass: #RestInterface
-	instanceVariableNames: 'carts catalog'
+	instanceVariableNames: 'carts catalog credentials'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:31:16'!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:14:46'!
 addToCart: cartId isbn: anIsbn quantity: anAmount
 	| cart |
 	
-	cart _ carts at: cartId ifAbsent: [self error: 'dale la concha de tu madre'].
+	cart _ carts at: cartId ifAbsent: [self error: self class invalidCartIdErrorMessage].
 	cart add: anAmount of: anIsbn.
 ! !
 
-!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:27:56'!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:17:30'!
 createCartForClientId: anUsername identifiedByPassword: aPassword
 
 | newCartId |
-('invalid username' = anUsername or: ['invalid password' = aPassword]) ifTrue: [self error: self class invalidUserCredencialsErrorMessage.].
+(self isValidPassword: aPassword forUsername: anUsername) ifFalse: [self error: self class invalidUserCredencialsErrorMessage.].
 
-newCartId := 1+carts size.
+newCartId _ 1+carts size.
 
 carts add: newCartId->(Cart acceptingItemsOf: catalog).
 ^newCartId.! !
 
-!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:08:10'!
-initialize
-carts _ Dictionary new.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:11:57'!
+initializeWithCatalog: aCatalog withCredentials: aCredentialsDictionary
 
-!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:25:38'!
-listPurchasesForCart: aCartId
-	(carts includesKey: aCartId) ifFalse: [self error: RestInterface invalidCartIdErrorMessage].
+carts _ Dictionary new.
+catalog _ aCatalog.
+credentials _ aCredentialsDictionary.! !
+
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:19:12'!
+isValidPassword: aPassword forUsername: anUsername
 	
-	^ Dictionary new.! !
+	^aPassword = (credentials at: anUsername ifAbsent: [^false.]).! !
+
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:07:22'!
+listCart: aCartId
+	| cartList cart |
+	
+	cart := carts at: aCartId ifAbsent: [self error: RestInterface invalidCartIdErrorMessage].
+	
+	cartList _ Dictionary new.
+	cart each: [:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
+	^ cartList.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'RestInterface class' category: #TusLibros stamp: 'LEB 11/7/2019 20:35:50'!
+!classDefinition: 'RestInterface class' category: #TusLibros stamp: 'LEB 11/7/2019 21:20:00'!
 RestInterface class
 	instanceVariableNames: ''!
 
@@ -1099,3 +1157,8 @@ invalidCartIdErrorMessage
 !RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 20:06:52'!
 invalidUserCredencialsErrorMessage
 	^'El usuario o el password no es válido'.! !
+
+
+!RestInterface class methodsFor: 'instance creation' stamp: 'LEB 11/7/2019 21:11:39'!
+withCatalog: aCatalog withCredentials: aCredentialsDictionary
+^self new initializeWithCatalog: aCatalog withCredentials: aCredentialsDictionary.! !
