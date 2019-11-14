@@ -4063,3 +4063,554 @@ PASSED!
 PASSED!
 
 ----SNAPSHOT----(14 November 2019 20:41:16) CuisUniversity-3938.image priorSource: 14437443!
+!RestInterface methodsFor: 'private' stamp: 'LEB 11/14/2019 20:42:27'!
+getHashForUsername: anUsername
+"
+	Hacer de cuenta que esto es un UUID... 
+"
+^ (anUsername), Time now hash asString! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 20:42:27' prior: 50785005!
+createCartForClientId: anUsername identifiedByPassword: aPassword
+	| newCartId |
+
+	self checkPassword: aPassword forUsername: anUsername.
+	newCartId _ self getHashForUsername: anUsername.
+	sessions add: newCartId->(Session 
+		forUser: anUsername 
+		withCart: (Cart acceptingItemsOf: catalog) 
+		using: clock).
+
+	^newCartId.! !
+
+!methodRemoval: RestInterface #getUUIDForUsername: stamp: 'LEB 11/14/2019 20:42:27'!
+getUUIDForUsername: anUsername
+"
+	Hacer de cuenta que esto es un UUID... 
+"
+^ (anUsername), Time now hash asString!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02listCartOfAJustCreatedCartIsEmpty stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05bCannotAddToCartWithANonPositiveValue stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test06cannotCheckoutOnAnInvalidIdCart stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test07cannotCheckoutWithAnEmptyCart stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test08cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test09cannotCheckoutIfMerchantProcessorFails stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test10cannotUseCartAfterCheckout stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test11listingPurchasesOfANewUserIsEmpty stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test12cannotListPurchasesWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test13listingPurchasesAfterCheckingOutACartWithAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test14listingManyPurchasesAfterCheckingOutManyCartsWithManyItemsWithMultipleUsersContainsAllThoseItemsForEachUser stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test15cannotAddToCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test16cannotListCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test17cannotCheckOutCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test18cartIsStillValidAfterMoreThan30MinutesIfUsedFrequently stamp: 'LEB 11/14/2019 20:42:29'!
+PASSED!
+!RestInterface methodsFor: 'initialization' stamp: 'LEB 11/14/2019 20:42:53' prior: 50782845!
+initializeWithCatalog: aCatalog withCredentials: aCredentialsDictionary withSalesBook: aSalesBook withMerchantProcessor: aMerchantProcessor withClock: aClock
+
+catalog _ aCatalog.
+salesBook _ aSalesBook.
+merchantProcessor _ aMerchantProcessor.
+sessions _ Dictionary new. 
+purchases _ Dictionary new.
+credentials _ aCredentialsDictionary.
+	credentials keysDo: [:user | purchases add: user->(Purchases withItems: Dictionary new total: 0)].
+clock _ aClock.
+! !
+!RestInterface methodsFor: 'initialization' stamp: 'LEB 11/14/2019 20:43:17' prior: 50785200!
+initializeWithCatalog: aCatalog withCredentials: aCredentialsDictionary withSalesBook: aSalesBook withMerchantProcessor: aMerchantProcessor withClock: aClock
+
+catalog _ aCatalog.
+salesBook _ aSalesBook.
+merchantProcessor _ aMerchantProcessor.
+credentials _ aCredentialsDictionary.
+clock _ aClock.
+sessions _ Dictionary new. 
+purchases _ Dictionary new.
+	credentials keysDo: [:user | purchases add: user->(Purchases withItems: Dictionary new total: 0)].! !
+!RestInterface methodsFor: 'private - preconditions' stamp: 'LEB 11/14/2019 20:43:45' prior: 50783151!
+checkPassword: aPassword forUsername: anUsername 
+	(self isValidPassword: aPassword forUsername: anUsername) ifFalse: [self error: self class invalidUserCredencialsErrorMessage.].
+! !
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:46:06' prior: 50784637!
+checkoutCart: cartId withCreditCard: creditCard 
+	| ticket session |
+	
+	session _ self getSession: cartId.
+	
+	ticket _ self getTicketFor: session cart.
+	
+	purchases at: session user put: ((purchases at: session user) + (Purchases withItems: (self listCart: cartId) total: ticket)).
+	
+	sessions removeKey: cartId.
+	^ticket.! !
+!RestInterface methodsFor: 'private' stamp: 'LEB 11/14/2019 20:46:41'!
+getTicketFor: aCart
+
+	| cashier creditCard |
+	cashier _ Cashier for: aCart on: salesBook with: creditCard onDate: (FixedGregorianDate fromDate: (clock now)) withMerchantProcessor: merchantProcessor.
+	^cashier checkOut.! !
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:47:13' prior: 50785245!
+checkoutCart: cartId withCreditCard: creditCard 
+	| ticket session |
+	
+	session _ self getSession: cartId.
+	
+	ticket _ self getTicketFor: session cart withCreditCard: creditCard.
+	
+	purchases at: session user put: ((purchases at: session user) + (Purchases withItems: (self listCart: cartId) total: ticket)).
+	
+	sessions removeKey: cartId.
+	^ticket.! !
+!RestInterface methodsFor: 'private' stamp: 'LEB 11/14/2019 20:47:32'!
+getTicketFor: aCart withCreditCard: creditCard
+
+	| cashier |
+	cashier _ Cashier for: aCart on: salesBook with: creditCard onDate: (FixedGregorianDate fromDate: (clock now)) withMerchantProcessor: merchantProcessor.
+	^cashier checkOut.! !
+
+!methodRemoval: RestInterface #getTicketFor: stamp: 'LEB 11/14/2019 20:47:33'!
+getTicketFor: aCart
+
+	| cashier creditCard |
+	cashier _ Cashier for: aCart on: salesBook with: creditCard onDate: (FixedGregorianDate fromDate: (clock now)) withMerchantProcessor: merchantProcessor.
+	^cashier checkOut.!
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02listCartOfAJustCreatedCartIsEmpty stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05bCannotAddToCartWithANonPositiveValue stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test06cannotCheckoutOnAnInvalidIdCart stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test07cannotCheckoutWithAnEmptyCart stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test08cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test09cannotCheckoutIfMerchantProcessorFails stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test10cannotUseCartAfterCheckout stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test11listingPurchasesOfANewUserIsEmpty stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test12cannotListPurchasesWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test13listingPurchasesAfterCheckingOutACartWithAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test14listingManyPurchasesAfterCheckingOutManyCartsWithManyItemsWithMultipleUsersContainsAllThoseItemsForEachUser stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test15cannotAddToCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test16cannotListCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test17cannotCheckOutCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test18cartIsStillValidAfterMoreThan30MinutesIfUsedFrequently stamp: 'LEB 11/14/2019 20:47:38'!
+PASSED!
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:48:35' prior: 50785268!
+checkoutCart: cartId withCreditCard: creditCard 
+	| ticket session |
+	
+	session _ self getSession: cartId.
+	
+	ticket _ self getTicketFor: session cart withCreditCard: creditCard.
+	
+	self addPurchase: ticket forUser: session user.
+	
+	sessions removeKey: cartId.
+	^ticket.! !
+!RestInterface methodsFor: 'private' stamp: 'LEB 11/14/2019 20:49:33'!
+addPurchase: aPurchase forUser: anUser
+	purchases at: anUser put: ((purchases at: anUser) + aPurchase).
+	! !
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:49:52' prior: 50785375!
+checkoutCart: cartId withCreditCard: creditCard 
+	| ticket session |
+	
+	session _ self getSession: cartId.
+	
+	ticket _ self getTicketFor: session cart withCreditCard: creditCard.
+	
+	self addPurchase: (self listCart: session cart) forUser: session user.
+	
+	sessions removeKey: cartId.
+	^ticket.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02listCartOfAJustCreatedCartIsEmpty stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05bCannotAddToCartWithANonPositiveValue stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test06cannotCheckoutOnAnInvalidIdCart stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test07cannotCheckoutWithAnEmptyCart stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test08cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test09cannotCheckoutIfMerchantProcessorFails stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test10cannotUseCartAfterCheckout stamp: 'LEB 11/14/2019 20:49:53'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test11listingPurchasesOfANewUserIsEmpty stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test12cannotListPurchasesWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test13listingPurchasesAfterCheckingOutACartWithAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:49:53'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test14listingManyPurchasesAfterCheckingOutManyCartsWithManyItemsWithMultipleUsersContainsAllThoseItemsForEachUser stamp: 'LEB 11/14/2019 20:49:53'!
+ERROR!
+
+!testRun: #RestInterfaceTest #test15cannotAddToCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test16cannotListCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test17cannotCheckOutCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:49:53'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test18cartIsStillValidAfterMoreThan30MinutesIfUsedFrequently stamp: 'LEB 11/14/2019 20:49:53'!
+ERROR!
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:50:30' prior: 50785393!
+checkoutCart: cartId withCreditCard: creditCard 
+	| ticket session |
+	
+	session _ self getSession: cartId.
+	
+	ticket _ self getTicketFor: session cart withCreditCard: creditCard.
+	
+	self addPurchase: (Purchases withItems: (self listCart: cartId) total: ticket) forUser: session user.
+	
+	sessions removeKey: cartId.
+	^ticket.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02listCartOfAJustCreatedCartIsEmpty stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05bCannotAddToCartWithANonPositiveValue stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test06cannotCheckoutOnAnInvalidIdCart stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test07cannotCheckoutWithAnEmptyCart stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test08cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test09cannotCheckoutIfMerchantProcessorFails stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test10cannotUseCartAfterCheckout stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test11listingPurchasesOfANewUserIsEmpty stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test12cannotListPurchasesWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test13listingPurchasesAfterCheckingOutACartWithAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test14listingManyPurchasesAfterCheckingOutManyCartsWithManyItemsWithMultipleUsersContainsAllThoseItemsForEachUser stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test15cannotAddToCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test16cannotListCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test17cannotCheckOutCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test18cartIsStillValidAfterMoreThan30MinutesIfUsedFrequently stamp: 'LEB 11/14/2019 20:50:30'!
+PASSED!
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:51:11' prior: 50785478!
+checkoutCart: cartId withCreditCard: creditCard 
+	| ticket session purchase |
+	
+	session _ self getSession: cartId.
+	
+	ticket _ self getTicketFor: session cart withCreditCard: creditCard.
+	
+	purchase _ (Purchases withItems: (self listCart: cartId) total: ticket). 
+	self addPurchase: purchase forUser: session user.
+	
+	sessions removeKey: cartId.
+	^ticket.! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02listCartOfAJustCreatedCartIsEmpty stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05bCannotAddToCartWithANonPositiveValue stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test06cannotCheckoutOnAnInvalidIdCart stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test07cannotCheckoutWithAnEmptyCart stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test08cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test09cannotCheckoutIfMerchantProcessorFails stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test10cannotUseCartAfterCheckout stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test11listingPurchasesOfANewUserIsEmpty stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test12cannotListPurchasesWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test13listingPurchasesAfterCheckingOutACartWithAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test14listingManyPurchasesAfterCheckingOutManyCartsWithManyItemsWithMultipleUsersContainsAllThoseItemsForEachUser stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test15cannotAddToCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test16cannotListCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test17cannotCheckOutCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test18cartIsStillValidAfterMoreThan30MinutesIfUsedFrequently stamp: 'LEB 11/14/2019 20:51:13'!
+PASSED!
+!Purchase methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 20:51:35' prior: 50779944!
++ anotherPurchase
+	| newItems |
+	newItems _ items copy.
+	anotherPurchase items keysAndValuesDo: [:k :v | newItems add: k->(v+(newItems at: k ifAbsent: [0]))].
+	^Purchase withItems: newItems total: total+anotherPurchase total.! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 20:51:35' prior: 50785218!
+initializeWithCatalog: aCatalog withCredentials: aCredentialsDictionary withSalesBook: aSalesBook withMerchantProcessor: aMerchantProcessor withClock: aClock
+
+catalog _ aCatalog.
+salesBook _ aSalesBook.
+merchantProcessor _ aMerchantProcessor.
+credentials _ aCredentialsDictionary.
+clock _ aClock.
+sessions _ Dictionary new. 
+purchases _ Dictionary new.
+	credentials keysDo: [:user | purchases add: user->(Purchase withItems: Dictionary new total: 0)].! !
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 20:51:35' prior: 50785564!
+checkoutCart: cartId withCreditCard: creditCard 
+	| ticket session purchase |
+	
+	session _ self getSession: cartId.
+	
+	ticket _ self getTicketFor: session cart withCreditCard: creditCard.
+	
+	purchase _ (Purchase withItems: (self listCart: cartId) total: ticket). 
+	self addPurchase: purchase forUser: session user.
+	
+	sessions removeKey: cartId.
+	^ticket.! !
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:52:52' prior: 50784599!
+addToCart: cartId isbn: anIsbn quantity: anAmount
+	
+	(self getCart: cartId) add: anAmount of: anIsbn.! !
+!RestInterface methodsFor: 'private' stamp: 'LEB 11/14/2019 20:53:02'!
+getCart: cartId
+
+(self getSession: cartId) cart! !
+!RestInterface methodsFor: 'private' stamp: 'LEB 11/14/2019 20:53:07' prior: 50785700!
+getCart: cartId
+
+^ (self getSession: cartId) cart! !
+
+!testRun: #RestInterfaceTest #test01cannotCreateCartWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test02listCartOfAJustCreatedCartIsEmpty stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test03cannotListCartForAnInvalidCartId stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test04listingACartAfterAddingAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05bCannotAddToCartWithANonPositiveValue stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test05cannotAddToAnInvalidIdCart stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test06cannotCheckoutOnAnInvalidIdCart stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test07cannotCheckoutWithAnEmptyCart stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test08cannotCheckoutWithAnExpiredCreditCard stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test09cannotCheckoutIfMerchantProcessorFails stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test10cannotUseCartAfterCheckout stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test11listingPurchasesOfANewUserIsEmpty stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test12cannotListPurchasesWithInvalidUserCredencials stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test13listingPurchasesAfterCheckingOutACartWithAnItemContainsThatItem stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test14listingManyPurchasesAfterCheckingOutManyCartsWithManyItemsWithMultipleUsersContainsAllThoseItemsForEachUser stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test15cannotAddToCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test16cannotListCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test17cannotCheckOutCartAfter30MinutesOfInactivity stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+
+!testRun: #RestInterfaceTest #test18cartIsStillValidAfterMoreThan30MinutesIfUsedFrequently stamp: 'LEB 11/14/2019 20:53:07'!
+PASSED!
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:53:25' prior: 50784669!
+listCart: cartId
+	| cartList |
+	
+	cartList _ Dictionary new.
+	(self getCart: cartId) each: [
+		:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
+	
+	^ cartList.! !
+!RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:53:35' prior: 50785782!
+listCart: cartId
+	| cartList |
+	
+	cartList _ Dictionary new.
+	(self getCart: cartId) each: [:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
+	
+	^ cartList.! !
+
+----SNAPSHOT----(14 November 2019 20:54:29) CuisUniversity-3938.image priorSource: 14510280!
