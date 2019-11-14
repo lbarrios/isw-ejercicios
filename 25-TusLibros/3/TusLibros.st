@@ -1,4 +1,4 @@
-!classDefinition: #TestTusLibros category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #TestTusLibros category: #TusLibros!
 TestCase subclass: #TestTusLibros
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -100,7 +100,7 @@ validCreditCard
 	^aCreditCard.! !
 
 
-!classDefinition: #CartTest category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #CartTest category: #TusLibros!
 TestTusLibros subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -206,7 +206,7 @@ test09EachExecutesClosure
 	self assert: 10 equals: counter.! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #CashierTest category: #TusLibros!
 TestTusLibros subclass: #CashierTest
 	instanceVariableNames: 'anEmptyCart aCartWithAnItem aSalesbook anArbitraryDate'
 	classVariableNames: ''
@@ -630,7 +630,7 @@ aSalesbook := self defaultSalesBook.
 anArbitraryDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.! !
 
 
-!classDefinition: #CreditCardTest category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #CreditCardTest category: #TusLibros!
 TestTusLibros subclass: #CreditCardTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -812,7 +812,7 @@ aDate year.
 "! !
 
 
-!classDefinition: #RestInterfaceTest category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #RestInterfaceTest category: #TusLibros!
 TestTusLibros subclass: #RestInterfaceTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -1044,8 +1044,8 @@ self assert: (purchases2 items includesKey: (self itemSellByTheStore)).
 self assert: 100 equals: (purchases2 items at: (self itemSellByTheStore)).
 self assert: (100 * (self defaultCatalog at: self itemSellByTheStore)) equals: purchases2 total.! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 22:00:22'!
-test15cannotUseCartAfter30MinutesOfInactivity
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'FL 11/13/2019 23:46:15'!
+test15cannotAddToCartAfter30MinutesOfInactivity
 
 | interface cartId clock |
 
@@ -1062,8 +1062,45 @@ self
 		self assert: anError messageText = RestInterface expiredCartErrorMessage.
 	]! !
 
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'FL 11/13/2019 23:48:02'!
+test16cannotListCartAfter30MinutesOfInactivity
+
+| interface cartId clock |
+
+clock _ ClockMock new.
+interface _ RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: self defaultSalesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: clock.
+
+cartId _ interface createCartForClientId: self username1 identifiedByPassword: self passwordForUsername1.
+clock addTime: (Duration minutes: 31).
+self 
+	should: [interface listCart: cartId.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface expiredCartErrorMessage.
+	]! !
+
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'FL 11/13/2019 23:58:56'!
+test17cannotCheckOutCartAfter30MinutesOfInactivity
+
+| interface cartId clock salesBook |
+
+clock _ ClockMock new.
+salesBook _ self defaultSalesBook.
+interface _ RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: salesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: clock.
+
+cartId _ interface createCartForClientId: self username1 identifiedByPassword: self passwordForUsername1.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 5.
+clock addTime: (Duration minutes: 31).
+self 
+	should: [interface checkoutCart: cartId withCreditCard: self validCreditCard.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface expiredCartErrorMessage.
+		self assert: salesBook isEmpty.
+	]! !
+
 
-!classDefinition: #Cart category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #Cart category: #TusLibros!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -1097,7 +1134,6 @@ initializeAcceptingItemsOf: aCatalog
 
 	catalog := aCatalog.
 	items := OrderedCollection new.! !
-
 
 
 !Cart methodsFor: 'testing' stamp: 'HernanWilkinson 6/17/2013 17:44'!
@@ -1150,7 +1186,7 @@ each: aBlockClosure
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: 'Cart class' category: #TusLibros!
 Cart class
 	instanceVariableNames: ''!
 
@@ -1160,7 +1196,7 @@ acceptingItemsOf: aCatalog
 	^self new initializeAcceptingItemsOf: aCatalog ! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook creditCard date merchantProcessor'
 	classVariableNames: ''
@@ -1190,10 +1226,9 @@ checkOut
 	salesBook add: aTicket.
 	^aTicket! !
 
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: 'Cashier class' category: #TusLibros!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -1216,7 +1251,7 @@ merchantProcessorErrorMessage
 	^'El merchant procesor se murió'! !
 
 
-!classDefinition: #Clock category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #Clock category: #TusLibros!
 Object subclass: #Clock
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -1227,7 +1262,7 @@ Object subclass: #Clock
 now! !
 
 
-!classDefinition: #ClockMock category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #ClockMock category: #TusLibros!
 Clock subclass: #ClockMock
 	instanceVariableNames: 'time'
 	classVariableNames: ''
@@ -1249,7 +1284,7 @@ now
 ^time! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #CreditCard category: #TusLibros!
 Object subclass: #CreditCard
 	instanceVariableNames: 'number expiration owner'
 	classVariableNames: ''
@@ -1270,7 +1305,7 @@ initializeWithNumber: aNumber expiringOn: anExpirationMonthOfYear ownedBy: anOwn
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: 'CreditCard class' category: #TusLibros!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -1279,7 +1314,7 @@ withNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName
 	^self new initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #MerchantProcessor category: #TusLibros!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -1293,7 +1328,7 @@ self shouldBeImplemented.
 ! !
 
 
-!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #MerchantProcessorMOCK category: #TusLibros!
 MerchantProcessor subclass: #MerchantProcessorMOCK
 	instanceVariableNames: 'blockClosure'
 	classVariableNames: ''
@@ -1311,7 +1346,7 @@ initializeWith: aBlockClosure
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'MerchantProcessorMOCK class' category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: 'MerchantProcessorMOCK class' category: #TusLibros!
 MerchantProcessorMOCK class
 	instanceVariableNames: ''!
 
@@ -1320,7 +1355,7 @@ with: aBlockClosure
 	^self new initializeWith: aBlockClosure ! !
 
 
-!classDefinition: #Purchases category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #Purchases category: #TusLibros!
 Object subclass: #Purchases
 	instanceVariableNames: 'total items'
 	classVariableNames: ''
@@ -1352,7 +1387,7 @@ total
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Purchases class' category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: 'Purchases class' category: #TusLibros!
 Purchases class
 	instanceVariableNames: ''!
 
@@ -1362,7 +1397,7 @@ withItems: aListOfItems total: anAmount
 	^ self new initializeWithItems: aListOfItems total: anAmount.! !
 
 
-!classDefinition: #RestInterface category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: #RestInterface category: #TusLibros!
 Object subclass: #RestInterface
 	instanceVariableNames: 'carts userForCarts catalog credentials salesBook merchantProcessor purchases clock lastUsedTime'
 	classVariableNames: ''
@@ -1430,11 +1465,12 @@ isValidPassword: aPassword forUsername: anUsername
 	
 	^aPassword = (credentials at: anUsername ifAbsent: [^false.]).! !
 
-!RestInterface methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:07:22'!
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'FL 11/13/2019 23:48:50'!
 listCart: aCartId
 	| cartList cart |
 	
 	cart := carts at: aCartId ifAbsent: [self error: RestInterface invalidCartIdErrorMessage].
+	(clock now > ((lastUsedTime at: aCartId) + (Duration minutes: 30))) ifTrue: [self error: RestInterface expiredCartErrorMessage].
 	
 	cartList _ Dictionary new.
 	cart each: [:item | cartList add: item->(1+(cartList at:item ifAbsent:[0]))].
@@ -1448,7 +1484,7 @@ listPurchasesForClientId: anUsername identifiedByPassword: aPassword
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'RestInterface class' category: #TusLibros stamp: 'LEB 11/11/2019 22:00:48'!
+!classDefinition: 'RestInterface class' category: #TusLibros!
 RestInterface class
 	instanceVariableNames: ''!
 
