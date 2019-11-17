@@ -1,4 +1,4 @@
-!classDefinition: #TestTusLibros category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #TestTusLibros category: #TusLibros!
 TestCase subclass: #TestTusLibros
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -104,7 +104,7 @@ validCreditCard
 	^aCreditCard.! !
 
 
-!classDefinition: #CartTest category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #CartTest category: #TusLibros!
 TestTusLibros subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -210,7 +210,7 @@ test09EachExecutesClosure
 	self assert: 10 equals: counter.! !
 
 
-!classDefinition: #CashierTest category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #CashierTest category: #TusLibros!
 TestTusLibros subclass: #CashierTest
 	instanceVariableNames: 'anEmptyCart aCartWithAnItem aSalesbook anArbitraryDate'
 	classVariableNames: ''
@@ -634,7 +634,7 @@ aSalesbook := self defaultSalesBook.
 anArbitraryDate := FixedGregorianDate yearNumber: 3 monthNumber: 3 dayNumber: 3.! !
 
 
-!classDefinition: #CreditCardTest category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #CreditCardTest category: #TusLibros!
 TestTusLibros subclass: #CreditCardTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -816,7 +816,7 @@ aDate year.
 "! !
 
 
-!classDefinition: #RestInterfaceTest category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #RestInterfaceTest category: #TusLibros!
 TestTusLibros subclass: #RestInterfaceTest
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -1123,7 +1123,7 @@ self
 		self assert: salesBook isEmpty.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 19:51:24'!
+!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'FL 11/17/2019 16:24:35'!
 test18cartIsStillValidAfterMoreThan30MinutesIfUsedFrequently
 
 | interface cartId clock salesBook |
@@ -1132,20 +1132,21 @@ clock _ self defaultClock.
 salesBook _ self defaultSalesBook.
 interface _ RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: salesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: clock.
 
-cartId _ interface createCartForClientId: self username1 identifiedByPassword: self passwordForUsername1.
-clock addTime: (Duration minutes: 29).
-interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 5.
-clock addTime: (Duration minutes: 29).
-interface listCart: cartId.
-clock addTime: (Duration minutes: 29).
-interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 5.
-clock addTime: (Duration minutes: 29).
-interface listCart: cartId.
-clock addTime: (Duration minutes: 29).
-interface checkoutCart: cartId withCreditCard: self validCreditCard.! !
+self shouldnt:  [
+	cartId _ interface createCartForClientId: self username1 identifiedByPassword: self passwordForUsername1.
+	clock addTime: (Duration minutes: 29).
+	interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 5.
+	clock addTime: (Duration minutes: 29).
+	interface listCart: cartId.
+	clock addTime: (Duration minutes: 29).
+	interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 5.
+	clock addTime: (Duration minutes: 29).
+	interface listCart: cartId.
+	clock addTime: (Duration minutes: 29).
+	interface checkoutCart: cartId withCreditCard: self validCreditCard.] raise: Error.! !
 
 
-!classDefinition: #Cart category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #Cart category: #TusLibros!
 Object subclass: #Cart
 	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
@@ -1231,7 +1232,7 @@ each: aBlockClosure
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cart class' category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: 'Cart class' category: #TusLibros!
 Cart class
 	instanceVariableNames: ''!
 
@@ -1247,7 +1248,7 @@ invalidQuantityErrorMessage
 	^'Invalid number of items'! !
 
 
-!classDefinition: #Cashier category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook creditCard date merchantProcessor'
 	classVariableNames: ''
@@ -1279,7 +1280,7 @@ checkOut
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Cashier class' category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: 'Cashier class' category: #TusLibros!
 Cashier class
 	instanceVariableNames: ''!
 
@@ -1302,7 +1303,7 @@ merchantProcessorErrorMessage
 	^'El merchant procesor se murió'! !
 
 
-!classDefinition: #Clock category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #Clock category: #TusLibros!
 Object subclass: #Clock
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -1313,7 +1314,7 @@ Object subclass: #Clock
 now! !
 
 
-!classDefinition: #FixedClock category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #FixedClock category: #TusLibros!
 Clock subclass: #FixedClock
 	instanceVariableNames: 'time'
 	classVariableNames: ''
@@ -1336,7 +1337,7 @@ now
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'FixedClock class' category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: 'FixedClock class' category: #TusLibros!
 FixedClock class
 	instanceVariableNames: ''!
 
@@ -1345,7 +1346,7 @@ with: initialDate
 ^self new initializeWith: initialDate.! !
 
 
-!classDefinition: #CreditCard category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #CreditCard category: #TusLibros!
 Object subclass: #CreditCard
 	instanceVariableNames: 'number expiration owner'
 	classVariableNames: ''
@@ -1366,7 +1367,7 @@ initializeWithNumber: aNumber expiringOn: anExpirationMonthOfYear ownedBy: anOwn
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CreditCard class' category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: 'CreditCard class' category: #TusLibros!
 CreditCard class
 	instanceVariableNames: ''!
 
@@ -1375,7 +1376,7 @@ withNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName
 	^self new initializeWithNumber: aNumber expiringOn: aMonthOfYear ownedBy: aName! !
 
 
-!classDefinition: #MerchantProcessor category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #MerchantProcessor category: #TusLibros!
 Object subclass: #MerchantProcessor
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -1389,7 +1390,7 @@ self shouldBeImplemented.
 ! !
 
 
-!classDefinition: #MerchantProcessorMOCK category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #MerchantProcessorMOCK category: #TusLibros!
 MerchantProcessor subclass: #MerchantProcessorMOCK
 	instanceVariableNames: 'blockClosure'
 	classVariableNames: ''
@@ -1407,7 +1408,7 @@ initializeWith: aBlockClosure
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'MerchantProcessorMOCK class' category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: 'MerchantProcessorMOCK class' category: #TusLibros!
 MerchantProcessorMOCK class
 	instanceVariableNames: ''!
 
@@ -1416,7 +1417,7 @@ with: aBlockClosure
 	^self new initializeWith: aBlockClosure ! !
 
 
-!classDefinition: #Purchase category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #Purchase category: #TusLibros!
 Object subclass: #Purchase
 	instanceVariableNames: 'total items'
 	classVariableNames: ''
@@ -1448,7 +1449,7 @@ total
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Purchase class' category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: 'Purchase class' category: #TusLibros!
 Purchase class
 	instanceVariableNames: ''!
 
@@ -1458,7 +1459,7 @@ withItems: aListOfItems total: anAmount
 	^ self new initializeWithItems: aListOfItems total: anAmount.! !
 
 
-!classDefinition: #RestInterface category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #RestInterface category: #TusLibros!
 Object subclass: #RestInterface
 	instanceVariableNames: 'carts userForCarts catalog credentials salesBook merchantProcessor purchases clock lastUsedTime sessions'
 	classVariableNames: ''
@@ -1568,7 +1569,7 @@ isValidPassword: aPassword forUsername: anUsername
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'RestInterface class' category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: 'RestInterface class' category: #TusLibros!
 RestInterface class
 	instanceVariableNames: ''!
 
@@ -1611,7 +1612,7 @@ merchantProcessorErrorMessage
 	^Cashier merchantProcessorErrorMessage.! !
 
 
-!classDefinition: #Session category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: #Session category: #TusLibros!
 Object subclass: #Session
 	instanceVariableNames: 'username cart clock lastUsedTime'
 	classVariableNames: ''
@@ -1645,7 +1646,7 @@ self checkAndRefreshSession.
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Session class' category: #TusLibros stamp: 'LEB 11/14/2019 20:54:27'!
+!classDefinition: 'Session class' category: #TusLibros!
 Session class
 	instanceVariableNames: ''!
 
