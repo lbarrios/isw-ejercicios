@@ -1662,12 +1662,13 @@ Object subclass: #TusLibrosServerController
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibrosServerController methodsFor: 'as yet unclassified' stamp: 'LEB 11/21/2019 19:15:10'!
+!TusLibrosServerController methodsFor: 'destroy' stamp: 'LEB 11/21/2019 19:15:10'!
 destroy
 	
 	webServer ifNotNil:[webServer destroy].! !
 
-!TusLibrosServerController methodsFor: 'as yet unclassified' stamp: 'LEB 11/21/2019 20:37:44'!
+
+!TusLibrosServerController methodsFor: 'initialization' stamp: 'LEB 11/21/2019 20:37:44'!
 initializeWith: aPortNumber
 	
 	restInterface := RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: self defaultSalesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: self defaultClock.
@@ -1738,7 +1739,7 @@ initializeWith: aPortNumber
 		do: [ :anError |
 			request send404Response: ('1|',anError messageText) ]].! !
 
-!TusLibrosServerController methodsFor: 'as yet unclassified' stamp: 'LEB 11/21/2019 19:12:26'!
+!TusLibrosServerController methodsFor: 'initialization' stamp: 'LEB 11/21/2019 19:12:26'!
 port
 	
 	^port ifNil: [port:=8080].
