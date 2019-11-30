@@ -15,12 +15,12 @@ createEmptyCartWithDefaultCatalog
 	
 	^Cart acceptingItemsOf: self defaultCatalog! !
 
-!TestTusLibros methodsFor: 'support' stamp: 'FL 11/4/2019 20:59:27'!
+!TestTusLibros methodsFor: 'support' stamp: 'FL 11/30/2019 15:09:01'!
 defaultCatalog
 	| aCatalog |
 	aCatalog := Dictionary new.
-	aCatalog add: self itemSellByTheStore -> 5.
-	aCatalog add: self itemSellByTheStore2 -> 99099999999.
+	aCatalog add: self itemSellByTheStore -> (Book withTitle: 'Hey' price: 5 author: 'John').
+	aCatalog add: self itemSellByTheStore2 -> (Book withTitle: 'You' price: 1000 author: 'Mike').
 	^ aCatalog.! !
 
 !TestTusLibros methodsFor: 'support' stamp: 'LEB 11/14/2019 17:31:09'!
@@ -246,7 +246,7 @@ test02checkingOutACartWithAnItemOnASalesBookReturnsATicketThatIsIncludedOnThatSa
 	self deny: aSalesbook isEmpty.
 	self assert: (aSalesbook includes: aTicket).! !
 
-!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:50:49'!
+!CashierTest methodsFor: 'tests' stamp: 'FL 11/30/2019 15:17:22'!
 test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 
 	| aCashier aTicket |
@@ -254,7 +254,7 @@ test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 	aCashier _ Cashier for: aCartWithAnItem on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
 	aTicket := aCashier checkOut.
 	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) equals: aTicket.
+	self assert: (self defaultCatalog at: self itemSellByTheStore) price equals: aTicket.
 	
 	
 	
@@ -359,7 +359,7 @@ test03checkingOutACartWithAnItemReturnsATicketWithTheItemValue
 	self assert: (aTicket at: 1) value equals: (self defaultCatalog at: self itemSellByTheStore).
 	"! !
 
-!CashierTest methodsFor: 'tests' stamp: 'LEB 11/6/2019 17:51:02'!
+!CashierTest methodsFor: 'tests' stamp: 'FL 11/30/2019 15:16:42'!
 test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
 
 	| aCart aCashier aTicket |
@@ -369,7 +369,7 @@ test04checkingOutACartWithTwoItemsReturnsATicketWithTheSumOfTheItemValues
 	aCashier _ Cashier for: aCart on: aSalesbook with: self validCreditCard onDate: anArbitraryDate withMerchantProcessor: self alwaysOKMerchantProcessor.
 	aTicket := aCashier checkOut.
 	
-	self assert: (self defaultCatalog at: self itemSellByTheStore) + (self defaultCatalog at: self itemSellByTheStore2) equals: aTicket.
+	self assert: (self defaultCatalog at: self itemSellByTheStore) price + (self defaultCatalog at: self itemSellByTheStore2) price equals: aTicket.
 	
 	
 	
@@ -823,7 +823,7 @@ TestTusLibros subclass: #RestInterfaceTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 21:03:29'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/7/2019 21:03:29'!
 test01cannotCreateCartWithInvalidUserCredencials
 
 | interface |
@@ -839,7 +839,7 @@ self
 
 ! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 20:58:32'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 20:58:32'!
 test02listCartOfAJustCreatedCartIsEmpty
 
 | interface cartId |
@@ -848,7 +848,7 @@ interface _ self defaultRestInterface.
 cartId _ interface createCartForClientId: self username1 identifiedByPassword: self passwordForUsername1.
 self assert: ((interface listCart: cartId) isEmpty).! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 18:02:05'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 18:02:05'!
 test03cannotListCartForAnInvalidCartId
 
 | interface |
@@ -861,7 +861,7 @@ self
 		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 20:58:32'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 20:58:32'!
 test04listingACartAfterAddingAnItemContainsThatItem
 
 | interface cartId cartList |
@@ -875,7 +875,7 @@ cartList _ interface listCart: cartId.
 self assert: (cartList includesKey: (self itemSellByTheStore)).
 self assert: 5 equals: (cartList at: (self itemSellByTheStore)).! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 19:46:31'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/14/2019 19:46:31'!
 test05bCannotAddToCartWithANonPositiveValue
 
 | interface cartId |
@@ -895,7 +895,7 @@ self
 		self assert: 5 equals: (cartList at: (self itemSellByTheStore)).
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 18:02:05'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 18:02:05'!
 test05cannotAddToAnInvalidIdCart
 
 | interface |
@@ -908,7 +908,7 @@ self
 		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 18:02:54'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 18:02:54'!
 test06cannotCheckoutOnAnInvalidIdCart
 
 | interface |
@@ -921,7 +921,7 @@ self
 		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 20:58:32'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 20:58:32'!
 test07cannotCheckoutWithAnEmptyCart
 
 | interface cartId |
@@ -936,7 +936,7 @@ self
 		self assert: anError messageText = RestInterface emptyCartErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 20:58:32'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 20:58:32'!
 test08cannotCheckoutWithAnExpiredCreditCard
 
 | interface cartId |
@@ -952,7 +952,7 @@ self
 		self assert: anError messageText = RestInterface expiredCreditCardMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 17:31:24'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/14/2019 17:31:24'!
 test09cannotCheckoutIfMerchantProcessorFails
 
 | interface cartId |
@@ -969,7 +969,7 @@ self
 		self assert: anError messageText = RestInterface merchantProcessorErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 20:58:32'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 20:58:32'!
 test10cannotUseCartAfterCheckout
 
 | interface cartId |
@@ -985,7 +985,7 @@ self
 		self assert: anError messageText = RestInterface invalidCartIdErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 20:58:32'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 20:58:32'!
 test11listingPurchasesOfANewUserIsEmpty
 
 | interface purchases |
@@ -996,7 +996,7 @@ purchases _ interface listPurchasesForClientId: self username1 identifiedByPassw
 self assert: purchases items isEmpty.
 self assert: purchases total equals: 0.! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 19:32:08'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/11/2019 19:32:08'!
 test12cannotListPurchasesWithInvalidUserCredencials
 
 | interface |
@@ -1010,7 +1010,7 @@ self
 		self assert: anError messageText = RestInterface invalidUserCredencialsErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 20:58:32'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'FL 11/30/2019 15:18:33'!
 test13listingPurchasesAfterCheckingOutACartWithAnItemContainsThatItem
 
 | interface cartId pass purchases user |
@@ -1027,9 +1027,9 @@ purchases _ interface listPurchasesForClientId: user identifiedByPassword: pass.
 
 self assert: (purchases items includesKey: (self itemSellByTheStore)).
 self assert: 5 equals: (purchases items at: (self itemSellByTheStore)).
-self assert: 5 * (self defaultCatalog at: self itemSellByTheStore) equals: purchases total.! !
+self assert: 5 * (self defaultCatalog at: self itemSellByTheStore) price equals: purchases total.! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 21:08:25'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'FL 11/30/2019 15:19:50'!
 test14listingManyPurchasesAfterCheckingOutManyCartsWithManyItemsWithMultipleUsersContainsAllThoseItemsForEachUser
 
 | interface cartId pass purchases user pass2 user2 purchases2 |
@@ -1063,12 +1063,12 @@ self assert: (purchases items includesKey: (self itemSellByTheStore)).
 self assert: (purchases items includesKey: (self itemSellByTheStore2)).
 self assert: 15 equals: (purchases items at: (self itemSellByTheStore)).
 self assert: 3 equals: (purchases items at: (self itemSellByTheStore2)).
-self assert: (15 * (self defaultCatalog at: self itemSellByTheStore)) + (3 * (self defaultCatalog at: self itemSellByTheStore2)) equals: purchases total.
+self assert: 15 * (self defaultCatalog at: self itemSellByTheStore) price + (3 * (self defaultCatalog at: self itemSellByTheStore2) price) equals: purchases total.
 self assert: (purchases2 items includesKey: (self itemSellByTheStore)).
 self assert: 100 equals: (purchases2 items at: (self itemSellByTheStore)).
-self assert: (100 * (self defaultCatalog at: self itemSellByTheStore)) equals: purchases2 total.! !
+self assert: 100 * (self defaultCatalog at: self itemSellByTheStore) price equals: purchases2 total.! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 17:39:23'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/14/2019 17:39:23'!
 test15cannotAddToCartAfter30MinutesOfInactivity
 
 | interface cartId clock |
@@ -1086,7 +1086,7 @@ self
 		self assert: anError messageText = RestInterface expiredCartErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 17:39:38'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/14/2019 17:39:38'!
 test16cannotListCartAfter30MinutesOfInactivity
 
 | interface cartId clock |
@@ -1103,7 +1103,7 @@ self
 		self assert: anError messageText = RestInterface expiredCartErrorMessage.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 17:39:42'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'LEB 11/14/2019 17:39:42'!
 test17cannotCheckOutCartAfter30MinutesOfInactivity
 
 | interface cartId clock salesBook |
@@ -1123,7 +1123,7 @@ self
 		self assert: salesBook isEmpty.
 	]! !
 
-!RestInterfaceTest methodsFor: 'as yet unclassified' stamp: 'FL 11/17/2019 16:24:35'!
+!RestInterfaceTest methodsFor: 'tests' stamp: 'FL 11/17/2019 16:24:35'!
 test18cartIsStillValidAfterMoreThan30MinutesIfUsedFrequently
 
 | interface cartId clock salesBook |
@@ -1144,6 +1144,64 @@ self shouldnt:  [
 	interface listCart: cartId.
 	clock addTime: (Duration minutes: 29).
 	interface checkoutCart: cartId withCreditCard: self validCreditCard.] raise: Error.! !
+
+!RestInterfaceTest methodsFor: 'tests' stamp: 'FL 11/30/2019 15:25:00'!
+test19catalogHasAllItsBooksWithNameAndPrice
+
+| interface clock salesBook catalog |
+
+clock _ self defaultClock.
+salesBook _ self defaultSalesBook.
+interface _ RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: salesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: clock.
+
+catalog _ interface catalog.
+
+self assert: self defaultCatalog size equals: catalog size.
+self assert: (self defaultCatalog at: self itemSellByTheStore ) title equals: (catalog at:self itemSellByTheStore) title .
+self assert: (self defaultCatalog at: self itemSellByTheStore ) author equals: (catalog at:self itemSellByTheStore) author .
+self assert: (self defaultCatalog at: self itemSellByTheStore2 ) title equals: (catalog at:self itemSellByTheStore2) title .
+self assert: (self defaultCatalog at: self itemSellByTheStore2 ) author equals: (catalog at:self itemSellByTheStore2) author .! !
+
+
+!classDefinition: #Book category: #TusLibros!
+Object subclass: #Book
+	instanceVariableNames: 'title price author'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!Book methodsFor: 'initialization' stamp: 'FL 11/30/2019 15:13:27'!
+initializeWithTitle: aTitle price: anAmount author: anAuthor 
+	
+	title := aTitle.
+	price := anAmount.
+	author := anAuthor.! !
+
+
+!Book methodsFor: 'getter' stamp: 'FL 11/30/2019 15:25:30'!
+author
+	
+	^author! !
+
+!Book methodsFor: 'getter' stamp: 'FL 11/30/2019 15:16:01'!
+price
+	^price ! !
+
+!Book methodsFor: 'getter' stamp: 'FL 11/30/2019 15:25:15'!
+title
+	
+	^title! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Book class' category: #TusLibros!
+Book class
+	instanceVariableNames: ''!
+
+!Book class methodsFor: 'instance creation' stamp: 'FL 11/30/2019 15:10:04'!
+withTitle: aTitle price: anAmount author: anAuthor 
+	
+	^self new initializeWithTitle: aTitle price: anAmount author: anAuthor ! !
 
 
 !classDefinition: #Cart category: #TusLibros!
@@ -1212,18 +1270,11 @@ add: aQuantity of: anItem
 	1 to: aQuantity do: [ :aNumber | items add: anItem ]! !
 
 
-!Cart methodsFor: 'TBD' stamp: 'LEB 11/11/2019 20:52:46'!
+!Cart methodsFor: 'TBD' stamp: 'FL 11/30/2019 15:11:32'!
 getTicket
-"
-aTicket _ Ticket new.
-items do: [:anItem | aTicket add: anItem -> (self occurrencesOf: anItem) -> ((catalog at: anItem) * (self occurrencesOf: anItem)) ].
-"
 
-"
-^ items inject: 0 into: [:total :anItem | total + ((catalog at: anItem) * (self occurrencesOf: anItem)) ]
-"
 
-^ items inject: 0 into: [:total :anItem | total + ((catalog at: anItem)) ]! !
+^ items inject: 0 into: [:total :anItem | total + ((catalog at: anItem) price) ]! !
 
 
 !Cart methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:55:29'!
@@ -1567,6 +1618,12 @@ isValidPassword: aPassword forUsername: anUsername
 	
 	^aPassword = (credentials at: anUsername ifAbsent: [^false.]).! !
 
+
+!RestInterface methodsFor: 'as yet unclassified' stamp: 'FL 11/30/2019 14:56:30'!
+catalog
+	
+	^catalog! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'RestInterface class' category: #TusLibros!
@@ -1675,8 +1732,30 @@ respond: aRequest with: aJson
 				 contentType: 'application/json; charset=utf-8' do: [:resp | 
 					resp headerAt: 'Access-Control-Allow-Origin' put: '*'.]! !
 
+!TusLibrosServerController methodsFor: 'respond' stamp: 'FL 11/30/2019 16:12:26'!
+respondBookFor: aBook withISBN: anISBN 
 
-!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 11/29/2019 19:37:51'!
+	|book|
+	book _ Dictionary new.
+	book add: ('isbn')->anISBN.
+	book add: ('title')->(aBook title).
+	book add: ('price')->(aBook price).
+	book add: ('author')->(aBook author).
+	^book! !
+
+!TusLibrosServerController methodsFor: 'respond' stamp: 'FL 11/30/2019 16:34:41'!
+respondCatalog
+
+	|respondCatalog index systemCatalog |
+	systemCatalog _ restInterface catalog.
+	respondCatalog _ Array new:systemCatalog size .
+	index _ 1.
+	systemCatalog keysAndValuesDo: [:anISBN :aBook | respondCatalog at:index put: (self respondBookFor: aBook withISBN: anISBN ).index _ index +1.].
+	
+	^respondCatalog! !
+
+
+!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 11/30/2019 16:17:51'!
 initializeWith: aPortNumber
 	
 	restInterface := RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: self defaultSalesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: self defaultClock.
@@ -1690,12 +1769,20 @@ initializeWith: aPortNumber
 			clientId := (request fields at:'clientId').
 			password := (request fields at:'password').
 			cartId := restInterface createCartForClientId: clientId identifiedByPassword: password.
-			"request send200Response: '0|' , cartId. El Formato de la consigna se puede ignorar"
 			self respond: request with: (WebUtils jsonEncode: cartId) 
 		 ] 
 		on: Error 
 		do: [ :anError |
-			request send404Response: ('1|',anError messageText) ]].
+			request send404Response: (anError messageText) ]].
+	
+	webServer addService: '/getCatalog' action:[:request |
+		[ | catalog |
+			catalog := self respondCatalog.
+			self respond: request with: (WebUtils jsonEncode: catalog) 
+		 ] 
+		on: Error 
+		do: [ :anError |
+			request send404Response: (anError messageText) ]].
 
 	webServer addService: '/addToCart' action:[:request | | cartId bookIsbn bookQuantity |
 		[ | |
@@ -1715,7 +1802,7 @@ initializeWith: aPortNumber
 			cartList := restInterface listCart: cartId.
 			response := ''.
 			cartList keysAndValuesDo: [:aKey :aValue | response := response, '|', aKey asString, '|', aValue asString.].
-			request send200Response: (response size = 0 ifTrue: ['0|'] ifFalse: ['0',response]).
+			self respond: request with: (WebUtils jsonEncode:(response size = 0 ifTrue: ['0|'] ifFalse: ['0',response])). 
 		 ] 
 		on: Error 
 		do: [ :anError |
@@ -1761,12 +1848,12 @@ alwaysOKMerchantProcessor
 	
 	^ MerchantProcessorMOCK with: [].! !
 
-!TusLibrosServerController methodsFor: 'support' stamp: 'LEB 11/21/2019 19:35:03'!
+!TusLibrosServerController methodsFor: 'support' stamp: 'FL 11/30/2019 15:28:55'!
 defaultCatalog
 	| aCatalog |
 	aCatalog := Dictionary new.
-	aCatalog add: 'validBook1' -> 5.
-	aCatalog add: 'validBook2' -> 99099999999.
+	aCatalog add: '0001' -> (Book withTitle: 'El túnel' price: 50 author: 'Ernesto Sabato').
+	aCatalog add: '0002' -> (Book withTitle: 'Crímenes imaginarios' price: 15 author: 'Patricia Highsmith').
 	^ aCatalog.! !
 
 !TusLibrosServerController methodsFor: 'support' stamp: 'LEB 11/21/2019 19:33:23'!

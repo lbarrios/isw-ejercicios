@@ -7,6 +7,12 @@ Username: usern
 Password: passn
 Con n de 1 a 5
 
+### Servicios
+
+/createCart: clientId password -> cartId
+/getCatalog: _ -> catalog
+/listCart: cartId -> cartList
+
 ## Cliente
 Hay dos formas de ejecutar/modificar el cliente:
 

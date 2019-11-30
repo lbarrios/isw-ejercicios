@@ -36,6 +36,14 @@ class App extends React.Component {
           </Typography>)
   }
 
+  contentForCatalog(){
+    const cartId = this.state.cartId
+    return (<CatalogView
+        router={this.router}
+        cartId={cartId}
+      />)
+  }
+
   render() {
     let title = "Tus Libros"
     let content = this.state.path.content(this)

@@ -51,6 +51,7 @@
       ListItem,
       ListItemIcon,
       ListItemText,
+      ListItemSecondaryAction,
       OutlinedInput,
       TextField,
       ThemeProvider,
@@ -127,6 +128,7 @@
       paths["/"] = {content: component =>component.contentForRoot()}
       paths["/logInError"] = {content: component =>component.contentForLogInError()}
       paths["/error"] = {content: component =>component.contentForError()}
+      paths["/catalog"] = {content: component =>component.contentForCatalog()}
       return paths[path]
     }    class MyToolBarComponent extends React.Component {
       constructor(props) {
@@ -155,6 +157,10 @@
     
       contentForError(){
         return this.iconButton("home",() => this.props.router.navigate("/", { }))
+      }
+    
+      contentForCatalog(){
+        
       }
     
       render() {
@@ -317,53 +323,50 @@
     const SubstringsView = withStyles(styles, {
       withTheme: true
     })(SubstringsComponent)
-    class SubstringDetailsComponent extends React.Component {
+    class CatalogComponent extends React.Component {
       constructor(props) {
         super(props)
     
         this.state = {
-          details: {},
+          catalog: [],
+          amounts: [],
           loading: false,
           error: null,
         }
       }
     
       componentDidMount() {
-        const substring = this.props.selectedSubstring
+        const cartId = this.props.cartId
     
         this.setState({
           loading: true,
           error: null,
         })
     
-        let details = {}
+        const details = {}
     
-        getLocalAsJson(`firstletter?word=${substring}`)
+        getLocalAsJson(`getCatalog`)
           .then(function (response) {
             return response.json()
           })
           .then(function (json) {
-            details["firstLetter"] = json
-            return getLocalAsJson(`touppercase?word=${substring}`)
+            details["catalog"] = json
+            
+            return getLocalAsJson(`listCart?cartId=${cartId}`)
           })
           .then(function (response) {
             return response.json()
           })
           .then(function (json) {
-            details["uppercase"] = json
-            return getLocalAsJson(`vowels?word=${substring}`)
-          })
-          .then(function(response) {
-            return response.json()
-          })
-          .then(function (json) {
-            details["vowels"] = json
+            details["amounts"] = json
+            
             return details
           })
           .then((details) => {
             this.setState({
               loading: false,
-              details: details
+              catalog: details["catalog"],
+              amounts: details["amounts"]
             })
           })
           .catch(err => {
@@ -376,16 +379,17 @@
     
       render() {
         const {
-          // router,
-          selectedSubstring,
+          router,
           classes,
         } = this.props
     
         const {
-          details,
+          catalog,
+          amounts,
           loading,
           error,
         } = this.state
+    
     
         if (loading) return <div>Loading...</div>
         if (error) return <div>{error}</div>
@@ -393,51 +397,42 @@
         return (
           <div>
             <Typography variant="h4" component="h4" gutterBottom>
-              Detalles de <b>{selectedSubstring}</b>
+              <b>Catálogo</b>:
             </Typography>
     
-            <TextField
-              id="outlined-read-only-input"
-              label="Primera letra"
-              defaultValue={details["firstLetter"]}
-              className={classes.textFieldDetails}
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-              variant="outlined"
-            />
-            <TextField
-              id="outlined-read-only-input"
-              label="En mayúsculas"
-              defaultValue={details["uppercase"]}
-              className={classes.textFieldDetails}
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-              variant="outlined"
-            />
-            <TextField
-              id="outlined-read-only-input"
-              label="Vocales"
-              defaultValue={details["vowels"]}
-              className={classes.textFieldDetails}
-              margin="normal"
-              InputProps={{
-                readOnly: true,
-              }}
-              variant="outlined"
-            />
+            <List component="nav" className={classes.rootList}>
+              {
+                catalog.map((book, ix) => {
+                  return (
+                    <ListItem
+                      button
+                      key={ix}
+                      onClick={() => router.navigate('/details', {  })}>
+                      <ListItemText primary={book.title + "     " + (amounts[book.isbn] || 0)} secondary={book.isbn} />
+                      <ListItemSecondaryAction>
+                        <IconButton 
+                        onClick={() => router.navigate('/', {  })}>
+                          <Icon>add</Icon>
+                        </IconButton>
+                        <IconButton 
+                        onClick={() => router.navigate('/', {  })}>
+                          <Icon>remove</Icon>
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  )
+                })
+              }
+            </List>
           </div>
         )
       }
     }
     
     // Add style
-    const SubstringDetailsView = withStyles(styles, {
+    const CatalogView = withStyles(styles, {
       withTheme: true
-    })(SubstringDetailsComponent)
+    })(CatalogComponent)
     class App extends React.Component {
       constructor(props) {
         super(props);
@@ -474,6 +469,14 @@
         return (<Typography component="h1" >
               ERROR
               </Typography>)
+      }
+    
+      contentForCatalog(){
+        const cartId = this.state.cartId
+        return (<CatalogView
+            router={this.router}
+            cartId={cartId}
+          />)
       }
     
       render() {

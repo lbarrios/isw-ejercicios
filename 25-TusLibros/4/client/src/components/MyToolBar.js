@@ -27,6 +27,10 @@ class MyToolBarComponent extends React.Component {
     return this.iconButton("home",() => this.props.router.navigate("/", { }))
   }
 
+  contentForCatalog(){
+    
+  }
+
   render() {
     const {
       router,
