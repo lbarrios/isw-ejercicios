@@ -1668,7 +1668,15 @@ destroy
 	webServer ifNotNil:[webServer destroy].! !
 
 
-!TusLibrosServerController methodsFor: 'initialization' stamp: 'LEB 11/21/2019 20:37:44'!
+!TusLibrosServerController methodsFor: 'respond' stamp: 'FL 11/29/2019 19:34:47'!
+respond: aRequest with: aJson
+
+	aRequest send200Response: (aJson asUtf8) 
+				 contentType: 'application/json; charset=utf-8' do: [:resp | 
+					resp headerAt: 'Access-Control-Allow-Origin' put: '*'.]! !
+
+
+!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 11/29/2019 19:37:51'!
 initializeWith: aPortNumber
 	
 	restInterface := RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: self defaultSalesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: self defaultClock.
@@ -1682,7 +1690,8 @@ initializeWith: aPortNumber
 			clientId := (request fields at:'clientId').
 			password := (request fields at:'password').
 			cartId := restInterface createCartForClientId: clientId identifiedByPassword: password.
-			request send200Response: '0|' , cartId.
+			"request send200Response: '0|' , cartId. El Formato de la consigna se puede ignorar"
+			self respond: request with: (WebUtils jsonEncode: cartId) 
 		 ] 
 		on: Error 
 		do: [ :anError |
