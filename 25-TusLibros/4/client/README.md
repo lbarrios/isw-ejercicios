@@ -12,6 +12,8 @@ Con n de 1 a 5
 /createCart: clientId password -> cartId
 /getCatalog: _ -> catalog
 /listCart: cartId -> cartList
+/addToCart: cartId bookIsbn bookQuantity -> 0|OK
+/removeFromCart: cartId bookIsbn bookQuantity -> 0|OK
 
 ## Cliente
 Hay dos formas de ejecutar/modificar el cliente:

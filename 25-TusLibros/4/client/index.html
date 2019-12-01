@@ -377,6 +377,59 @@
           })
       }
     
+      handleAdd(isbn) {
+        const {
+          router,
+          cartId
+        } = this.props
+    
+        const {
+          amounts,
+          error
+        } = this.state
+    
+        getLocalAsJson(`addToCart?cartId=${cartId}&bookIsbn=${isbn}&bookQuantity=1`)
+          .then( response => response.json())
+          .then(json => {
+            amounts[isbn] = 1 + (amounts[isbn] || 0)
+            this.setState({
+              amounts: amounts
+            })
+          })
+          .catch(function (error) {
+            console.log('Looks like there was a problem: \n', error);
+            router.navigate("/error", {})
+          });
+      }
+    
+      handleRemove(isbn) {
+        const {
+          router,
+          cartId
+        } = this.props
+    
+        const {
+          amounts,
+          error
+        } = this.state
+    
+        getLocalAsJson(`removeFromCart?cartId=${cartId}&bookIsbn=${isbn}&bookQuantity=1`)
+          .then(response => response.json())
+          .then(json => {
+            amounts[isbn] = amounts[isbn] - 1
+            if(amounts[isbn] === 0){
+              delete amounts[isbn]
+            }
+            this.setState({
+              amounts: amounts
+            })
+          })
+          .catch(function (error) {
+            console.log('Looks like there was a problem: \n', error);
+            router.navigate("/error", {})
+          });
+      }
+    
       render() {
         const {
           router,
@@ -408,14 +461,15 @@
                       button
                       key={ix}
                       onClick={() => router.navigate('/details', {  })}>
-                      <ListItemText primary={book.title + "     " + (amounts[book.isbn] || 0)} secondary={book.isbn} />
+                      <ListItemText primary={book.title + "     " + (amounts[book.isbn] || 0) + "     $" + book.price} secondary={book.isbn} />
                       <ListItemSecondaryAction>
                         <IconButton 
-                        onClick={() => router.navigate('/', {  })}>
+                        onClick={() => this.handleAdd(book.isbn)}>
                           <Icon>add</Icon>
                         </IconButton>
                         <IconButton 
-                        onClick={() => router.navigate('/', {  })}>
+                        onClick={() => this.handleRemove(book.isbn)}
+                        disabled={amounts[book.isbn] === undefined}>
                           <Icon>remove</Icon>
                         </IconButton>
                       </ListItemSecondaryAction>

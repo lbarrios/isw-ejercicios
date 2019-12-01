@@ -209,6 +209,89 @@ test09EachExecutesClosure
 	cart each: [:item | counter := counter + 1].
 	self assert: 10 equals: counter.! !
 
+!CartTest methodsFor: 'tests' stamp: 'FL 12/1/2019 15:34:20'!
+test10CannotRemoveItemsThatAreNotContained
+
+	| cart |
+	
+	cart := self createEmptyCartWithDefaultCatalog.
+	
+	self 
+		should: [ cart remove: self itemSellByTheStore ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = cart noItemToRemoveErrorMessage.
+			self assert: cart isEmpty ]! !
+
+!CartTest methodsFor: 'tests' stamp: 'FL 12/1/2019 15:27:49'!
+test11CanRemoveItemIfItIsContained
+
+	| cart |
+	
+	cart := self createEmptyCartWithDefaultCatalog.
+	cart add: self itemSellByTheStore.
+	cart remove: self itemSellByTheStore.
+	
+	self assert: cart isEmpty.! !
+
+!CartTest methodsFor: 'tests' stamp: 'FL 12/1/2019 15:34:45'!
+test12CanNotRemoveAmountGreaterThanContained
+
+	| cart |
+	
+	cart := self createEmptyCartWithDefaultCatalog.
+	cart add: 2 of: self itemSellByTheStore.
+	
+	self 
+		should: [cart remove: 3 of: self itemSellByTheStore  ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = cart noItemToRemoveErrorMessage.
+			self deny: cart isEmpty ]! !
+
+!CartTest methodsFor: 'tests' stamp: 'FL 12/1/2019 15:41:29'!
+test13CannotRemoveNonPositiveNumberOfItems
+
+	| cart |
+	
+	cart := self createEmptyCartWithDefaultCatalog.
+	cart add: 1 of: self itemSellByTheStore.
+	
+	self 
+		should: [cart remove: 0 of: self itemSellByTheStore ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = cart invalidQuantityErrorMessage.
+			self deny: cart isEmpty ]! !
+
+!CartTest methodsFor: 'tests' stamp: 'FL 12/1/2019 15:42:33'!
+test14CannotRemoveItemsThatDoNotBelongToStore
+
+	| cart |
+	
+	cart := self createEmptyCartWithDefaultCatalog.
+	
+	self 
+		should: [ cart remove: self itemNotSellByTheStore ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = cart invalidItemErrorMessage.
+			self assert: cart isEmpty ]! !
+
+!CartTest methodsFor: 'tests' stamp: 'FL 12/1/2019 15:43:17'!
+test15CannotRemoveMoreThanOneItemNotSellByTheStore
+
+	| cart |
+	
+	cart := self createEmptyCartWithDefaultCatalog.
+	
+	self 
+		should: [cart remove: 2 of: self itemNotSellByTheStore  ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = cart invalidItemErrorMessage.
+			self assert: cart isEmpty ]! !
+
 
 !classDefinition: #CashierTest category: #TusLibros!
 TestTusLibros subclass: #CashierTest
@@ -1162,6 +1245,37 @@ self assert: (self defaultCatalog at: self itemSellByTheStore ) author equals: (
 self assert: (self defaultCatalog at: self itemSellByTheStore2 ) title equals: (catalog at:self itemSellByTheStore2) title .
 self assert: (self defaultCatalog at: self itemSellByTheStore2 ) author equals: (catalog at:self itemSellByTheStore2) author .! !
 
+!RestInterfaceTest methodsFor: 'tests' stamp: 'FL 12/1/2019 15:47:59'!
+test20cannotRemoveFromCartIfBookIsNotContained
+
+| interface cartId |
+
+
+interface _ RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: self defaultSalesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: self defaultClock.
+cartId _ interface createCartForClientId: self username1 identifiedByPassword: self passwordForUsername1.
+
+self 
+	should: [interface removeFromCart: cartId isbn: (self itemSellByTheStore ) quantity: 1.]
+	raise: Error - MessageNotUnderstood
+	withExceptionDo: [ :anError |
+		self assert: anError messageText = RestInterface noItemToRemoveErrorMessage.
+	]! !
+
+!RestInterfaceTest methodsFor: 'tests' stamp: 'FL 12/1/2019 15:51:48'!
+test21CartListAfterRemovingItemsHasThemRemoved
+
+| interface cartId cartList |
+interface _ self defaultRestInterface.
+
+cartId _ interface createCartForClientId: self username1 identifiedByPassword: self passwordForUsername1.
+interface addToCart: cartId isbn: (self itemSellByTheStore) quantity: 5.
+interface removeFromCart: cartId isbn: (self itemSellByTheStore) quantity: 3.
+
+cartList _ interface listCart: cartId.
+
+self assert: (cartList includesKey: (self itemSellByTheStore)).
+self assert: 2 equals: (cartList at: (self itemSellByTheStore)).! !
+
 
 !classDefinition: #Book category: #TusLibros!
 Object subclass: #Book
@@ -1221,6 +1335,15 @@ invalidQuantityErrorMessage
 	
 	^self class invalidQuantityErrorMessage.! !
 
+!Cart methodsFor: 'error messages' stamp: 'FL 12/1/2019 15:49:01'!
+noItemToRemoveErrorMessage
+	^self class noItemToRemoveErrorMessage ! !
+
+
+!Cart methodsFor: 'assertions' stamp: 'FL 12/1/2019 15:38:38'!
+assert: aQuantity IsValidAmountFor: anItem.
+
+	aQuantity > (items occurrencesOf: anItem) ifTrue: [self error: self noItemToRemoveErrorMessage]! !
 
 !Cart methodsFor: 'assertions' stamp: 'FL 11/4/2019 20:29:37'!
 assertIsValidItem: anItem
@@ -1277,9 +1400,23 @@ getTicket
 ^ items inject: 0 into: [:total :anItem | total + ((catalog at: anItem) price) ]! !
 
 
-!Cart methodsFor: 'as yet unclassified' stamp: 'LEB 11/7/2019 20:55:29'!
+!Cart methodsFor: 'iterate' stamp: 'LEB 11/7/2019 20:55:29'!
 each: aBlockClosure 
 	items do: [:item | aBlockClosure value: item].! !
+
+
+!Cart methodsFor: 'removing' stamp: 'FL 12/1/2019 15:33:41'!
+remove: anItem
+	self remove: 1 of: anItem.! !
+
+!Cart methodsFor: 'removing' stamp: 'FL 12/1/2019 15:38:13'!
+remove: aQuantity of: anItem 
+
+	self assertIsValidQuantity: aQuantity.
+	self assertIsValidItem: anItem.
+	self assert: aQuantity IsValidAmountFor: anItem.
+
+	1 to: aQuantity do: [ :aNumber | items remove: anItem ]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1297,6 +1434,10 @@ acceptingItemsOf: aCatalog
 invalidQuantityErrorMessage
 	
 	^'Invalid number of items'! !
+
+!Cart class methodsFor: 'error messages' stamp: 'FL 12/1/2019 15:48:35'!
+noItemToRemoveErrorMessage
+	^'Cart does not have that amount of requested item'! !
 
 
 !classDefinition: #Cashier category: #TusLibros!
@@ -1535,6 +1676,11 @@ addToCart: cartId isbn: anIsbn quantity: anAmount
 	
 	(self getCart: cartId) add: anAmount of: anIsbn.! !
 
+!RestInterface methodsFor: 'usage' stamp: 'FL 11/30/2019 14:56:30'!
+catalog
+	
+	^catalog! !
+
 !RestInterface methodsFor: 'usage' stamp: 'LEB 11/14/2019 20:51:35'!
 checkoutCart: cartId withCreditCard: creditCard 
 	| ticket session purchase |
@@ -1577,6 +1723,10 @@ listPurchasesForClientId: anUsername identifiedByPassword: aPassword
 	self checkPassword: aPassword forUsername: anUsername.
 	^purchases at: anUsername.! !
 
+!RestInterface methodsFor: 'usage' stamp: 'FL 12/1/2019 15:44:47'!
+removeFromCart: cartId isbn: anIsbn quantity: anAmount 
+	(self getCart: cartId) remove: anAmount of: anIsbn.! !
+
 
 !RestInterface methodsFor: 'private' stamp: 'LEB 11/14/2019 20:49:33'!
 addPurchase: aPurchase forUser: anUser
@@ -1618,12 +1768,6 @@ isValidPassword: aPassword forUsername: anUsername
 	
 	^aPassword = (credentials at: anUsername ifAbsent: [^false.]).! !
 
-
-!RestInterface methodsFor: 'as yet unclassified' stamp: 'FL 11/30/2019 14:56:30'!
-catalog
-	
-	^catalog! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'RestInterface class' category: #TusLibros!
@@ -1634,13 +1778,33 @@ RestInterface class
 emptyCartErrorMessage
 ^ Cashier emptyCartErrorMessage.! !
 
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/11/2019 21:52:05'!
+expiredCartErrorMessage
+	^'El reloj se expiró'! !
+
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/11/2019 19:03:52'!
+expiredCreditCardMessage
+	^ Cashier expiredCreditCardMessage.! !
+
 !RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 20:08:48'!
 invalidCartIdErrorMessage
 	^'El id de carrito no es válido.'! !
 
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/14/2019 18:04:36'!
+invalidQuantityErrorMessage
+	^Cart invalidQuantityErrorMessage.! !
+
 !RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/7/2019 20:06:52'!
 invalidUserCredencialsErrorMessage
 	^'El usuario o el password no es válido'.! !
+
+!RestInterface class methodsFor: 'error messages' stamp: 'LEB 11/11/2019 19:08:34'!
+merchantProcessorErrorMessage
+	^Cashier merchantProcessorErrorMessage.! !
+
+!RestInterface class methodsFor: 'error messages' stamp: 'FL 12/1/2019 15:47:30'!
+noItemToRemoveErrorMessage
+	^Cart noItemToRemoveErrorMessage ! !
 
 
 !RestInterface class methodsFor: 'instance creation' stamp: 'LEB 11/11/2019 21:55:32'!
@@ -1650,23 +1814,6 @@ withCatalog: aCatalog withCredentials: aCredentialsDictionary withSalesBook: aSa
 	withSalesBook: aSalesBook 
 	withMerchantProcessor: aMerchantProcessor 
 	withClock: aClock.! !
-
-
-!RestInterface class methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 21:52:05'!
-expiredCartErrorMessage
-	^'El reloj se expiró'! !
-
-!RestInterface class methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 19:03:52'!
-expiredCreditCardMessage
-	^ Cashier expiredCreditCardMessage.! !
-
-!RestInterface class methodsFor: 'as yet unclassified' stamp: 'LEB 11/14/2019 18:04:36'!
-invalidQuantityErrorMessage
-	^Cart invalidQuantityErrorMessage.! !
-
-!RestInterface class methodsFor: 'as yet unclassified' stamp: 'LEB 11/11/2019 19:08:34'!
-merchantProcessorErrorMessage
-	^Cashier merchantProcessorErrorMessage.! !
 
 
 !classDefinition: #Session category: #TusLibros!
@@ -1755,7 +1902,7 @@ respondCatalog
 	^respondCatalog! !
 
 
-!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 11/30/2019 16:17:51'!
+!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 12/1/2019 16:12:45'!
 initializeWith: aPortNumber
 	
 	restInterface := RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: self defaultSalesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: self defaultClock.
@@ -1790,7 +1937,19 @@ initializeWith: aPortNumber
 			bookIsbn := (request fields at:'bookIsbn').
 			bookQuantity := (request fields at:'bookQuantity') asInteger.
 			restInterface addToCart: cartId isbn: bookIsbn quantity: bookQuantity.
-			request send200Response: '0|OK'.
+			self respond: request with: (WebUtils jsonEncode: '0|OK').
+		 ] 
+		on: Error 
+		do: [ :anError |
+			request send404Response: ('1|',anError messageText) ]].
+	
+	webServer addService: '/removeFromCart' action:[:request | | cartId bookIsbn bookQuantity |
+		[ | |
+			cartId := (request fields at:'cartId').
+			bookIsbn := (request fields at:'bookIsbn').
+			bookQuantity := (request fields at:'bookQuantity') asInteger.
+			restInterface removeFromCart: cartId isbn: bookIsbn quantity: bookQuantity.
+			self respond: request with: (WebUtils jsonEncode: '0|OK').
 		 ] 
 		on: Error 
 		do: [ :anError |
@@ -1800,9 +1959,7 @@ initializeWith: aPortNumber
 		[ | cartList response |
 			cartId := (request fields at:'cartId').
 			cartList := restInterface listCart: cartId.
-			response := ''.
-			cartList keysAndValuesDo: [:aKey :aValue | response := response, '|', aKey asString, '|', aValue asString.].
-			self respond: request with: (WebUtils jsonEncode:(response size = 0 ifTrue: ['0|'] ifFalse: ['0',response])). 
+			self respond: request with: (WebUtils jsonEncode: cartList). 
 		 ] 
 		on: Error 
 		do: [ :anError |
