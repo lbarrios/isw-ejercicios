@@ -6,6 +6,7 @@ class App extends React.Component {
       clientId: "",
       password: "",
       cartId: "",
+      currentBook: ""
     };
   }
 
@@ -42,6 +43,17 @@ class App extends React.Component {
         router={this.router}
         cartId={cartId}
       />)
+  }
+
+  contentForBook(){
+    const {
+      cartId,
+      currentBook
+    } = this.state
+    return (<BookView
+        cartId={cartId}
+        currentBook={currentBook}
+        />)
   }
 
   render() {

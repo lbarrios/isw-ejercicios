@@ -105,9 +105,13 @@ class CatalogComponent extends React.Component {
       });
   }
 
+  handleDetails(isbn){
+    const router = this.props.router
+    router.navigate('/bookDetails', {currentBook: isbn  })
+  }
+
   render() {
     const {
-      router,
       classes,
     } = this.props
 
@@ -135,7 +139,7 @@ class CatalogComponent extends React.Component {
                 <ListItem
                   button
                   key={ix}
-                  onClick={() => router.navigate('/details', {  })}>
+                  onClick={() => this.handleDetails(book.isbn)}>
                   <ListItemText primary={book.title + "     " + (amounts[book.isbn] || 0) + "     $" + book.price} secondary={book.isbn} />
                   <ListItemSecondaryAction>
                     <IconButton 

@@ -28,7 +28,22 @@ class MyToolBarComponent extends React.Component {
   }
 
   contentForCatalog(){
-    
+    //TODO carrito historial
+    return (<div>
+    {this.iconButton("close",() => this.props.router.navigate("/", { }))}
+    {this.iconButton("shopping_cart",() => this.props.router.navigate("/", { }))}
+    {this.iconButton("assignment",() => this.props.router.navigate("/", { }))}
+    </div>)
+  }
+
+  contentForBook(){
+    //TODO carrito historial
+    return (<div>
+    {this.iconButton("close",() => this.props.router.navigate("/", { }))}
+    {this.iconButton("arrow_back",() => this.props.router.navigate("/catalog", { }))}
+    {this.iconButton("shopping_cart",() => this.props.router.navigate("/catalog", { }))}
+    {this.iconButton("assignment",() => this.props.router.navigate("/catalog", { }))}
+    </div>)
   }
 
   render() {

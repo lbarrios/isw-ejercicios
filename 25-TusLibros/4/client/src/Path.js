@@ -4,5 +4,6 @@ function getPath(path){
   paths["/logInError"] = {content: component =>component.contentForLogInError()}
   paths["/error"] = {content: component =>component.contentForError()}
   paths["/catalog"] = {content: component =>component.contentForCatalog()}
+  paths["/bookDetails"] = {content: component =>component.contentForBook()}
   return paths[path]
 }

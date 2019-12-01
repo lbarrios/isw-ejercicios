@@ -1,4 +1,4 @@
-class SubstringsComponent extends React.Component {
+class SubstringsComponent extends React.Component { //TODO
   constructor(props) {
     super(props)
   }

@@ -129,6 +129,7 @@
       paths["/logInError"] = {content: component =>component.contentForLogInError()}
       paths["/error"] = {content: component =>component.contentForError()}
       paths["/catalog"] = {content: component =>component.contentForCatalog()}
+      paths["/bookDetails"] = {content: component =>component.contentForBook()}
       return paths[path]
     }    class MyToolBarComponent extends React.Component {
       constructor(props) {
@@ -160,7 +161,22 @@
       }
     
       contentForCatalog(){
-        
+        //TODO carrito historial
+        return (<div>
+        {this.iconButton("close",() => this.props.router.navigate("/", { }))}
+        {this.iconButton("shopping_cart",() => this.props.router.navigate("/", { }))}
+        {this.iconButton("assignment",() => this.props.router.navigate("/", { }))}
+        </div>)
+      }
+    
+      contentForBook(){
+        //TODO carrito historial
+        return (<div>
+        {this.iconButton("close",() => this.props.router.navigate("/", { }))}
+        {this.iconButton("arrow_back",() => this.props.router.navigate("/catalog", { }))}
+        {this.iconButton("shopping_cart",() => this.props.router.navigate("/catalog", { }))}
+        {this.iconButton("assignment",() => this.props.router.navigate("/catalog", { }))}
+        </div>)
       }
     
       render() {
@@ -283,7 +299,7 @@
     const LogInInputView = withStyles(styles, {
       withTheme: true
     })(LogInInputComponent)
-    class SubstringsComponent extends React.Component {
+    class SubstringsComponent extends React.Component { //TODO
       constructor(props) {
         super(props)
       }
@@ -323,6 +339,174 @@
     const SubstringsView = withStyles(styles, {
       withTheme: true
     })(SubstringsComponent)
+    class BookComponent extends React.Component {
+      constructor(props) {
+        super(props)
+    
+        this.state = {
+          bookData: {},
+          amount: 0,
+          loading: false,
+          error: null,
+        }
+      }
+    
+      componentDidMount() {
+        const {
+          cartId,
+          currentBook,
+        } = this.props
+    
+        this.setState({
+          loading: true,
+          error: null,
+        })
+    
+    
+    
+        let catalog = {}
+    
+        getLocalAsJson(`getCatalog`)
+          .then(function (response) {
+            return response.json()
+          })
+          .then(function (json) {
+            catalog = json
+            
+            return getLocalAsJson(`listCart?cartId=${cartId}`)
+          })
+          .then(function (response) {
+            return response.json()
+          })
+          .then(amounts => {
+            const amount = amounts[currentBook] || 0
+            const bookData = catalog.find(book => book.isbn === currentBook)
+    
+            this.setState({
+              loading: false,
+              bookData,
+              amount
+            })
+          })
+          .catch(err => {
+            this.setState({
+              loading: false,
+              error: err,
+            })
+          })
+      }
+    
+      handleAdd() {
+        const {
+          currentBook,
+          cartId
+        } = this.props
+    
+        const {
+          amount,
+        } = this.state
+    
+        getLocalAsJson(`addToCart?cartId=${cartId}&bookIsbn=${currentBook}&bookQuantity=1`)
+          .then( response => response.json())
+          .then(json => {
+            const newAmount = 1 + amount
+            this.setState({
+              amount: newAmount
+            })
+          })
+          .catch(err => {
+            console.log('Looks like there was a problem: \n', err);
+            this.setState({
+              
+              error: err,
+            })
+          });
+      }
+    
+      handleRemove() {
+        const {
+          currentBook,
+          cartId
+        } = this.props
+    
+        const {
+          amount,
+          bookData
+        } = this.state
+    
+        getLocalAsJson(`removeFromCart?cartId=${cartId}&bookIsbn=${currentBook}&bookQuantity=1`)
+          .then(response => response.json())
+          .then(json => {
+            const newAmount = amount - 1
+            this.setState({
+              amount: newAmount
+            })
+          })
+          .catch(error => {
+            console.log('Looks like there was a problem: \n', error);
+            this.setState({
+              error
+            })
+          });
+      }
+    
+      render() {
+        const {
+          cartId,
+          classes,
+        } = this.props
+    
+        const {
+          bookData,
+          amount,
+          loading,
+          error,
+        } = this.state
+    
+        if (loading) return (<div>Loading...</div>)
+        if (error) return (<div>{error}</div>)
+    
+        return (
+          <div>
+            <Typography component="h1" gutterBottom>
+              Detalles del libro:
+              </Typography>
+              <Typography component="h2" gutterBottom>
+              Título: {bookData.title}
+              </Typography>
+              <Typography component="h3" gutterBottom>
+              ISBN: {bookData.isbn}
+              </Typography>
+              <Typography component="h3" gutterBottom>
+              Autor: {bookData.author}
+              </Typography>
+              <Typography component="h3" gutterBottom>
+              Precio: ${bookData.price}
+              </Typography>
+              <Typography component="h4" gutterBottom>
+              Amount: {amount}
+              </Typography>
+            <Button
+              color="inherit"
+              onClick={ev =>this.handleRemove()}
+              disabled={amount === 0}>
+              Remove
+            </Button>
+            <Button
+              color="inherit"
+              onClick={ev =>this.handleAdd()}
+              >
+              Add
+          </Button>
+          </div>
+        )
+      }
+    }
+    
+    // Add style
+    const BookView = withStyles(styles, {
+      withTheme: true
+    })(BookComponent)
     class CatalogComponent extends React.Component {
       constructor(props) {
         super(props)
@@ -430,9 +614,13 @@
           });
       }
     
+      handleDetails(isbn){
+        const router = this.props.router
+        router.navigate('/bookDetails', {currentBook: isbn  })
+      }
+    
       render() {
         const {
-          router,
           classes,
         } = this.props
     
@@ -460,7 +648,7 @@
                     <ListItem
                       button
                       key={ix}
-                      onClick={() => router.navigate('/details', {  })}>
+                      onClick={() => this.handleDetails(book.isbn)}>
                       <ListItemText primary={book.title + "     " + (amounts[book.isbn] || 0) + "     $" + book.price} secondary={book.isbn} />
                       <ListItemSecondaryAction>
                         <IconButton 
@@ -495,6 +683,7 @@
           clientId: "",
           password: "",
           cartId: "",
+          currentBook: ""
         };
       }
     
@@ -531,6 +720,17 @@
             router={this.router}
             cartId={cartId}
           />)
+      }
+    
+      contentForBook(){
+        const {
+          cartId,
+          currentBook
+        } = this.state
+        return (<BookView
+            cartId={cartId}
+            currentBook={currentBook}
+            />)
       }
     
       render() {
