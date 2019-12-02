@@ -12,7 +12,7 @@ echo $curlOut
 curlOut=`curl -s "http://localhost:8080/listCart?cartId=${cartId}"`
 echo $curlOut
 
-curlOut=`curl -s "http://localhost:8080/checkOutCart?cartId=${cartId}&ccn=12345678&cced=112020"`
+curlOut=`curl -s "http://localhost:8080/checkOutCart?cartId=${cartId}&ccn=12345678&cced=112020&cco=alguien"`
 echo $curlOut
 
 
@@ -31,7 +31,7 @@ echo $curlOut
 curlOut=`curl -s "http://localhost:8080/listCart?cartId=${cartId}"`
 echo $curlOut
 
-curlOut=`curl -s "http://localhost:8080/checkOutCart?cartId=${cartId}&ccn=12345678&cced=112020"`
+curlOut=`curl -s "http://localhost:8080/checkOutCart?cartId=${cartId}&ccn=12345678&cced=112020&cco=alguien"`
 echo $curlOut
 
 

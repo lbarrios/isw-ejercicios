@@ -1902,7 +1902,7 @@ respondCatalog
 	^respondCatalog! !
 
 
-!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 12/1/2019 16:12:45'!
+!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 12/2/2019 15:16:32'!
 initializeWith: aPortNumber
 	
 	restInterface := RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: self defaultSalesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: self defaultClock.
@@ -1965,14 +1965,15 @@ initializeWith: aPortNumber
 		do: [ :anError |
 			request send404Response: ('1|',anError messageText) ]].
 
-	webServer addService: '/checkOutCart' action:[:request | | cartId ccn cced |
+	webServer addService: '/checkOutCart' action:[:request | | cartId ccn cced cco |
 		[ | ticket aMonthOfYear |
 			cartId := (request fields at:'cartId').
 			ccn := (request fields at:'ccn').
 			cced := (request fields at:'cced').
+			cco := (request fields at:'cco').
 			aMonthOfYear := GregorianMonthOfYear year: (GregorianYear number: 2020) monthNumber: 6. "ARREGLAR ESTO"
-			ticket := restInterface checkoutCart: cartId withCreditCard: (CreditCard withNumber: ccn expiringOn: aMonthOfYear ownedBy: 'alguien').
-			request send200Response: 'CheckoutCart: ', ticket asString.
+			ticket := restInterface checkoutCart: cartId withCreditCard: (CreditCard withNumber: ccn expiringOn: aMonthOfYear ownedBy: cco).
+			self respond: request with: (WebUtils jsonEncode: 'CheckoutCart: ', ticket asString).
 		 ] 
 		on: Error 
 		do: [ :anError |
@@ -1986,7 +1987,7 @@ initializeWith: aPortNumber
 			purchases := restInterface listPurchasesForClientId: clientId identifiedByPassword: password.
 			response := ''.
 			(purchases items) keysAndValuesDo: [:aKey :aValue | response := response, '|', aKey asString, '|', aValue asString.].
-			request send200Response: '0|',response,'|',purchases total asString.
+			self respond: request with: (WebUtils jsonEncode:'0|',response,'|',purchases total asString).
 		 ] 
 		on: Error 
 		do: [ :anError |

@@ -12,7 +12,7 @@ class LogInInputComponent extends React.Component {
     const o = {}
     o[keyToChange] = event.target.value
     this.setState(o)
-  };
+  }
 
   handleSend() {
     const {

@@ -6,7 +6,8 @@ class App extends React.Component {
       clientId: "",
       password: "",
       cartId: "",
-      currentBook: ""
+      currentBook: "",
+      ticket: ""
     };
   }
 
@@ -31,10 +32,17 @@ class App extends React.Component {
           </Typography>)
   }
 
-  contentForError(){
-    return (<Typography component="h1" >
-          ERROR
-          </Typography>)
+  contentForTicket(){
+    
+    return (<div>
+      <Typography component="h1" >
+          Purchase succesful!
+          </Typography>
+      <TextField value={this.state.ticket}
+        InputProps={{
+            readOnly: true,
+          }}/>
+    </div>)
   }
 
   contentForCatalog(){
@@ -56,22 +64,33 @@ class App extends React.Component {
         />)
   }
 
+  contentForCart(){
+    const {
+      cartId,
+    } = this.state
+    return (<CartView
+        cartId={cartId}
+        router={this.router}
+        />)
+  }
+
+  contentForHistory(){
+    const {
+      clientId,
+      password
+    } = this.state
+    return (<HistoryView
+      clientId={clientId}
+      password={password}
+      />)
+  }
+
   render() {
     let title = "Tus Libros"
     let content = this.state.path.content(this)
     
 
-    /* else if (this.state.path === "/list") {//TODO cambiar
-      content = (<SubstringsView
-        router={router}
-        substrings={this.state.substrings}
-      />)
-    } else if (this.state.path === "/details") {//TODO cambiar
-      content = (<SubstringDetailsView
-        router={router}
-        selectedSubstring={this.state.selectedSubstring}
-      />)
-    }*/
+    
     return (
       <div>
         <MyToolBar

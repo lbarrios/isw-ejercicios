@@ -23,26 +23,40 @@ class MyToolBarComponent extends React.Component {
     return this.iconButton("home",() => this.props.router.navigate("/", { }))
   }
 
-  contentForError(){
-    return this.iconButton("home",() => this.props.router.navigate("/", { }))
+  contentForTicket(){
+    return this.iconButton("close",() => this.props.router.navigate("/", { }))
   }
 
   contentForCatalog(){
-    //TODO carrito historial
     return (<div>
     {this.iconButton("close",() => this.props.router.navigate("/", { }))}
-    {this.iconButton("shopping_cart",() => this.props.router.navigate("/", { }))}
-    {this.iconButton("assignment",() => this.props.router.navigate("/", { }))}
+    {this.iconButton("assignment",() => this.props.router.navigate("/history", { }))}
+    {this.iconButton("shopping_cart",() => this.props.router.navigate("/cart", { }))}
     </div>)
   }
 
   contentForBook(){
-    //TODO carrito historial
     return (<div>
     {this.iconButton("close",() => this.props.router.navigate("/", { }))}
     {this.iconButton("arrow_back",() => this.props.router.navigate("/catalog", { }))}
-    {this.iconButton("shopping_cart",() => this.props.router.navigate("/catalog", { }))}
-    {this.iconButton("assignment",() => this.props.router.navigate("/catalog", { }))}
+    {this.iconButton("assignment",() => this.props.router.navigate("/history", { }))}
+    {this.iconButton("shopping_cart",() => this.props.router.navigate("/cart", { }))}
+    </div>)
+  }
+
+  contentForCart(){
+    return (<div>
+    {this.iconButton("close",() => this.props.router.navigate("/", { }))}
+    {this.iconButton("arrow_back",() => this.props.router.navigate("/catalog", { }))}
+    {this.iconButton("assignment",() => this.props.router.navigate("/history", { }))}
+    </div>)
+  }
+
+  contentForHistory(){
+    return (<div>
+    {this.iconButton("close",() => this.props.router.navigate("/", { }))}
+    {this.iconButton("arrow_back",() => this.props.router.navigate("/catalog", { }))}
+    {this.iconButton("shopping_cart",() => this.props.router.navigate("/cart", { }))}
     </div>)
   }
 
@@ -55,24 +69,6 @@ class MyToolBarComponent extends React.Component {
 
     const current_path = router.current()
     let content = current_path.content(this)
-
-    /*if (current_path === "/") {
-      icon = "home"
-      onclick = () => {}
-    } else if (current_path === "/list") {
-      icon = "home"
-      onclick = () => router.navigate("/", {
-        substrings: [],
-        selectedSubstring: "",
-      })
-    } else if (current_path === "/details") {
-      icon = "keyboard_arrow_left"
-      onclick = () => router.navigate("/list", {
-        selectedSubstring: "",
-      })
-    } else {
-      console.error("Not a valid current path!")
-    }*/
 
     return (
       <div className={classes.rootToolBar}>

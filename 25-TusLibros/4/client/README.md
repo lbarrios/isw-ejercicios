@@ -14,6 +14,8 @@ Con n de 1 a 5
 /listCart: cartId -> cartList
 /addToCart: cartId bookIsbn bookQuantity -> 0|OK
 /removeFromCart: cartId bookIsbn bookQuantity -> 0|OK
+/checkOutCart: cartId ccn cced cco -> ticket
+/listPurchases: clientId password -> purchasesList
 
 ## Cliente
 Hay dos formas de ejecutar/modificar el cliente:

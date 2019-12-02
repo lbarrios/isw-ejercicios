@@ -71,10 +71,11 @@ class CatalogComponent extends React.Component {
           amounts: amounts
         })
       })
-      .catch(function (error) {
-        console.log('Looks like there was a problem: \n', error);
-        router.navigate("/error", {})
-      });
+      .catch(err => {
+        this.setState({
+          error: err,
+        })
+      })
   }
 
   handleRemove(isbn) {
@@ -99,10 +100,11 @@ class CatalogComponent extends React.Component {
           amounts: amounts
         })
       })
-      .catch(function (error) {
-        console.log('Looks like there was a problem: \n', error);
-        router.navigate("/error", {})
-      });
+      .catch(err => {
+        this.setState({
+          error: err,
+        })
+      })
   }
 
   handleDetails(isbn){
