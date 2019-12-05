@@ -1,11 +1,12 @@
+var paths = {
+	  "/": {content: component =>component.contentForRoot()},
+	  "/logInError": {content: component =>component.contentForLogInError()},
+	  "/catalog": {content: component =>component.contentForCatalog()},
+	  "/bookDetails": {content: component =>component.contentForBook()},
+	  "/cart": {content: component =>component.contentForCart()},
+	  "/ticket": {content: component =>component.contentForTicket()},
+	  "/history": {content: component =>component.contentForHistory()},
+};
 function getPath(path){
-  const paths = {}
-  paths["/"] = {content: component =>component.contentForRoot()}
-  paths["/logInError"] = {content: component =>component.contentForLogInError()}
-  paths["/catalog"] = {content: component =>component.contentForCatalog()}
-  paths["/bookDetails"] = {content: component =>component.contentForBook()}
-  paths["/cart"] = {content: component =>component.contentForCart()}
-  paths["/ticket"] = {content: component =>component.contentForTicket()}
-  paths["/history"] = {content: component =>component.contentForHistory()}
-  return paths[path]
+  return paths[path];
 }
