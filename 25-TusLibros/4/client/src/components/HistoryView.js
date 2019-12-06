@@ -3,8 +3,9 @@ class HistoryComponent extends React.Component {
     super(props)
 
     this.state = {
-      history: [],
-      loading: false,
+      catalog: [],
+      history: {},
+      loading: true,
       error: null,
     }
   }
@@ -22,7 +23,15 @@ class HistoryComponent extends React.Component {
 
     const details = {}
 
-    getLocalAsJson(`listPurchases?clientId=${clientId}&password=${password}`)
+    getLocalAsJson(`getCatalog`)
+      .then(function (response) {
+        return response.json()
+      })
+      .then(function (json) {
+        details["catalog"] = json
+        
+        return getLocalAsJson(`listPurchases?clientId=${clientId}&password=${password}`)
+      })
       .then(function (response) {
         return response.json()
       })
@@ -34,6 +43,7 @@ class HistoryComponent extends React.Component {
       .then((details) => {
         this.setState({
           loading: false,
+          catalog: details["catalog"],
           history: details["list"]
         })
       })
@@ -51,6 +61,7 @@ class HistoryComponent extends React.Component {
     } = this.props
 
     const {
+      catalog,
       history,
       loading,
       error,
@@ -65,8 +76,22 @@ class HistoryComponent extends React.Component {
         <Typography variant="h4" component="h4" gutterBottom>
           <b>Historial de compras</b>:
         </Typography>
-
-        <div>{history}</div>
+        <List component="nav" className={classes.rootList}>
+          {
+            Object.keys(history.amounts).map((isbn, ix) => {
+              const book = catalog.find(b => b.isbn === isbn)
+              return (
+                <ListItem
+                  key={ix}>
+                  <ListItemText primary={book.title + "     " + (history.amounts[isbn])} secondary={book.isbn} />
+                </ListItem>
+              )
+            })
+          }
+        </List>
+        <Typography variant="h5" component="h5" gutterBottom>
+          <b>Total gastado</b>: ${history.total}
+        </Typography>
       </div>
     )
   }

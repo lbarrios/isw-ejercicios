@@ -1901,8 +1901,17 @@ respondCatalog
 	
 	^respondCatalog! !
 
+!TusLibrosServerController methodsFor: 'respond' stamp: 'FL 12/6/2019 02:19:04'!
+respondPurchases: aPurchasesHistory
 
-!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 12/2/2019 15:16:32'!
+	|purchases|
+	purchases _ Dictionary new.
+	purchases add: ('amounts')->(aPurchasesHistory items).
+	purchases add: ('total')->(aPurchasesHistory total).
+	^purchases! !
+
+
+!TusLibrosServerController methodsFor: 'initialization' stamp: 'FL 12/6/2019 01:37:36'!
 initializeWith: aPortNumber
 	
 	restInterface := RestInterface withCatalog: self defaultCatalog withCredentials: self defaultCredentials withSalesBook: self defaultSalesBook withMerchantProcessor: self alwaysOKMerchantProcessor withClock: self defaultClock.
@@ -1985,9 +1994,7 @@ initializeWith: aPortNumber
 			clientId := (request fields at:'clientId').
 			password := (request fields at:'password').
 			purchases := restInterface listPurchasesForClientId: clientId identifiedByPassword: password.
-			response := ''.
-			(purchases items) keysAndValuesDo: [:aKey :aValue | response := response, '|', aKey asString, '|', aValue asString.].
-			self respond: request with: (WebUtils jsonEncode:'0|',response,'|',purchases total asString).
+			self respond: request with: (WebUtils jsonEncode:(self respondPurchases: purchases )).
 		 ] 
 		on: Error 
 		do: [ :anError |
